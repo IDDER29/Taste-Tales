@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 const ArticleHeader = () => {
   const [articleData, setArticleData] = useState(null);
   const [isPanding, setIsPanding] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     // Fetch article data from API
@@ -17,13 +18,11 @@ const ArticleHeader = () => {
       .then((data) => {
         setArticleData(data[0]);
         setIsPanding(false);
-        console.log(data);
+        setError(null);
       })
       .catch((error) => {
-        console.error(
-          "There was a problem with your fetch operation:",
-          error.message
-        );
+        setIsPanding(false);
+        setError(error);
       });
   }, []); // The empty array ensures this effect runs only once after the initial render
 
@@ -39,6 +38,7 @@ const ArticleHeader = () => {
 
   return (
     <React.Fragment>
+      {error && <div>{error.message}</div>}
       {articleData && (
         <div className="max-w-4xl mx-auto p-8 bg-gray-50 rounded-lg shadow-md">
           {/* Title Section */}
