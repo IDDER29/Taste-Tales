@@ -1,130 +1,7 @@
 import React from "react";
 import { FaHeart, FaRegBookmark } from "react-icons/fa";
 
-const recipes = [
-  {
-    id: 1,
-    title: "Hot Meatloaf",
-    subtitle: "Delicious and Hearty",
-    category: "Breakfast",
-    image:
-      "https://khni.kerry.com/wp-content/uploads/2019/02/Restaurant-meal-1024x680.jpg",
-    views: 1200,
-    likes: 300,
-    date: "Aug 27, 2019",
-    publisher: {
-      name: "John Doe",
-      image: "https://via.placeholder.com/40x40.png?text=JD",
-    },
-  },
-  {
-    id: 2,
-    title: "Instant Pot Pulled",
-    subtitle: "Quick and Easy",
-    category: "Main Course",
-    image:
-      "https://media.istockphoto.com/id/1081422898/photo/pan-fried-duck.jpg?s=2048x2048&w=is&k=20&c=KcDScs6hE2epagNeSD5tUuCAomdL1YK0eLLMCd5mtGU=",
-    views: 2400,
-    likes: 500,
-    date: "May 10, 2005",
-    publisher: {
-      name: "Jane Smith",
-      image: "https://via.placeholder.com/40x40.png?text=JS",
-    },
-  },
-  {
-    id: 3,
-    title: "Best Grill Salmon",
-    subtitle: "Healthy and Tasty",
-    category: "Appetizer",
-    image:
-      "https://media.istockphoto.com/id/516329534/photo/last-straw.jpg?s=2048x2048&w=is&k=20&c=1L46K6jtSK0cuy9YTGuR7yf8621sftHxEpTkoWtmmk4=",
-    views: 3100,
-    likes: 800,
-    date: "Nov 22, 2006",
-    publisher: {
-      name: "Alice Johnson",
-      image: "https://via.placeholder.com/40x40.png?text=AJ",
-    },
-  },
-  {
-    id: 4,
-    title: "Hot Meatloaf",
-    subtitle: "Delicious and Hearty",
-    category: "Breakfast",
-    image:
-      "https://khni.kerry.com/wp-content/uploads/2019/02/Restaurant-meal-1024x680.jpg",
-    views: 1200,
-    likes: 300,
-    date: "Aug 27, 2019",
-    publisher: {
-      name: "John Doe",
-      image: "https://via.placeholder.com/40x40.png?text=JD",
-    },
-  },
-  {
-    id: 5,
-    title: "Instant Pot Pulled",
-    subtitle: "Quick and Easy",
-    category: "Main Course",
-    image:
-      "https://media.istockphoto.com/id/1081422898/photo/pan-fried-duck.jpg?s=2048x2048&w=is&k=20&c=KcDScs6hE2epagNeSD5tUuCAomdL1YK0eLLMCd5mtGU=",
-    views: 2400,
-    likes: 500,
-    date: "May 10, 2005",
-    publisher: {
-      name: "Jane Smith",
-      image: "https://via.placeholder.com/40x40.png?text=JS",
-    },
-  },
-  {
-    id: 6,
-    title: "Best Grill Salmon",
-    subtitle: "Healthy and Tasty",
-    category: "Appetizer",
-    image:
-      "https://media.istockphoto.com/id/516329534/photo/last-straw.jpg?s=2048x2048&w=is&k=20&c=1L46K6jtSK0cuy9YTGuR7yf8621sftHxEpTkoWtmmk4=",
-    views: 3100,
-    likes: 800,
-    date: "Nov 22, 2006",
-    publisher: {
-      name: "Alice Johnson",
-      image: "https://via.placeholder.com/40x40.png?text=AJ",
-    },
-  },
-  {
-    id: 7,
-    title: "Instant Pot Pulled",
-    subtitle: "Quick and Easy",
-    category: "Main Course",
-    image:
-      "https://media.istockphoto.com/id/1081422898/photo/pan-fried-duck.jpg?s=2048x2048&w=is&k=20&c=KcDScs6hE2epagNeSD5tUuCAomdL1YK0eLLMCd5mtGU=",
-    views: 2400,
-    likes: 500,
-    date: "May 10, 2005",
-    publisher: {
-      name: "Jane Smith",
-      image: "https://via.placeholder.com/40x40.png?text=JS",
-    },
-  },
-  {
-    id: 8,
-    title: "Best Grill Salmon",
-    subtitle: "Healthy and Tasty",
-    category: "Appetizer",
-    image:
-      "https://media.istockphoto.com/id/516329534/photo/last-straw.jpg?s=2048x2048&w=is&k=20&c=1L46K6jtSK0cuy9YTGuR7yf8621sftHxEpTkoWtmmk4=",
-    views: 3100,
-    likes: 800,
-    date: "Nov 22, 2006",
-    publisher: {
-      name: "Alice Johnson",
-      image: "https://via.placeholder.com/40x40.png?text=AJ",
-    },
-  },
-];
-
-const TopCategoryRecipes = () => {
+const TopCategoryRecipes = ({ recipes }) => {
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-4xl font-bold text-gray-800 mb-6">
@@ -160,7 +37,7 @@ const TopCategoryRecipes = () => {
                 Category: {recipe.category}
               </div>
               <div className="mt-2 text-gray-600 text-sm">
-                Published on: {recipe.date}
+                Published on: {recipe.publishedDate}
               </div>
               <div className="flex items-center mt-4">
                 <img

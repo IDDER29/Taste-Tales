@@ -2,40 +2,123 @@
   "blogs": [
     {
       "id": 1,
-      "title": "Lemon Garlic Roasted Chicken",
-      "introduction": "Welcome to Cooks Delight, where culinary dreams come alive! Today, we embark on a journey of flavors with a dish that promises to elevate your dining experience - our Citrus Infusion Delight: Lemon Garlic Roasted Chicken.",
-      "time": "1 Hour",
-      "difficulty": "Hard Prep",
-      "serves": "4 Serves",
-      "imageUrl": "https://media.istockphoto.com/id/134987504/photo/baked-chicken.webp?s=2048x2048&w=is&k=20&c=1GjKpuIeeoyxkNoaMSLjb2KVzyVluVKQ36dnGRSiCgc=",
-      "description": "Picture succulent chicken infused with the bright notes of lemon and the aromatic richness of garlic. It’s a symphony of flavors that will have your taste buds dancing. Join us as we delve into the art of roasting and uncover the culinary secrets that transform this simple dish into not just a meal, but a celebration of taste and tradition.",
-      "dos": [
-        "Thoroughly Clean Hands and Surfaces",
-        "Use Separate Cutting Boards",
-        "Check Internal Temperature"
-      ],
-      "donts": ["Thaw Chicken at Room Temperature", "Overcrowd the Pan"],
-      "ingredients": [
-        "1 whole chicken (about 3-4 pounds)",
-        "2 lemons, sliced",
-        "6 cloves garlic, minced",
-        "2 tablespoons olive oil",
-        "1 teaspoon dried thyme",
-        "1 teaspoon dried rosemary",
-        "Salt and black pepper to taste"
-      ],
-      "equipment": [
-        "Roasting pan",
-        "Meat thermometer",
-        "Cutting board",
-        "Kitchen twine"
-      ],
-      "nutrition": [
-        "Calories: 250",
-        "Protein: 23g",
-        "Fat: 14g",
-        "Carbohydrates: 3g"
-      ]
+      "title": "Hot Meatloaf",
+      "subtitle": "Delicious and Hearty",
+      "category": "Breakfast",
+      "image": "https://khni.kerry.com/wp-content/uploads/2019/02/Restaurant-meal-1024x680.jpg",
+      "views": 1200,
+      "likes": 329,
+      " publishedDate": "Aug 27, 2019",
+      "publisher": {
+        "name": "John Doe",
+        "image": "https://via.placeholder.com/40x40.png?text=JD"
+      },
+      "content": "\n      <h1>Hot Meatloaf</h1>\n      <h2>Delicious and Hearty</h2>\n      <p>There's nothing quite like a hearty meatloaf to start your day. Our hot meatloaf is not only delicious but also packed with the energy you need to power through your morning.</p>\n      <h3>Ingredients</h3>\n      <ul>\n        <li>1 pound ground beef</li>\n        <li>1/2 cup bread crumbs</li>\n        <li>1 egg</li>\n        <li>1/4 cup milk</li>\n        <li>1/2 cup chopped onion</li>\n        <li>Salt and pepper to taste</li>\n      </ul>\n      <h3>Preparation</h3>\n      <p>Mix all ingredients together in a large bowl. Form into a loaf and place in a baking dish. Bake at 350°F for 1 hour. Serve hot and enjoy!</p>\n    "
+    },
+    {
+      "id": 2,
+      "title": "Instant Pot Pulled Pork",
+      "subtitle": "Quick and Easy",
+      "category": "Main Course",
+      "image": "https://media.istockphoto.com/id/1081422898/photo/pan-fried-duck.jpg?s=2048x2048&w=is&k=20&c=KcDScs6hE2epagNeSD5tUuCAomdL1YK0eLLMCd5mtGU=",
+      "views": 2400,
+      "likes": 500,
+      " publishedDate": "May 10, 2005",
+      "publisher": {
+        "name": "Jane Smith",
+        "image": "https://via.placeholder.com/40x40.png?text=JS"
+      },
+      "content": "\n      <h1>Instant Pot Pulled Pork</h1>\n      <h2>Quick and Easy</h2>\n      <p>This instant pot pulled pork recipe is perfect for those who want a quick and easy meal without sacrificing flavor. In just under an hour, you can have tender and juicy pulled pork ready to serve.</p>\n      <h3>Ingredients</h3>\n      <ul>\n        <li>2 pounds pork shoulder</li>\n        <li>1 cup BBQ sauce</li>\n        <li>1/2 cup apple cider vinegar</li>\n        <li>1 tablespoon brown sugar</li>\n        <li>1 teaspoon smoked paprika</li>\n        <li>Salt and pepper to taste</li>\n      </ul>\n      <h3>Preparation</h3>\n      <p>Place all ingredients in the instant pot. Set to high pressure and cook for 45 minutes. Allow pressure to release naturally for 10 minutes, then quick release. Shred the pork and mix with remaining sauce. Serve on buns or over rice.</p>\n    "
+    },
+    {
+      "id": 3,
+      "title": "Best Grilled Salmon",
+      "subtitle": "Healthy and Tasty",
+      "category": "Appetizer",
+      "image": "https://media.istockphoto.com/id/516329534/photo/last-straw.jpg?s=2048x2048&w=is&k=20&c=1L46K6jtSK0cuy9YTGuR7yf8621sftHxEpTkoWtmmk4=",
+      "views": 3100,
+      "likes": 800,
+      " publishedDate": "Nov 22, 2006",
+      "publisher": {
+        "name": "Alice Johnson",
+        "image": "https://via.placeholder.com/40x40.png?text=AJ"
+      },
+      "content": "\n      <h1>Best Grilled Salmon</h1>\n      <h2>Healthy and Tasty</h2>\n      <p>Our grilled salmon is a delightful appetizer that combines healthiness with great taste. Perfectly grilled to bring out the rich flavors of the fish, it's sure to impress your guests.</p>\n      <h3>Ingredients</h3>\n      <ul>\n        <li>4 salmon fillets</li>\n        <li>2 tablespoons olive oil</li>\n        <li>1 tablespoon lemon juice</li>\n        <li>1 teaspoon garlic powder</li>\n        <li>Salt and pepper to taste</li>\n      </ul>\n      <h3>Preparation</h3>\n      <p>Brush salmon fillets with olive oil, lemon juice, and sprinkle with garlic powder, salt, and pepper. Grill over medium-high heat for about 5-7 minutes on each side or until the fish flakes easily with a fork. Serve with a side of vegetables or a fresh salad.</p>\n    "
+    },
+    {
+      "id": 4,
+      "title": "Hot Meatloaf",
+      "subtitle": "Delicious and Hearty",
+      "category": "Breakfast",
+      "image": "https://khni.kerry.com/wp-content/uploads/2019/02/Restaurant-meal-1024x680.jpg",
+      "views": 1200,
+      "likes": 300,
+      " publishedDate": "Aug 27, 2019",
+      "publisher": {
+        "name": "John Doe",
+        "image": "https://via.placeholder.com/40x40.png?text=JD"
+      },
+      "content": "\n      <h1>Hot Meatloaf</h1>\n      <h2>Delicious and Hearty</h2>\n      <p>There's nothing quite like a hearty meatloaf to start your day. Our hot meatloaf is not only delicious but also packed with the energy you need to power through your morning.</p>\n      <h3>Ingredients</h3>\n      <ul>\n        <li>1 pound ground beef</li>\n        <li>1/2 cup bread crumbs</li>\n        <li>1 egg</li>\n        <li>1/4 cup milk</li>\n        <li>1/2 cup chopped onion</li>\n        <li>Salt and pepper to taste</li>\n      </ul>\n      <h3>Preparation</h3>\n      <p>Mix all ingredients together in a large bowl. Form into a loaf and place in a baking dish. Bake at 350°F for 1 hour. Serve hot and enjoy!</p>\n    "
+    },
+    {
+      "id": 5,
+      "title": "Instant Pot Pulled Pork",
+      "subtitle": "Quick and Easy",
+      "category": "Main Course",
+      "image": "https://media.istockphoto.com/id/1081422898/photo/pan-fried-duck.jpg?s=2048x2048&w=is&k=20&c=KcDScs6hE2epagNeSD5tUuCAomdL1YK0eLLMCd5mtGU=",
+      "views": 2400,
+      "likes": 500,
+      " publishedDate": "May 10, 2005",
+      "publisher": {
+        "name": "Jane Smith",
+        "image": "https://via.placeholder.com/40x40.png?text=JS"
+      },
+      "content": "\n      <h1>Instant Pot Pulled Pork</h1>\n      <h2>Quick and Easy</h2>\n      <p>This instant pot pulled pork recipe is perfect for those who want a quick and easy meal without sacrificing flavor. In just under an hour, you can have tender and juicy pulled pork ready to serve.</p>\n      <h3>Ingredients</h3>\n      <ul>\n        <li>2 pounds pork shoulder</li>\n        <li>1 cup BBQ sauce</li>\n        <li>1/2 cup apple cider vinegar</li>\n        <li>1 tablespoon brown sugar</li>\n        <li>1 teaspoon smoked paprika</li>\n        <li>Salt and pepper to taste</li>\n      </ul>\n      <h3>Preparation</h3>\n      <p>Place all ingredients in the instant pot. Set to high pressure and cook for 45 minutes. Allow pressure to release naturally for 10 minutes, then quick release. Shred the pork and mix with remaining sauce. Serve on buns or over rice.</p>\n    "
+    },
+    {
+      "id": 6,
+      "title": "Best Grilled Salmon",
+      "subtitle": "Healthy and Tasty",
+      "category": "Appetizer",
+      "image": "https://media.istockphoto.com/id/516329534/photo/last-straw.jpg?s=2048x2048&w=is&k=20&c=1L46K6jtSK0cuy9YTGuR7yf8621sftHxEpTkoWtmmk4=",
+      "views": 3100,
+      "likes": 800,
+      " publishedDate": "Nov 22, 2006",
+      "publisher": {
+        "name": "Alice Johnson",
+        "image": "https://via.placeholder.com/40x40.png?text=AJ"
+      },
+      "content": "\n      <h1>Best Grilled Salmon</h1>\n      <h2>Healthy and Tasty</h2>\n      <p>Our grilled salmon is a delightful appetizer that combines healthiness with great taste. Perfectly grilled to bring out the rich flavors of the fish, it's sure to impress your guests.</p>\n      <h3>Ingredients</h3>\n      <ul>\n        <li>4 salmon fillets</li>\n        <li>2 tablespoons olive oil</li>\n        <li>1 tablespoon lemon juice</li>\n        <li>1 teaspoon garlic powder</li>\n        <li>Salt and pepper to taste</li>\n      </ul>\n      <h3>Preparation</h3>\n      <p>Brush salmon fillets with olive oil, lemon juice, and sprinkle with garlic powder, salt, and pepper. Grill over medium-high heat for about 5-7 minutes on each side or until the fish flakes easily with a fork. Serve with a side of vegetables or a fresh salad.</p>\n    "
+    },
+    {
+      "id": 7,
+      "title": "Instant Pot Pulled Pork",
+      "subtitle": "Quick and Easy",
+      "category": "Main Course",
+      "image": "https://media.istockphoto.com/id/1081422898/photo/pan-fried-duck.jpg?s=2048x2048&w=is&k=20&c=KcDScs6hE2epagNeSD5tUuCAomdL1YK0eLLMCd5mtGU=",
+      "views": 2400,
+      "likes": 500,
+      " publishedDate": "May 10, 2005",
+      "publisher": {
+        "name": "Jane Smith",
+        "image": "https://via.placeholder.com/40x40.png?text=JS"
+      },
+      "content": "\n      <h1>Instant Pot Pulled Pork</h1>\n      <h2>Quick and Easy</h2>\n      <p>This instant pot pulled pork recipe is perfect for those who want a quick and easy meal without sacrificing flavor. In just under an hour, you can have tender and juicy pulled pork ready to serve.</p>\n      <h3>Ingredients</h3>\n      <ul>\n        <li>2 pounds pork shoulder</li>\n        <li>1 cup BBQ sauce</li>\n        <li>1/2 cup apple cider vinegar</li>\n        <li>1 tablespoon brown sugar</li>\n        <li>1 teaspoon smoked paprika</li>\n        <li>Salt and pepper to taste</li>\n      </ul>\n      <h3>Preparation</h3>\n      <p>Place all ingredients in the instant pot. Set to high pressure and cook for 45 minutes. Allow pressure to release naturally for 10 minutes, then quick release. Shred the pork and mix with remaining sauce. Serve on buns or over rice.</p>\n    "
+    },
+    {
+      "id": 8,
+      "title": "Best Grilled Salmon",
+      "subtitle": "Healthy and Tasty",
+      "category": "Appetizer",
+      "image": "https://media.istockphoto.com/id/516329534/photo/last-straw.jpg?s=2048x2048&w=is&k=20&c=1L46K6jtSK0cuy9YTGuR7yf8621sftHxEpTkoWtmmk4=",
+      "views": 3100,
+      "likes": 800,
+      " publishedDate": "Nov 22, 2006",
+      "publisher": {
+        "name": "Alice Johnson",
+        "image": "https://via.placeholder.com/40x40.png?text=AJ"
+      },
+      "content": "\n      <h1>Best Grilled Salmon</h1>\n      <h2>Healthy and Tasty</h2>\n      <p>Our grilled salmon is a delightful appetizer that combines healthiness with great taste. Perfectly grilled to bring out the rich flavors of the fish, it's sure to impress your guests.</p>\n      <h3>Ingredients</h3>\n      <ul>\n        <li>4 salmon fillets</li>\n        <li>2 tablespoons olive oil</li>\n        <li>1 tablespoon lemon juice</li>\n        <li>1 teaspoon garlic powder</li>\n        <li>Salt and pepper to taste</li>\n      </ul>\n      <h3>Preparation</h3>\n      <p>Brush salmon fillets with olive oil, lemon juice, and sprinkle with garlic powder, salt, and pepper. Grill over medium-high heat for about 5-7 minutes on each side or until the fish flakes easily with a fork. Serve with a side of vegetables or a fresh salad.</p>\n    "
     }
   ]
 }

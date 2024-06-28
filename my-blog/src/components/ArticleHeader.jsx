@@ -1,30 +1,24 @@
 import React, { useState, useEffect } from "react";
+import api from "../api/posts.js";
 
 const ArticleHeader = () => {
   const [articleData, setArticleData] = useState(null);
-  const [isPanding, setIsPanding] = useState(true);
+  const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch article data from API
-    console.log("Fetching article data...");
-    fetch("http://localhost:8000/blogs")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setArticleData(data[0]);
-        setIsPanding(false);
-        setError(null);
-      })
-      .catch((error) => {
-        setIsPanding(false);
-        setError(error);
-      });
-  }, []); // The empty array ensures this effect runs only once after the initial render
+    const fetchPosts = async () => {
+      try {
+        const response = await api.get("/blogs");
+        setArticleData(response.data[0]);
+        setIsPending(false);
+      } catch (err) {
+        setError(err);
+        setIsPending(false);
+      }
+    };
+    fetchPosts();
+  }, []);
 
   const handleEdit = () => {
     console.log("Edit button clicked");
@@ -175,7 +169,7 @@ const ArticleHeader = () => {
           </button>
         </div>
       )}
-      {isPanding && <div>Loading...</div>}
+      {isPending && <div>Loading...</div>}
     </React.Fragment>
   );
 };

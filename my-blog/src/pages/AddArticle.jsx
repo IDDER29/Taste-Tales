@@ -43,8 +43,8 @@ const AddArticle = ({ onSubmit }) => {
       title,
       subtitle,
       content,
-      tags,
-      categories,
+      tags: tags.map((tag) => tag.value), // send only the value
+      categories: categories.map((category) => category.value), // send only the value
       image,
       summary,
     };
