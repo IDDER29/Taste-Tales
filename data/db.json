@@ -1,0 +1,42 @@
+{
+  "blogs": [
+    {
+      "id": 1,
+      "title": "Lemon Garlic Roasted Chicken",
+      "introduction": "Welcome to Cooks Delight, where culinary dreams come alive! Today, we embark on a journey of flavors with a dish that promises to elevate your dining experience - our Citrus Infusion Delight: Lemon Garlic Roasted Chicken.",
+      "time": "1 Hour",
+      "difficulty": "Hard Prep",
+      "serves": "4 Serves",
+      "imageUrl": "https://media.istockphoto.com/id/134987504/photo/baked-chicken.webp?s=2048x2048&w=is&k=20&c=1GjKpuIeeoyxkNoaMSLjb2KVzyVluVKQ36dnGRSiCgc=",
+      "description": "Picture succulent chicken infused with the bright notes of lemon and the aromatic richness of garlic. It’s a symphony of flavors that will have your taste buds dancing. Join us as we delve into the art of roasting and uncover the culinary secrets that transform this simple dish into not just a meal, but a celebration of taste and tradition.",
+      "dos": [
+        "Thoroughly Clean Hands and Surfaces",
+        "Use Separate Cutting Boards",
+        "Check Internal Temperature"
+      ],
+      "donts": ["Thaw Chicken at Room Temperature", "Overcrowd the Pan"],
+      "ingredients": [
+        "1 whole chicken (about 3-4 pounds)",
+        "2 lemons, sliced",
+        "6 cloves garlic, minced",
+        "2 tablespoons olive oil",
+        "1 teaspoon dried thyme",
+        "1 teaspoon dried rosemary",
+        "Salt and black pepper to taste"
+      ],
+      "equipment": [
+        "Roasting pan",
+        "Meat thermometer",
+        "Cutting board",
+        "Kitchen twine"
+      ],
+      "nutrition": [
+        "Calories: 250",
+        "Protein: 23g",
+        "Fat: 14g",
+        "Carbohydrates: 3g"
+      ]
+    },
+    {}
+  ]
+}
