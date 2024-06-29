@@ -4,15 +4,14 @@ import TrendyRecipes from "../components/TrendyRecipes";
 import Categories from "../components/Categories";
 import TopCategoryRecipes from "../components/TopCategoryRecipes";
 import Subscription from "../components/Subscription";
-import Footer from "../components/Footer";
 
-function Home() {
+function Home({ articles }) {
   return (
     <>
       <RecipeBlog />
       <TrendyRecipes />
       <Categories />
-      <TopCategoryRecipes />
+      <TopCategoryRecipes recipes={articles} />
       <Subscription />
     </>
   );

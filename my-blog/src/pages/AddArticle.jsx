@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
+import axios from "axios";
 
 const AddArticle = ({ onSubmit }) => {
   const [title, setTitle] = useState("");
@@ -9,8 +10,7 @@ const AddArticle = ({ onSubmit }) => {
   const [content, setContent] = useState("");
   const [tags, setTags] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [image, setImage] = useState(null);
-  const [summary, setSummary] = useState("");
+  const [imageUrl, setImageUrl] = useState(null);
 
   const tagOptions = [
     { value: "Tech", label: "Tech" },
@@ -26,7 +26,26 @@ const AddArticle = ({ onSubmit }) => {
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
-    setImage(URL.createObjectURL(file));
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
+    );
+
+    axios
+      .post(process.env.REACT_APP_CLOUDINARY_URL, formData)
+      .then((response) => {
+        console.log("Image uploaded to Cloudinary", response.data);
+        setImageUrl(response.data.secure_url); // Set the URL of the uploaded image
+      })
+      .catch((error) => {
+        console.error(
+          "Error uploading the image:",
+          error.response ? error.response.data : error.message
+        );
+      });
   };
 
   const handleTagChange = (selectedOptions) => {
@@ -37,16 +56,15 @@ const AddArticle = ({ onSubmit }) => {
     setCategories(selectedOptions);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const articleData = {
       title,
       subtitle,
       content,
-      tags,
-      categories,
-      image,
-      summary,
+      tags: tags.map((tag) => tag.value),
+      categories: categories.map((category) => category.value),
+      imageUrl,
     };
     onSubmit(articleData);
   };
@@ -78,10 +96,10 @@ const AddArticle = ({ onSubmit }) => {
               className="border-2 border-dashed border-gray-300 rounded-md p-6 cursor-pointer"
               onClick={() => document.getElementById("image").click()}
             >
-              {image ? (
+              {imageUrl ? (
                 <img
-                  src={image}
-                  alt="Article"
+                  src={imageUrl}
+                  alt="Uploaded"
                   className="rounded-md shadow-md w-full object-cover h-72"
                 />
               ) : (
