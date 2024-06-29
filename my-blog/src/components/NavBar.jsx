@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogPanel, PopoverGroup } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon, BellIcon } from "@heroicons/react/24/outline";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Example() {
+export default function NavBar({ notifications }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   return (
     <header className="bg-white">
@@ -40,7 +41,7 @@ export default function Example() {
             Home
           </a>
           <a
-            href="/creat-article"
+            href="/create-article"
             className="text-sm font-semibold leading-6 text-gray-900"
           >
             Create Article
@@ -52,8 +53,22 @@ export default function Example() {
             About Us
           </a>
         </PopoverGroup>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
+          <button
+            className="relative text-gray-700"
+            onClick={() => setShowNotifications(!showNotifications)}
+          >
+            <BellIcon className="h-6 w-6" aria-hidden="true" />
+            {notifications.length > 0 && (
+              <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                {notifications.length}
+              </span>
+            )}
+          </button>
+          <a
+            href="#"
+            className="ml-6 text-sm font-semibold leading-6 text-gray-900"
+          >
             Log in <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
@@ -93,7 +108,7 @@ export default function Example() {
                   Home
                 </a>
                 <a
-                  href="/creat-article"
+                  href="/create-article"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Create Article
@@ -117,6 +132,29 @@ export default function Example() {
           </div>
         </DialogPanel>
       </Dialog>
+      {showNotifications && (
+        <div className="fixed top-0 right-0 mt-16 mr-6 w-80 bg-white border border-gray-200 shadow-lg rounded-lg z-50">
+          <div className="p-4">
+            <h3 className="text-lg font-medium text-gray-900">Notifications</h3>
+            <ul className="mt-4 space-y-2">
+              {notifications.map((notification, index) => (
+                <li
+                  key={index}
+                  className={`p-2 border rounded ${
+                    notification.type === "new"
+                      ? "border-green-500"
+                      : notification.type === "edit"
+                      ? "border-yellow-500"
+                      : "border-red-500"
+                  }`}
+                >
+                  {notification.message}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

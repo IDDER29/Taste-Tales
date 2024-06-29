@@ -1,20 +1,20 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const ArticleHeader = ({ articleData, onDelete }) => {
+  const navigate = useNavigate();
+
   const handleEdit = () => {
-    console.log("Edit button clicked");
-    // Add your edit logic here
+    navigate(`/edit-article/${articleData.id}`);
   };
 
   const handleDelete = () => {
-    console.log("Delete button clicked");
     onDelete(articleData.id);
   };
 
   return (
     <article className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      {/* Title and Publisher Section */}
-      <header className=" mb-8">
+      <header className="mb-8">
         <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
           {articleData.title}
         </h1>
@@ -32,7 +32,6 @@ const ArticleHeader = ({ articleData, onDelete }) => {
         </div>
       </header>
 
-      {/* Image Section */}
       <figure className="mb-8">
         <img
           src={articleData.image}
@@ -41,8 +40,7 @@ const ArticleHeader = ({ articleData, onDelete }) => {
         />
       </figure>
 
-      {/* Additional Information Section */}
-      <section className="mb-8 ">
+      <section className="mb-8">
         <div className="flex justify-center space-x-6 text-sm text-gray-600">
           <span className="flex items-center space-x-2">
             <svg
@@ -50,7 +48,7 @@ const ArticleHeader = ({ articleData, onDelete }) => {
               fill="currentColor"
               viewBox="0 0 20 20"
             >
-              <path d="M9.05 3.636a1 1 0 011.9 0l.341 1.027a1 1 0 00.95.688h1.084a1 1 0 01.588 1.81l-.886.646a1 1 00-.364 1.118l.341 1.027a1 1 01-1.537 1.118l-.886-.646a1 1 00-1.176 0l-.886.646a1 1 01-1.537-1.118l.341-1.027a1 1 00-.364-1.118l-.886-.646a1 1 01.588-1.81h1.084a1 1 00.95-.688l.341-1.027z" />
+              <path d="M9.05 3.636a1 1 0 011.9 0l.341 1.027a1 1 00.95.688h1.084a1 1 01.588 1.81l-.886.646a1 1 00-.364 1.118l.341 1.027a1 1 01-1.537 1.118l-.886-.646a1 1 00-1.176 0l-.886.646a1 1 01-1.537-1.118l.341-1.027a1 1 00-.364-1.118l-.886-.646a1 1 01.588-1.81h1.084a1 1 00.95-.688l.341-1.027z" />
             </svg>
             <span>{articleData.views} Views</span>
           </span>
@@ -77,7 +75,6 @@ const ArticleHeader = ({ articleData, onDelete }) => {
         </div>
       </section>
 
-      {/* Content Section */}
       <section className="prose lg:prose-xl prose-blue mb-8 text-left">
         <div
           dangerouslySetInnerHTML={{ __html: articleData.content }}
