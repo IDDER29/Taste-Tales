@@ -1,15 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaHeart, FaRegBookmark } from "react-icons/fa";
 
 const TopCategoryRecipes = ({ recipes }) => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredRecipes = recipes.filter((recipe) =>
+    recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-4xl font-bold text-gray-800 mb-6">
         <span className="text-red-500">Top</span> Category Recipes
       </h2>
+      <input
+        type="text"
+        placeholder="Search by title"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="mb-6 p-2 border border-gray-300 rounded-lg w-full"
+      />
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-        {recipes.map((recipe) => (
+        {filteredRecipes.map((recipe) => (
           <Link to={`/view-article/${recipe.id}`} key={recipe.id}>
             <div className="relative rounded-lg shadow-lg overflow-hidden">
               <img
