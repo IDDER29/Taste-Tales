@@ -45,7 +45,7 @@ const RecipeBlog = ({ articles }) => {
                 <div className="flex flex-col lg:flex-row bg-white rounded-lg shadow-md overflow-hidden">
                   <div
                     className="h-48 lg:h-auto lg:w-48 flex-none bg-cover"
-                    style={{ backgroundImage: `url(${article.image})` }}
+                    style={{ backgroundImage: `url(${article.imageUrl})` }}
                     title={article.title}
                   ></div>
                   <div className="p-4 flex flex-col justify-between leading-normal">

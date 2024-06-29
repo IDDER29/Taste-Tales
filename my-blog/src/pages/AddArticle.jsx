@@ -29,6 +29,7 @@ const AddArticle = ({ onSubmit }) => {
     e.preventDefault();
     try {
       setFile(e.target.files[0]);
+      setImageUrl(URL.createObjectURL(e.target.files[0]));
       console.log("file", file);
     } catch (err) {
       console.log(err);

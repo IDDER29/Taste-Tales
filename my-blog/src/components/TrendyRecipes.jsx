@@ -29,7 +29,7 @@ const TrendyRecipes = ({ articles }) => {
                 className="bg-white rounded-lg shadow-lg overflow-hidden"
               >
                 <img
-                  src={article.image}
+                  src={article.imageUrl}
                   alt={article.title}
                   className="w-full h-40 object-cover"
                 />
