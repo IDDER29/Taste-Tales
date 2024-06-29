@@ -3,15 +3,11 @@ import { FaTiktok, FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white">
+    <footer className="bg-red-400 text-white">
       <div className="container mx-auto py-6">
         <div className="flex flex-col sm:flex-row justify-between items-center pb-6">
           <div className="flex justify-start items-center">
-            <img
-              src="https://via.placeholder.com/150x50.png?text=Blog+Logo"
-              alt="Blog Logo"
-              className="h-12"
-            />
+            <img src="./blogLogo.png" alt="Blog Logo" className="h-16" />
           </div>
           <div className="flex justify-center items-center space-x-4 my-4 sm:my-0">
             <a href="#home" className="hover:underline">
@@ -25,16 +21,16 @@ const Footer = () => {
             </a>
           </div>
           <div className="flex justify-end items-center space-x-4">
-            <a href="#tiktok" className="text-gray-400 hover:text-white">
+            <a href="#tiktok" className="text-white hover:text-gray-500">
               <FaTiktok size={24} />
             </a>
-            <a href="#facebook" className="text-gray-400 hover:text-white">
+            <a href="#facebook" className="text-white hover:text-blue-500">
               <FaFacebook size={24} />
             </a>
-            <a href="#instagram" className="text-gray-400 hover:text-white">
+            <a href="#instagram" className="text-white hover:text-pink-500">
               <FaInstagram size={24} />
             </a>
-            <a href="#youtube" className="text-gray-400 hover:text-white">
+            <a href="#youtube" className="text-whit hover:text-red-600">
               <FaYoutube size={24} />
             </a>
           </div>

@@ -11,7 +11,7 @@ export default function NavBar({ notifications }) {
   const [showNotifications, setShowNotifications] = useState(false);
 
   return (
-    <header className="bg-white">
+    <header className="bg-red-400">
       <nav
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
         aria-label="Global"
@@ -19,11 +19,7 @@ export default function NavBar({ notifications }) {
         <div className="flex lg:flex-1">
           <a href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img
-              className="h-8 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt=""
-            />
+            <img className="h-14 w-auto" src="./blogLogo.png" alt="" />
           </a>
         </div>
         <div className="flex lg:hidden">
@@ -37,25 +33,25 @@ export default function NavBar({ notifications }) {
           </button>
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-          <a href="/" className="text-sm font-semibold leading-6 text-gray-900">
+          <a href="/" className="text-sm font-semibold leading-6 text-white ">
             Home
           </a>
           <a
             href="/create-article"
-            className="text-sm font-semibold leading-6 text-gray-900"
+            className="text-sm font-semibold leading-6 text-white"
           >
             Create Article
           </a>
           <a
             href="/about"
-            className="text-sm font-semibold leading-6 text-gray-900"
+            className="text-sm font-semibold leading-6 text-white"
           >
             About Us
           </a>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
           <button
-            className="relative text-gray-700"
+            className="relative text-white p-2.5 rounded-md hover:bg-red-500"
             onClick={() => setShowNotifications(!showNotifications)}
           >
             <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -67,7 +63,7 @@ export default function NavBar({ notifications }) {
           </button>
           <a
             href="#"
-            className="ml-6 text-sm font-semibold leading-6 text-gray-900"
+            className="ml-6 text-sm font-semibold leading-6 text-white"
           >
             Log in <span aria-hidden="true">&rarr;</span>
           </a>

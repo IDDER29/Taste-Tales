@@ -25,7 +25,7 @@ const RecipeBlog = ({ articles }) => {
           <div className="lg:col-span-2">
             <img
               className="w-full h-auto rounded-lg shadow-md"
-              src="https://via.placeholder.com/800x400"
+              src="https://www.upmenu.com/wp-content/uploads/2023/06/restaurant-blog1.jpg"
               alt="Main Blog"
             />
             <div className="mt-4">

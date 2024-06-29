@@ -3,15 +3,15 @@ import React from "react";
 const Subscription = () => {
   return (
     <div
-      className="relative p-6 rounded-lg shadow-md text-white"
+      className="relative p-6  shadow-md text-white"
       style={{
         backgroundImage:
-          'url("https://via.placeholder.com/1200x600.png?text=Background+Image")',
+          'url("https://villacdn.villagroupresorts.com/uploads/article/cover_en/36/gastronomica-2018-01.jpg")',
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      <div className="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
+      <div className="absolute inset-0 bg-black opacity-50"></div>
       <div className="relative z-10 max-w-lg mx-auto text-center">
         <h2 className="text-4xl font-bold mb-4">
           Get a Subscription to Taste Tales Blog
