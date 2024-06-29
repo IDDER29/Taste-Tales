@@ -4,7 +4,7 @@ import { FaFacebook, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
 const HeroSection = () => {
   return (
     <div
-      className="relative flex items-center justify-center h-screen text-white"
+      className="relative flex items-center justify-center py-24 text-white"
       style={{
         backgroundImage:
           'url("https://via.placeholder.com/1200x800.png?text=Pizza")',
