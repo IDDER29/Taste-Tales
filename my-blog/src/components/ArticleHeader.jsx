@@ -34,7 +34,7 @@ const ArticleHeader = ({ articleData, onDelete }) => {
 
       <figure className="mb-8">
         <img
-          src={articleData.image}
+          src={articleData.imageUrl}
           alt={articleData.title}
           className="w-full h-auto rounded-lg shadow-md"
         />

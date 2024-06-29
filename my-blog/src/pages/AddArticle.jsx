@@ -11,6 +11,7 @@ const AddArticle = ({ onSubmit }) => {
   const [tags, setTags] = useState([]);
   const [categories, setCategories] = useState([]);
   const [imageUrl, setImageUrl] = useState(null);
+  const [file, setFile] = useState(null);
 
   const tagOptions = [
     { value: "Tech", label: "Tech" },
@@ -24,29 +25,14 @@ const AddArticle = ({ onSubmit }) => {
     { value: "Business", label: "Business" },
   ];
 
-  const handleImageUpload = async (event) => {
-    const file = await event.target.files[0];
-    console.log("Cloudinary URL:", process.env.REACT_APP_CLOUDINARY_URL);
-    console.log(
-      "Upload Preset:",
-      process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
-    );
-
-    const formData = await new FormData();
-    formData.append("file", file);
-    formData.append(
-      "upload_preset",
-      process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
-    );
-
-    await axios
-      .post(`https://api.cloudinary.com/v1_1/dvnwx89ao/image/upload`, formData)
-      .then((response) => {
-        setImageUrl(response.data.secure_url); // Set the URL of the uploaded image
-      })
-      .catch((error) => {
-        console.error("Error uploading the image:", error);
-      });
+  const handleImageUpload = async (e) => {
+    e.preventDefault();
+    try {
+      setFile(e.target.files[0]);
+      console.log("file", file);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleTagChange = (selectedOptions) => {
@@ -59,13 +45,21 @@ const AddArticle = ({ onSubmit }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const form = new FormData();
+    form.append("file", file);
+    form.append("upload_preset", "cg4zfcut");
+    const img = await axios.post(
+      "https://api.cloudinary.com/v1_1/dvnwx89ao/upload",
+      form
+    );
+
     const articleData = {
       title,
       subtitle,
       content,
       tags: tags.map((tag) => tag.value),
       categories: categories.map((category) => category.value),
-      imageUrl,
+      imageUrl: img.data.secure_url,
     };
     onSubmit(articleData);
   };
