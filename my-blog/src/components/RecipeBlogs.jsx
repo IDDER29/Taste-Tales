@@ -1,35 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const RecipeBlog = () => {
-  const articles = [
-    {
-      id: 1,
-      title: "Hot Meatloaf",
-      date: "Aug 27, 2019",
-      category: "Breakfast",
-      description: "Lorem ipsum dolor sit amet",
-      image:
-        "https://khni.kerry.com/wp-content/uploads/2019/02/Restaurant-meal-1024x680.jpg",
-    },
-    {
-      id: 2,
-      title: "Instant Pot Pulled",
-      date: "May 10, 2005",
-      category: "Main Course",
-      description: "Lorem ipsum dolor sit amet",
-      image:
-        "https://media.istockphoto.com/id/1081422898/photo/pan-fried-duck.jpg?s=2048x2048&w=is&k=20&c=KcDScs6hE2epagNeSD5tUuCAomdL1YK0eLLMCd5mtGU=",
-    },
-    {
-      id: 3,
-      title: "Best Grill Salmon",
-      date: "Nov 22, 2006",
-      category: "Appetizer",
-      description: "Lorem ipsum dolor sit amet",
-      image:
-        "https://media.istockphoto.com/id/516329534/photo/last-straw.jpg?s=2048x2048&w=is&k=20&c=1L46K6jtSK0cuy9YTGuR7yf8621sftHxEpTkoWtmmk4=",
-    },
-  ];
+const RecipeBlog = ({ articles }) => {
   return (
     <div className="relative bg-white p-6 rounded-lg shadow-md">
       <div
@@ -45,20 +17,20 @@ const RecipeBlog = () => {
         />
       </div>
 
-      <div className="mx-auto max-w-7xl">
-        <h1 className="text-4xl font-bold text-gray-800 mb-6">
+      <div className="mx-auto ">
+        <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
           <span className="text-red-500">Recipe</span> Blogs
         </h1>
-        <div className="flex flex-col lg:flex-row lg:space-x-8">
-          <div className="lg:flex-1">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
             <img
               className="w-full h-auto rounded-lg shadow-md"
-              src="https://via.placeholder.com/800x400"
+              src="https://www.upmenu.com/wp-content/uploads/2023/06/restaurant-blog1.jpg"
               alt="Main Blog"
             />
             <div className="mt-4">
               <p className="text-gray-600 text-sm">November 30, 2016</p>
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-2xl font-semibold text-gray-800">
                 Our Recipes Blog
               </h2>
               <p className="text-gray-600 mt-2">
@@ -67,29 +39,37 @@ const RecipeBlog = () => {
               </p>
             </div>
           </div>
-          <div className="mt-6 lg:mt-0 lg:flex-1">
+          <div className="lg:col-span-1 space-y-8 flex flex-col">
             {articles.map((article) => (
-              <div key={article.id} className="flex mb-4">
-                <img
-                  className="w-16 h-16 object-cover rounded-lg shadow-md"
-                  src={article.image}
-                  alt={article.title}
-                />
-                <div className="ml-4">
-                  <p className="text-sm text-gray-500">{article.date}</p>
-                  <h3 className="text-md font-semibold text-gray-800">
-                    {article.title}
-                  </h3>
-                  <p className="text-sm text-gray-600">{article.description}</p>
-                  <span className="inline-block mt-2 text-xs text-white bg-green-500 px-2 py-1 rounded-full">
-                    {article.category}
-                  </span>
+              <Link to={`/view-article/${article.id}`} key={article.id}>
+                <div className="flex flex-col lg:flex-row bg-white rounded-lg shadow-md overflow-hidden">
+                  <div
+                    className="h-48 lg:h-auto lg:w-48 flex-none bg-cover"
+                    style={{ backgroundImage: `url(${article.imageUrl})` }}
+                    title={article.title}
+                  ></div>
+                  <div className="p-4 flex flex-col justify-between leading-normal">
+                    <div>
+                      <p className="text-gray-600 text-sm">
+                        {article.publishedDate}
+                      </p>
+                      <h3 className="text-xl font-semibold text-gray-800">
+                        {article.title}
+                      </h3>
+                      <p className="text-gray-600 mt-2">{article.subtitle}</p>
+                    </div>
+                    <div className="flex items-center mt-4 lg:mt-0">
+                      <span className="inline-block text-xs text-white bg-green-500 px-2 py-1 rounded-full">
+                        {article.category}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
-        <div className="mt-6 text-right">
+        <div className="mt-8 text-center">
           <button className="text-blue-500 hover:underline">View more</button>
         </div>
       </div>

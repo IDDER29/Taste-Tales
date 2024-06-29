@@ -1,17 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
 import axios from "axios";
 
-const AddArticle = ({ onSubmit }) => {
-  const [title, setTitle] = useState("");
-  const [subtitle, setSubtitle] = useState("");
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [imageUrl, setImageUrl] = useState(null);
-  const [file, setFile] = useState(null);
+const EditArticle = ({ articleData, onUpdate }) => {
+  const [title, setTitle] = useState(articleData.title);
+  const [subtitle, setSubtitle] = useState(articleData.subtitle);
+  const [content, setContent] = useState(articleData.content);
+  const [tags, setTags] = useState(
+    articleData.tags.map((tag) => ({ value: tag, label: tag }))
+  );
+  const [categories, setCategories] = useState(
+    articleData.categories.map((category) => ({
+      value: category,
+      label: category,
+    }))
+  );
+  const [imageUrl, setImageUrl] = useState(articleData.imageUrl);
 
   const tagOptions = [
     { value: "Tech", label: "Tech" },
@@ -25,15 +31,28 @@ const AddArticle = ({ onSubmit }) => {
     { value: "Business", label: "Business" },
   ];
 
-  const handleImageUpload = async (e) => {
-    e.preventDefault();
-    try {
-      setFile(e.target.files[0]);
-      setImageUrl(URL.createObjectURL(e.target.files[0]));
-      console.log("file", file);
-    } catch (err) {
-      console.log(err);
-    }
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
+    );
+
+    axios
+      .post(process.env.REACT_APP_CLOUDINARY_URL, formData)
+      .then((response) => {
+        console.log("Image uploaded to Cloudinary", response.data);
+        setImageUrl(response.data.secure_url); // Set the URL of the uploaded image
+      })
+      .catch((error) => {
+        console.error(
+          "Error uploading the image:",
+          error.response ? error.response.data : error.message
+        );
+      });
   };
 
   const handleTagChange = (selectedOptions) => {
@@ -46,30 +65,21 @@ const AddArticle = ({ onSubmit }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const form = new FormData();
-    form.append("file", file);
-    form.append("upload_preset", "cg4zfcut");
-    const img = await axios.post(
-      "https://api.cloudinary.com/v1_1/dvnwx89ao/upload",
-      form
-    );
-
-    const articleData = {
+    const updatedArticleData = {
+      ...articleData,
       title,
       subtitle,
       content,
       tags: tags.map((tag) => tag.value),
       categories: categories.map((category) => category.value),
-      imageUrl: img.data.secure_url,
+      imageUrl,
     };
-    onSubmit(articleData);
+    onUpdate(updatedArticleData);
   };
 
   return (
     <div className="container mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold text-center mb-8">
-        Create and Publish an Article
-      </h1>
+      <h1 className="text-4xl font-bold text-center mb-8">Edit Your Article</h1>
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-4 gap-6"
@@ -195,7 +205,7 @@ const AddArticle = ({ onSubmit }) => {
             type="submit"
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Publish
+            Update
           </button>
         </div>
       </form>
@@ -203,4 +213,4 @@ const AddArticle = ({ onSubmit }) => {
   );
 };
 
-export default AddArticle;
+export default EditArticle;

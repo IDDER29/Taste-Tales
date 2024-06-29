@@ -13,7 +13,7 @@ const TopCategoryRecipes = ({ recipes }) => {
           <Link to={`/view-article/${recipe.id}`} key={recipe.id}>
             <div className="relative rounded-lg shadow-lg overflow-hidden">
               <img
-                src={recipe.image}
+                src={recipe.imageUrl}
                 alt={recipe.title}
                 className="w-full h-40 object-cover"
               />

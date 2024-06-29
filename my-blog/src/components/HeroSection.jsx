@@ -3,15 +3,7 @@ import { FaFacebook, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
 
 const HeroSection = () => {
   return (
-    <div
-      className="relative flex items-center justify-center h-screen text-white"
-      style={{
-        backgroundImage:
-          'url("https://via.placeholder.com/1200x800.png?text=Pizza")',
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
+    <div className="relative flex items-center justify-center py-24 text-white bg-cover bg-center  bg-[url('https://wallpapercave.com/wp/wp9754130.jpg')]">
       <div className="absolute inset-0 bg-black opacity-50"></div>
       <div className="relative z-10 w-full max-w-3xl text-center">
         <p className="text-xl mb-4">Discover the Best Recipes</p>
