@@ -17,7 +17,7 @@ const RecipeBlog = ({ articles }) => {
         />
       </div>
 
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto ">
         <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
           <span className="text-red-500">Recipe</span> Blogs
         </h1>

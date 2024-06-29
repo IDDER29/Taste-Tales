@@ -24,27 +24,28 @@ const AddArticle = ({ onSubmit }) => {
     { value: "Business", label: "Business" },
   ];
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
+  const handleImageUpload = async (event) => {
+    const file = await event.target.files[0];
+    console.log("Cloudinary URL:", process.env.REACT_APP_CLOUDINARY_URL);
+    console.log(
+      "Upload Preset:",
+      process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
+    );
 
-    const formData = new FormData();
+    const formData = await new FormData();
     formData.append("file", file);
     formData.append(
       "upload_preset",
       process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
     );
 
-    axios
-      .post(process.env.REACT_APP_CLOUDINARY_URL, formData)
+    await axios
+      .post(`https://api.cloudinary.com/v1_1/dvnwx89ao/image/upload`, formData)
       .then((response) => {
-        console.log("Image uploaded to Cloudinary", response.data);
         setImageUrl(response.data.secure_url); // Set the URL of the uploaded image
       })
       .catch((error) => {
-        console.error(
-          "Error uploading the image:",
-          error.response ? error.response.data : error.message
-        );
+        console.error("Error uploading the image:", error);
       });
   };
 
