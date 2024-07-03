@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FilteredArticlesByViewContext } from "../pages/Home";
 
-const TrendyRecipes = ({ articles }) => {
+const TrendyRecipes = () => {
+  const articles = React.useContext(FilteredArticlesByViewContext);
   return (
     <div className="relative bg-white p-6 rounded-lg ">
       <div
@@ -23,7 +25,7 @@ const TrendyRecipes = ({ articles }) => {
         </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles.map((article) => (
-            <Link to={`/view-article/${article.id}`} key={article.id}>
+            <Link to={`/articles/${article.id}`} key={article.id}>
               <div
                 key={article.id}
                 className="bg-white rounded-lg shadow-lg overflow-hidden"

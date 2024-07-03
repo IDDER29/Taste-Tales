@@ -3,11 +3,13 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const EditArticle = ({ articleData, onUpdate }) => {
   const [title, setTitle] = useState(articleData.title);
   const [subtitle, setSubtitle] = useState(articleData.subtitle);
   const [content, setContent] = useState(articleData.content);
+  const navigate = useNavigate();
   const [tags, setTags] = useState(
     articleData.tags.map((tag) => ({ value: tag, label: tag }))
   );
@@ -75,6 +77,7 @@ const EditArticle = ({ articleData, onUpdate }) => {
       imageUrl,
     };
     onUpdate(updatedArticleData);
+    navigate(`/`);
   };
 
   return (

@@ -3,6 +3,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AddArticle = ({ onSubmit }) => {
   const [title, setTitle] = useState("");
@@ -12,6 +13,7 @@ const AddArticle = ({ onSubmit }) => {
   const [categories, setCategories] = useState([]);
   const [imageUrl, setImageUrl] = useState(null);
   const [file, setFile] = useState(null);
+  const navigate = useNavigate();
 
   const tagOptions = [
     { value: "Tech", label: "Tech" },
@@ -20,10 +22,19 @@ const AddArticle = ({ onSubmit }) => {
   ];
 
   const categoryOptions = [
-    { value: "Lifestyle", label: "Lifestyle" },
-    { value: "Education", label: "Education" },
-    { value: "Business", label: "Business" },
+    { value: "Breakfast", label: "Breakfast" },
+    { value: "Main Course", label: "Main Course" },
+    { value: "Appetizer", label: "Appetizer" },
+    { value: "Dessert", label: "Dessert" },
   ];
+
+  const handleTagChange = (selectedOptions) => {
+    setTags(selectedOptions);
+  };
+
+  const handleCategoryChange = (selectedOptions) => {
+    setCategories(selectedOptions);
+  };
 
   const handleImageUpload = async (e) => {
     e.preventDefault();
@@ -35,15 +46,6 @@ const AddArticle = ({ onSubmit }) => {
       console.log(err);
     }
   };
-
-  const handleTagChange = (selectedOptions) => {
-    setTags(selectedOptions);
-  };
-
-  const handleCategoryChange = (selectedOptions) => {
-    setCategories(selectedOptions);
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = new FormData();
@@ -53,16 +55,17 @@ const AddArticle = ({ onSubmit }) => {
       "https://api.cloudinary.com/v1_1/dvnwx89ao/upload",
       form
     );
-
+    const category = categories[0].value;
     const articleData = {
       title,
       subtitle,
       content,
       tags: tags.map((tag) => tag.value),
-      categories: categories.map((category) => category.value),
+      category,
       imageUrl: img.data.secure_url,
     };
     onSubmit(articleData);
+    navigate(`/`);
   };
 
   return (
