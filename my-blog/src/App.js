@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import Home from './pages/Home';
 import AddArticle from './pages/AddArticle';
 import ViewArticle from './pages/ViewArticle';
@@ -10,53 +11,31 @@ import NoPage from './pages/NoPage';
 import HeroSection from './components/HeroSection';
 import Footer from './components/Footer';
 import './App.css';
+import { getAllArticles, addArticle, deleteAnArticle, updateAnArticle } from './features/article/articleSlice';
 import api from "./api/posts";
-import { v4 as uuid } from "uuid";
 
 function App() {
-  const [articleData, setArticleData] = useState([]);
+  const articleData = useSelector(state => state.article.articles);
+  const dispatch = useDispatch();
   const [notifications, setNotifications] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await api.get("/blogs");
-        console.log(response.data);
-        setArticleData(response.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchPosts();
-  }, []);
+    dispatch(getAllArticles());
+  }, [dispatch]);
 
   const handleArticleSubmit = async (data) => {
-    const request = {
-      id: uuid(),
-      ...data,
-      views: 0,
-      likes: 0,
-      publishedDate: data.publishedDate || new Date().toISOString(),
-      publisher: data.author || {
-        name: "Anonymous",
-        image: "https://via.placeholder.com/40x40.png?text=JD",
-      }
-    };
-    const response = await api.post("/blogs", request);
-    setArticleData([...articleData, response.data]);
+    dispatch(addArticle(data));
     setNotifications([...notifications, { type: 'new', message: 'New article created!' }]);
   };
 
   const handleDeleteArticle = async (id) => {
-    await api.delete(`/blogs/${id}`);
-    setArticleData(articleData.filter(article => article.id !== id));
+    dispatch(deleteAnArticle(id));
     setNotifications([...notifications, { type: 'delete', message: 'Article deleted!' }]);
   };
 
   const handleUpdateArticle = async (updatedArticle) => {
-    await api.put(`/blogs/${updatedArticle.id}`, updatedArticle);
-    setArticleData(articleData.map(article => article.id === updatedArticle.id ? updatedArticle : article));
+    dispatch(updateAnArticle(updatedArticle));
     setNotifications([...notifications, { type: 'edit', message: 'Article updated!' }]);
   };
 
