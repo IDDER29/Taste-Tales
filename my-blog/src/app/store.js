@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import articleReducer from '../features/article/articleSlice';
+import articleReducer from "../features/article/articleSlice";
 
-export const store = configureStore({
+const store = configureStore({
     reducer: {
-        article: articleReducer
-    }
+        article: articleReducer,
+    },
 });
+
+export default store;

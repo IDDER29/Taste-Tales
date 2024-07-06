@@ -1,9 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FilteredArticlesByViewContext } from "../pages/Home";
 
-const RecipeBlog = () => {
-  const articles = React.useContext(FilteredArticlesByViewContext);
+const RecipeBlog = ({ articles }) => {
   return (
     <div className="relative bg-white p-6 rounded-lg shadow-md">
       <div

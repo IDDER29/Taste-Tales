@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import { FaHeart, FaRegBookmark } from "react-icons/fa";
 import { SelectedCategoryContext } from "../pages/Home";
 
-const TopCategoryRecipes = () => {
-  const recipes = useContext(SelectedCategoryContext);
+const TopCategoryRecipes = ({ recipes }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredRecipes = recipes.filter((recipe) =>

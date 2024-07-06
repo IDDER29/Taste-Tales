@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,7 +11,6 @@ import NavBar from './components/NavBar';
 import NoPage from './pages/NoPage';
 import HeroSection from './components/HeroSection';
 import Footer from './components/Footer';
-import './App.css';
 import { getAllArticles, addArticle, deleteAnArticle, updateAnArticle } from './features/article/articleSlice';
 import api from "./api/posts";
 
