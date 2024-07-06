@@ -34,8 +34,8 @@ function Home() {
 
   return (
     <>
-      <RecipeBlog articles={filteredArticlesByViews} />
-      <TrendyRecipes articles={filteredArticlesByViews} />
+      <RecipeBlog />
+      <TrendyRecipes />
       <Categories
         selectedCategory={selectedCategory}
         setSelectedCategory={handleCategoryChange}
