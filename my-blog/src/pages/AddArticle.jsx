@@ -4,8 +4,11 @@ import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addArticle } from "../features/article/articleSlice";
+import { v4 as uuidv4 } from "uuid"; // to generate unique id
 
-const AddArticle = ({ onSubmit }) => {
+const AddArticle = () => {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [content, setContent] = useState("");
@@ -14,6 +17,7 @@ const AddArticle = ({ onSubmit }) => {
   const [imageUrl, setImageUrl] = useState(null);
   const [file, setFile] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const tagOptions = [
     { value: "Tech", label: "Tech" },
@@ -41,11 +45,11 @@ const AddArticle = ({ onSubmit }) => {
     try {
       setFile(e.target.files[0]);
       setImageUrl(URL.createObjectURL(e.target.files[0]));
-      console.log("file", file);
     } catch (err) {
       console.log(err);
     }
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = new FormData();
@@ -55,16 +59,25 @@ const AddArticle = ({ onSubmit }) => {
       "https://api.cloudinary.com/v1_1/dvnwx89ao/upload",
       form
     );
-    const category = categories[0].value;
+
     const articleData = {
+      id: uuidv4(),
       title,
       subtitle,
       content,
       tags: tags.map((tag) => tag.value),
-      category,
+      category: categories[0].value,
       imageUrl: img.data.secure_url,
+      views: 0,
+      likes: 0,
+      publishedDate: new Date().toISOString(),
+      publisher: {
+        name: "Anonymous",
+        image: "https://via.placeholder.com/40x40.png?text=JD",
+      },
     };
-    onSubmit(articleData);
+
+    dispatch(addArticle(articleData));
     navigate(`/`);
   };
 

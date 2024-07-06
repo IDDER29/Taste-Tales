@@ -1,14 +1,24 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogPanel, PopoverGroup } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, BellIcon } from "@heroicons/react/24/outline";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  toggleMobileMenu,
+  toggleNotifications,
+  selectNotifications,
+  selectMobileMenuOpen,
+  selectShowNotifications,
+} from "../features/ui/uiSlice";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function NavBar({ notifications }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
+export default function NavBar() {
+  const dispatch = useDispatch();
+  const notifications = useSelector(selectNotifications);
+  const mobileMenuOpen = useSelector(selectMobileMenuOpen);
+  const showNotifications = useSelector(selectShowNotifications);
 
   return (
     <header className="bg-red-400">
@@ -26,7 +36,7 @@ export default function NavBar({ notifications }) {
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-            onClick={() => setMobileMenuOpen(true)}
+            onClick={() => dispatch(toggleMobileMenu())}
           >
             <span className="sr-only">Open main menu</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
@@ -52,7 +62,7 @@ export default function NavBar({ notifications }) {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
           <button
             className="relative text-white p-2.5 rounded-md hover:bg-red-500"
-            onClick={() => setShowNotifications(!showNotifications)}
+            onClick={() => dispatch(toggleNotifications())}
           >
             <BellIcon className="h-6 w-6" aria-hidden="true" />
             {notifications.length > 0 && (
@@ -72,7 +82,7 @@ export default function NavBar({ notifications }) {
       <Dialog
         className="lg:hidden"
         open={mobileMenuOpen}
-        onClose={setMobileMenuOpen}
+        onClose={() => dispatch(toggleMobileMenu())}
       >
         <div className="fixed inset-0 z-10" />
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
@@ -88,7 +98,7 @@ export default function NavBar({ notifications }) {
             <button
               type="button"
               className="-m-2.5 rounded-md p-2.5 text-gray-700"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => dispatch(toggleMobileMenu())}
             >
               <span className="sr-only">Close menu</span>
               <XMarkIcon className="h-6 w-6" aria-hidden="true" />

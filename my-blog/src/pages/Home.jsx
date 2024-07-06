@@ -1,4 +1,3 @@
-// src/pages/Home.js
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import RecipeBlog from "../components/RecipeBlogs";
@@ -15,19 +14,16 @@ function Home() {
   );
   const dispatch = useDispatch();
 
-  // Create a new array before sorting to avoid mutating the original array
   const sortedArticlesByLatestDate = [...articles].sort((a, b) => {
     return new Date(b.publishedDate) - new Date(a.publishedDate);
   });
 
-  // Filter the sorted articles
   const filteredArticles = selectedCategory
     ? sortedArticlesByLatestDate.filter(
         (article) => article.category === selectedCategory
       )
     : sortedArticlesByLatestDate;
 
-  // Create a new array before sorting by views to avoid mutating the original array
   const filteredArticlesByViews = [...articles]
     .sort((a, b) => b.views - a.views)
     .slice(0, 3);

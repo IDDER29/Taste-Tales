@@ -2,24 +2,47 @@ import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import {
+  getArticleById,
+  updateAnArticle,
+} from "../features/article/articleSlice";
 
-const EditArticle = ({ articleData, onUpdate }) => {
-  const [title, setTitle] = useState(articleData.title);
-  const [subtitle, setSubtitle] = useState(articleData.subtitle);
-  const [content, setContent] = useState(articleData.content);
+const EditArticle = () => {
+  const { id } = useParams();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [tags, setTags] = useState(
-    articleData.tags.map((tag) => ({ value: tag, label: tag }))
+
+  const article = useSelector((state) =>
+    state.article.articles.find((article) => article.id === id)
   );
-  const [categories, setCategories] = useState(
-    articleData.categories.map((category) => ({
-      value: category,
-      label: category,
-    }))
-  );
-  const [imageUrl, setImageUrl] = useState(articleData.imageUrl);
+
+  const [title, setTitle] = useState("");
+  const [subtitle, setSubtitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tags, setTags] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [imageUrl, setImageUrl] = useState("");
+
+  useEffect(() => {
+    if (!article) {
+      dispatch(getArticleById(id));
+    } else {
+      setTitle(article.title);
+      setSubtitle(article.subtitle);
+      setContent(article.content);
+      setTags(article.tags.map((tag) => ({ value: tag, label: tag })));
+      setCategories(
+        article.categories.map((category) => ({
+          value: category,
+          label: category,
+        }))
+      );
+      setImageUrl(article.imageUrl);
+    }
+  }, [dispatch, id, article]);
 
   const tagOptions = [
     { value: "Tech", label: "Tech" },
@@ -33,7 +56,7 @@ const EditArticle = ({ articleData, onUpdate }) => {
     { value: "Business", label: "Business" },
   ];
 
-  const handleImageUpload = (event) => {
+  const handleImageUpload = async (event) => {
     const file = event.target.files[0];
 
     const formData = new FormData();
@@ -46,8 +69,7 @@ const EditArticle = ({ articleData, onUpdate }) => {
     axios
       .post(process.env.REACT_APP_CLOUDINARY_URL, formData)
       .then((response) => {
-        console.log("Image uploaded to Cloudinary", response.data);
-        setImageUrl(response.data.secure_url); // Set the URL of the uploaded image
+        setImageUrl(response.data.secure_url);
       })
       .catch((error) => {
         console.error(
@@ -68,7 +90,7 @@ const EditArticle = ({ articleData, onUpdate }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const updatedArticleData = {
-      ...articleData,
+      id,
       title,
       subtitle,
       content,
@@ -76,9 +98,11 @@ const EditArticle = ({ articleData, onUpdate }) => {
       categories: categories.map((category) => category.value),
       imageUrl,
     };
-    onUpdate(updatedArticleData);
+    await dispatch(updateAnArticle({ id, data: updatedArticleData }));
     navigate(`/`);
   };
+
+  if (!article) return <p>Loading...</p>;
 
   return (
     <div className="container mx-auto py-10 px-4">
