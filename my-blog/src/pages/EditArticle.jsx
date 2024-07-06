@@ -1,10 +1,11 @@
+// src/pages/EditArticle.js
 import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
+import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import {
   getArticleById,
   updateAnArticle,
@@ -22,9 +23,16 @@ const EditArticle = () => {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [content, setContent] = useState("");
-  const [tags, setTags] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
+  const [file, setFile] = useState(null);
+  const [category, setCategory] = useState(null);
+
+  const categoryOptions = [
+    { value: "Breakfast", label: "Breakfast" },
+    { value: "Main Course", label: "Main Course" },
+    { value: "Appetizer", label: "Appetizer" },
+    { value: "Dessert", label: "Dessert" },
+  ];
 
   useEffect(() => {
     if (!article) {
@@ -33,73 +41,52 @@ const EditArticle = () => {
       setTitle(article.title);
       setSubtitle(article.subtitle);
       setContent(article.content);
-      setTags(article.tags.map((tag) => ({ value: tag, label: tag })));
-      setCategories(
-        article.categories.map((category) => ({
-          value: category,
-          label: category,
-        }))
-      );
       setImageUrl(article.imageUrl);
+      setCategory(
+        categoryOptions.find((cat) => cat.value === article.category)
+      );
     }
   }, [dispatch, id, article]);
 
-  const tagOptions = [
-    { value: "Tech", label: "Tech" },
-    { value: "Health", label: "Health" },
-    { value: "Food", label: "Food" },
-  ];
-
-  const categoryOptions = [
-    { value: "Lifestyle", label: "Lifestyle" },
-    { value: "Education", label: "Education" },
-    { value: "Business", label: "Business" },
-  ];
-
-  const handleImageUpload = async (event) => {
-    const file = event.target.files[0];
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append(
-      "upload_preset",
-      process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
-    );
-
-    axios
-      .post(process.env.REACT_APP_CLOUDINARY_URL, formData)
-      .then((response) => {
-        setImageUrl(response.data.secure_url);
-      })
-      .catch((error) => {
-        console.error(
-          "Error uploading the image:",
-          error.response ? error.response.data : error.message
-        );
-      });
-  };
-
-  const handleTagChange = (selectedOptions) => {
-    setTags(selectedOptions);
-  };
-
-  const handleCategoryChange = (selectedOptions) => {
-    setCategories(selectedOptions);
+  const handleImageUpload = async (e) => {
+    try {
+      setFile(e.target.files[0]);
+      setImageUrl(URL.createObjectURL(e.target.files[0]));
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!category) {
+      alert("Please select a category.");
+      return;
+    }
+
+    const form = new FormData();
+    form.append("file", file);
+    form.append("upload_preset", "cg4zfcut");
+    const img = await axios.post(
+      "https://api.cloudinary.com/v1_1/dvnwx89ao/upload",
+      form
+    );
+
     const updatedArticleData = {
       id,
       title,
       subtitle,
       content,
-      tags: tags.map((tag) => tag.value),
-      categories: categories.map((category) => category.value),
-      imageUrl,
+      imageUrl: img.data.secure_url,
+      category: category ? category.value : article.category,
+      views: article.views,
+      likes: article.likes,
+      publishedDate: article.publishedDate,
+      publisher: article.publisher,
     };
+
     await dispatch(updateAnArticle({ id, data: updatedArticleData }));
-    navigate(`/`);
+    navigate(`/articles/${id}`);
   };
 
   if (!article) return <p>Loading...</p>;
@@ -174,57 +161,21 @@ const EditArticle = () => {
         <div className="md:col-span-1 space-y-6">
           <div>
             <label
-              htmlFor="tags"
+              htmlFor="category"
               className="block text-lg font-medium text-gray-700 mb-2"
             >
-              Tags
+              Category
             </label>
             <Select
-              id="tags"
-              isMulti
-              value={tags}
-              onChange={handleTagChange}
-              options={tagOptions}
-              className="basic-multi-select"
-              classNamePrefix="select"
-            />
-            <div className="mt-4">
-              {tags.map((tag) => (
-                <span
-                  key={tag.value}
-                  className="inline-block bg-blue-500 text-white px-2 py-1 rounded-full mr-2 mb-2"
-                >
-                  {tag.label}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div>
-            <label
-              htmlFor="categories"
-              className="block text-lg font-medium text-gray-700 mb-2"
-            >
-              Categories
-            </label>
-            <Select
-              id="categories"
-              isMulti
-              value={categories}
-              onChange={handleCategoryChange}
+              id="category"
+              value={category}
+              onChange={setCategory}
               options={categoryOptions}
-              className="basic-multi-select"
+              className="basic-single-select"
               classNamePrefix="select"
+              isClearable={true}
+              placeholder="Select a category..."
             />
-            <div className="mt-4">
-              {categories.map((category) => (
-                <span
-                  key={category.value}
-                  className="inline-block bg-green-500 text-white px-2 py-1 rounded-full mr-2 mb-2"
-                >
-                  {category.label}
-                </span>
-              ))}
-            </div>
           </div>
         </div>
         <div className="text-center mt-8 md:col-span-4">

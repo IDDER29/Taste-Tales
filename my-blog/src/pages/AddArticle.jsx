@@ -13,7 +13,7 @@ const AddArticle = () => {
   const [subtitle, setSubtitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState(null); // Changed to single category state
   const [imageUrl, setImageUrl] = useState(null);
   const [file, setFile] = useState(null);
   const navigate = useNavigate();
@@ -36,8 +36,8 @@ const AddArticle = () => {
     setTags(selectedOptions);
   };
 
-  const handleCategoryChange = (selectedOptions) => {
-    setCategories(selectedOptions);
+  const handleCategoryChange = (selectedOption) => {
+    setCategory(selectedOption);
   };
 
   const handleImageUpload = async (e) => {
@@ -52,6 +52,11 @@ const AddArticle = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!category) {
+      alert("Please select a category.");
+      return;
+    }
+
     const form = new FormData();
     form.append("file", file);
     form.append("upload_preset", "cg4zfcut");
@@ -66,7 +71,7 @@ const AddArticle = () => {
       subtitle,
       content,
       tags: tags.map((tag) => tag.value),
-      category: categories[0].value,
+      category: category.value, // Accessing single category value
       imageUrl: img.data.secure_url,
       views: 0,
       likes: 0,
@@ -180,30 +185,21 @@ const AddArticle = () => {
           </div>
           <div>
             <label
-              htmlFor="categories"
+              htmlFor="category"
               className="block text-lg font-medium text-gray-700 mb-2"
             >
-              Categories
+              Category
             </label>
             <Select
-              id="categories"
-              isMulti
-              value={categories}
+              id="category"
+              value={category}
               onChange={handleCategoryChange}
               options={categoryOptions}
-              className="basic-multi-select"
+              className="basic-single-select"
               classNamePrefix="select"
+              isClearable={true}
+              placeholder="Select a category..."
             />
-            <div className="mt-4">
-              {categories.map((category) => (
-                <span
-                  key={category.value}
-                  className="inline-block bg-green-500 text-white px-2 py-1 rounded-full mr-2 mb-2"
-                >
-                  {category.label}
-                </span>
-              ))}
-            </div>
           </div>
         </div>
         <div className="text-center mt-8 md:col-span-4">
