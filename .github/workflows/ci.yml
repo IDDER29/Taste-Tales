@@ -1,37 +1,23 @@
 name: Node.js CI
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+push:
+branches: [main]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x] # Compatible versions
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build the project
-        run: npm run build
-
-      - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main' # Only deploy on main branch
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run deploy
+deploy:
+runs-on: ubuntu-latest
+steps:
+- uses: actions/checkout/@v3
+- name: Use node js 18
+uses: actions/setup-node@v4
+with:
+node-version: 22
+- name: install dependencies
+run: npm install
+- name: Deploy to production
+run: npm run build
+- name: deploy with gihub pages
+uses: peaceiris/actions-gh-pages@v3
+with:
+publish_dir: ./build
