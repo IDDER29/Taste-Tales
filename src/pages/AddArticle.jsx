@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addArticle } from "../features/article/articleSlice";
+import { v4 as uuidv4 } from "uuid"; // to generate unique id
 
-const EditArticle = ({ articleData, onUpdate }) => {
-  const [title, setTitle] = useState(articleData.title);
-  const [subtitle, setSubtitle] = useState(articleData.subtitle);
-  const [content, setContent] = useState(articleData.content);
-  const [tags, setTags] = useState(
-    articleData.tags.map((tag) => ({ value: tag, label: tag }))
-  );
-  const [categories, setCategories] = useState(
-    articleData.categories.map((category) => ({
-      value: category,
-      label: category,
-    }))
-  );
-  const [imageUrl, setImageUrl] = useState(articleData.imageUrl);
+const AddArticle = () => {
+  const [title, setTitle] = useState("");
+  const [subtitle, setSubtitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tags, setTags] = useState([]);
+  const [category, setCategory] = useState(null); // Changed to single category state
+  const [imageUrl, setImageUrl] = useState(null);
+  const [file, setFile] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const tagOptions = [
     { value: "Tech", label: "Tech" },
@@ -26,60 +26,71 @@ const EditArticle = ({ articleData, onUpdate }) => {
   ];
 
   const categoryOptions = [
-    { value: "Lifestyle", label: "Lifestyle" },
-    { value: "Education", label: "Education" },
-    { value: "Business", label: "Business" },
+    { value: "Breakfast", label: "Breakfast" },
+    { value: "Main Course", label: "Main Course" },
+    { value: "Appetizer", label: "Appetizer" },
+    { value: "Dessert", label: "Dessert" },
   ];
-
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append(
-      "upload_preset",
-      process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
-    );
-
-    axios
-      .post(process.env.REACT_APP_CLOUDINARY_URL, formData)
-      .then((response) => {
-        console.log("Image uploaded to Cloudinary", response.data);
-        setImageUrl(response.data.secure_url); // Set the URL of the uploaded image
-      })
-      .catch((error) => {
-        console.error(
-          "Error uploading the image:",
-          error.response ? error.response.data : error.message
-        );
-      });
-  };
 
   const handleTagChange = (selectedOptions) => {
     setTags(selectedOptions);
   };
 
-  const handleCategoryChange = (selectedOptions) => {
-    setCategories(selectedOptions);
+  const handleCategoryChange = (selectedOption) => {
+    setCategory(selectedOption);
+  };
+
+  const handleImageUpload = async (e) => {
+    e.preventDefault();
+    try {
+      setFile(e.target.files[0]);
+      setImageUrl(URL.createObjectURL(e.target.files[0]));
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const updatedArticleData = {
-      ...articleData,
+    if (!category) {
+      alert("Please select a category.");
+      return;
+    }
+
+    const form = new FormData();
+    form.append("file", file);
+    form.append("upload_preset", "cg4zfcut");
+    const img = await axios.post(
+      "https://api.cloudinary.com/v1_1/dvnwx89ao/upload",
+      form
+    );
+
+    const articleData = {
+      id: uuidv4(),
       title,
       subtitle,
       content,
       tags: tags.map((tag) => tag.value),
-      categories: categories.map((category) => category.value),
-      imageUrl,
+      category: category.value, // Accessing single category value
+      imageUrl: img.data.secure_url,
+      views: 0,
+      likes: 0,
+      publishedDate: new Date().toISOString(),
+      publisher: {
+        name: "Anonymous",
+        image: "https://via.placeholder.com/40x40.png?text=JD",
+      },
     };
-    onUpdate(updatedArticleData);
+
+    dispatch(addArticle(articleData));
+    navigate(`/`);
   };
 
   return (
     <div className="container mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold text-center mb-8">Edit Your Article</h1>
+      <h1 className="text-4xl font-bold text-center mb-8">
+        Create and Publish an Article
+      </h1>
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-4 gap-6"
@@ -174,30 +185,21 @@ const EditArticle = ({ articleData, onUpdate }) => {
           </div>
           <div>
             <label
-              htmlFor="categories"
+              htmlFor="category"
               className="block text-lg font-medium text-gray-700 mb-2"
             >
-              Categories
+              Category
             </label>
             <Select
-              id="categories"
-              isMulti
-              value={categories}
+              id="category"
+              value={category}
               onChange={handleCategoryChange}
               options={categoryOptions}
-              className="basic-multi-select"
+              className="basic-single-select"
               classNamePrefix="select"
+              isClearable={true}
+              placeholder="Select a category..."
             />
-            <div className="mt-4">
-              {categories.map((category) => (
-                <span
-                  key={category.value}
-                  className="inline-block bg-green-500 text-white px-2 py-1 rounded-full mr-2 mb-2"
-                >
-                  {category.label}
-                </span>
-              ))}
-            </div>
           </div>
         </div>
         <div className="text-center mt-8 md:col-span-4">
@@ -205,7 +207,7 @@ const EditArticle = ({ articleData, onUpdate }) => {
             type="submit"
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Update
+            Publish
           </button>
         </div>
       </form>
@@ -213,4 +215,4 @@ const EditArticle = ({ articleData, onUpdate }) => {
   );
 };
 
-export default EditArticle;
+export default AddArticle;

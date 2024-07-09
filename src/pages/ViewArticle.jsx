@@ -1,27 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import ArticleHeader from "../components/ArticleHeader";
 import Sidebar from "../components/Sidebar";
-import api from "../api/posts";
+import {
+  getArticleById,
+  deleteAnArticle,
+} from "../features/article/articleSlice";
 
-const ArticlePage = ({ onDelete }) => {
+const ArticlePage = () => {
   const { id } = useParams();
-  const [article, setArticle] = useState(null);
   const navigate = useNavigate();
-  useEffect(() => {
-    const fetchArticle = async () => {
-      try {
-        const response = await api.get(`/blogs/${id}`);
-        setArticle(response.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
+  const dispatch = useDispatch();
 
-    fetchArticle();
-  }, [id]);
+  const article = useSelector((state) =>
+    state.article.articles.find((article) => article.id === id)
+  );
+
+  useEffect(() => {
+    if (!article) {
+      dispatch(getArticleById(id));
+    }
+  }, [dispatch, id, article]);
+
   const handleDelete = async () => {
-    await onDelete(id);
+    await dispatch(deleteAnArticle(id));
     navigate("/");
   };
 

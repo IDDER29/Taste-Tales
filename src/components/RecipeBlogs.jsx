@@ -1,7 +1,13 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const RecipeBlog = ({ articles }) => {
+const RecipeBlog = () => {
+  const articles = useSelector((state) => state.article.articles);
+  const sortedArticlesByViews = [...articles]
+    .sort((a, b) => b.views - a.views)
+    .slice(0, 3);
+
   return (
     <div className="relative bg-white p-6 rounded-lg shadow-md">
       <div
@@ -40,8 +46,8 @@ const RecipeBlog = ({ articles }) => {
             </div>
           </div>
           <div className="lg:col-span-1 space-y-8 flex flex-col">
-            {articles.map((article) => (
-              <Link to={`/view-article/${article.id}`} key={article.id}>
+            {sortedArticlesByViews.map((article) => (
+              <Link to={`/articles/${article.id}`} key={article.id}>
                 <div className="flex flex-col lg:flex-row bg-white rounded-lg shadow-md overflow-hidden">
                   <div
                     className="h-48 lg:h-auto lg:w-48 flex-none bg-cover"

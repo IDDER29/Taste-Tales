@@ -1,51 +1,69 @@
-import React, { useState } from "react";
+// src/pages/EditArticle.js
+import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getArticleById,
+  updateAnArticle,
+} from "../features/article/articleSlice";
 
-const AddArticle = ({ onSubmit }) => {
+const EditArticle = () => {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const article = useSelector((state) =>
+    state.article.articles.find((article) => article.id === id)
+  );
+
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [content, setContent] = useState("");
-  const [tags, setTags] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [imageUrl, setImageUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
   const [file, setFile] = useState(null);
-
-  const tagOptions = [
-    { value: "Tech", label: "Tech" },
-    { value: "Health", label: "Health" },
-    { value: "Food", label: "Food" },
-  ];
+  const [category, setCategory] = useState(null);
 
   const categoryOptions = [
-    { value: "Lifestyle", label: "Lifestyle" },
-    { value: "Education", label: "Education" },
-    { value: "Business", label: "Business" },
+    { value: "Breakfast", label: "Breakfast" },
+    { value: "Main Course", label: "Main Course" },
+    { value: "Appetizer", label: "Appetizer" },
+    { value: "Dessert", label: "Dessert" },
   ];
 
+  useEffect(() => {
+    if (!article) {
+      dispatch(getArticleById(id));
+    } else {
+      setTitle(article.title);
+      setSubtitle(article.subtitle);
+      setContent(article.content);
+      setImageUrl(article.imageUrl);
+      setCategory(
+        categoryOptions.find((cat) => cat.value === article.category)
+      );
+    }
+  }, [dispatch, id, article]);
+
   const handleImageUpload = async (e) => {
-    e.preventDefault();
     try {
       setFile(e.target.files[0]);
       setImageUrl(URL.createObjectURL(e.target.files[0]));
-      console.log("file", file);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleTagChange = (selectedOptions) => {
-    setTags(selectedOptions);
-  };
-
-  const handleCategoryChange = (selectedOptions) => {
-    setCategories(selectedOptions);
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!category) {
+      alert("Please select a category.");
+      return;
+    }
+
     const form = new FormData();
     form.append("file", file);
     form.append("upload_preset", "cg4zfcut");
@@ -54,22 +72,28 @@ const AddArticle = ({ onSubmit }) => {
       form
     );
 
-    const articleData = {
+    const updatedArticleData = {
+      id,
       title,
       subtitle,
       content,
-      tags: tags.map((tag) => tag.value),
-      categories: categories.map((category) => category.value),
       imageUrl: img.data.secure_url,
+      category: category ? category.value : article.category,
+      views: article.views,
+      likes: article.likes,
+      publishedDate: article.publishedDate,
+      publisher: article.publisher,
     };
-    onSubmit(articleData);
+
+    await dispatch(updateAnArticle({ id, data: updatedArticleData }));
+    navigate(`/articles/${id}`);
   };
+
+  if (!article) return <p>Loading...</p>;
 
   return (
     <div className="container mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold text-center mb-8">
-        Create and Publish an Article
-      </h1>
+      <h1 className="text-4xl font-bold text-center mb-8">Edit Your Article</h1>
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-4 gap-6"
@@ -137,57 +161,21 @@ const AddArticle = ({ onSubmit }) => {
         <div className="md:col-span-1 space-y-6">
           <div>
             <label
-              htmlFor="tags"
+              htmlFor="category"
               className="block text-lg font-medium text-gray-700 mb-2"
             >
-              Tags
+              Category
             </label>
             <Select
-              id="tags"
-              isMulti
-              value={tags}
-              onChange={handleTagChange}
-              options={tagOptions}
-              className="basic-multi-select"
-              classNamePrefix="select"
-            />
-            <div className="mt-4">
-              {tags.map((tag) => (
-                <span
-                  key={tag.value}
-                  className="inline-block bg-blue-500 text-white px-2 py-1 rounded-full mr-2 mb-2"
-                >
-                  {tag.label}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div>
-            <label
-              htmlFor="categories"
-              className="block text-lg font-medium text-gray-700 mb-2"
-            >
-              Categories
-            </label>
-            <Select
-              id="categories"
-              isMulti
-              value={categories}
-              onChange={handleCategoryChange}
+              id="category"
+              value={category}
+              onChange={setCategory}
               options={categoryOptions}
-              className="basic-multi-select"
+              className="basic-single-select"
               classNamePrefix="select"
+              isClearable={true}
+              placeholder="Select a category..."
             />
-            <div className="mt-4">
-              {categories.map((category) => (
-                <span
-                  key={category.value}
-                  className="inline-block bg-green-500 text-white px-2 py-1 rounded-full mr-2 mb-2"
-                >
-                  {category.label}
-                </span>
-              ))}
-            </div>
           </div>
         </div>
         <div className="text-center mt-8 md:col-span-4">
@@ -195,7 +183,7 @@ const AddArticle = ({ onSubmit }) => {
             type="submit"
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Publish
+            Update
           </button>
         </div>
       </form>
@@ -203,4 +191,4 @@ const AddArticle = ({ onSubmit }) => {
   );
 };
 
-export default AddArticle;
+export default EditArticle;
