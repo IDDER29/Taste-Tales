@@ -61,7 +61,7 @@ function App() {
   };
 
   return (
-    <Router>
+    <Router basename='/Taste-Tales'>
       <div>
         <NavBar notifications={notifications} />
         <HeroSection />
