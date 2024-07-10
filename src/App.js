@@ -67,10 +67,10 @@ function App() {
         <HeroSection />
         <Routes>
           <Route path="/" element={<Home articles={articleData} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />} />
-          <Route path="create-article" element={<AddArticle onSubmit={handleArticleSubmit} />} />
-          <Route path="view-article/:id" element={<ViewArticle onDelete={handleDeleteArticle} />} />
-          <Route path="edit-article/:id" element={<EditArticleWrapper onUpdate={handleUpdateArticle} />} />
-          <Route path="about" element={<About />} />
+          <Route path="/create-article" element={<AddArticle onSubmit={handleArticleSubmit} />} />
+          <Route path="/view-article/:id" element={<ViewArticle onDelete={handleDeleteArticle} />} />
+          <Route path="/edit-article/:id" element={<EditArticleWrapper onUpdate={handleUpdateArticle} />} />
+          <Route path="/about" element={<About />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
         <Footer />
