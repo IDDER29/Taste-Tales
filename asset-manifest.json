@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/Taste-Tales/static/css/main.32561191.css",
-    "main.js": "/Taste-Tales/static/js/main.bf695ed2.js",
+    "main.js": "/Taste-Tales/static/js/main.d9e51dfc.js",
     "static/js/453.bbe7adac.chunk.js": "/Taste-Tales/static/js/453.bbe7adac.chunk.js",
     "index.html": "/Taste-Tales/index.html",
     "main.32561191.css.map": "/Taste-Tales/static/css/main.32561191.css.map",
-    "main.bf695ed2.js.map": "/Taste-Tales/static/js/main.bf695ed2.js.map",
+    "main.d9e51dfc.js.map": "/Taste-Tales/static/js/main.d9e51dfc.js.map",
     "453.bbe7adac.chunk.js.map": "/Taste-Tales/static/js/453.bbe7adac.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.32561191.css",
-    "static/js/main.bf695ed2.js"
+    "static/js/main.d9e51dfc.js"
   ]
 }
