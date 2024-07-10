@@ -1,10 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Dialog, DialogPanel, PopoverGroup } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, BellIcon } from "@heroicons/react/24/outline";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function NavBar({ notifications }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

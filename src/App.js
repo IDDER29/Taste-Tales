@@ -9,7 +9,6 @@ import NavBar from './components/NavBar';
 import NoPage from './pages/NoPage';
 import HeroSection from './components/HeroSection';
 import Footer from './components/Footer';
-import Categories from './components/Categories';
 import './App.css';
 import api from "./api/posts";
 import { v4 as uuid } from "uuid";
