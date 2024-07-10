@@ -1,5 +1,4 @@
 name: Node.js CI
-
 on:
 push:
 branches: [main]
@@ -8,16 +7,20 @@ jobs:
 deploy:
 runs-on: ubuntu-latest
 steps:
-- uses: actions/checkout/@v3
+- uses: actions/checkout@v3
 - name: Use node js 18
 uses: actions/setup-node@v4
 with:
-node-version: 22
+node-version: 18
 - name: install dependencies
 run: npm install
-- name: Deploy to production
-run: npm run build
-- name: deploy with gihub pages
+- name: build
+run: |
+echo "Building the project..."
+CI=false npm run build
+echo "Build completed"
+- name: deploy with GitHub Pages
 uses: peaceiris/actions-gh-pages@v3
 with:
+github_token: ${{ secrets.GITHUB_TOKEN }}
 publish_dir: ./build
