@@ -19,8 +19,8 @@ jobs:
               CI=false npm run build
               echo "Build completed"
 
-        - name: deploy with GitHub Pages
-          uses: peaceiris/actions-gh-pages@v3
-          with:
+      - name: deploy with GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
             publish_dir: ./build
