@@ -1,11 +1,24 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Dialog, DialogPanel, PopoverGroup } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, BellIcon } from "@heroicons/react/24/outline";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  toggleMobileMenu,
+  toggleNotifications,
+  selectNotifications,
+  selectMobileMenuOpen,
+  selectShowNotifications,
+} from "../features/ui/uiSlice";
 
-export default function NavBar({ notifications }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
+export default function NavBar() {
+  const dispatch = useDispatch();
+  const notifications = useSelector(selectNotifications);
+  const mobileMenuOpen = useSelector(selectMobileMenuOpen);
+  const showNotifications = useSelector(selectShowNotifications);
 
   return (
     <header className="bg-red-400">
@@ -14,42 +27,42 @@ export default function NavBar({ notifications }) {
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
-          <Link to="/" className="-m-1.5 p-1.5">
+          <a href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <img className="h-14 w-auto" src="./blogLogo.png" alt="" />
-          </Link>
+          </a>
         </div>
         <div className="flex lg:hidden">
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-            onClick={() => setMobileMenuOpen(true)}
+            onClick={() => dispatch(toggleMobileMenu())}
           >
             <span className="sr-only">Open main menu</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-          <Link to="/" className="text-sm font-semibold leading-6 text-white ">
+          <a href="/" className="text-sm font-semibold leading-6 text-white ">
             Home
-          </Link>
-          <Link
-            to="/create-article"
+          </a>
+          <a
+            href="/articles"
             className="text-sm font-semibold leading-6 text-white"
           >
             Create Article
-          </Link>
-          <Link
-            to="/about"
+          </a>
+          <a
+            href="/about"
             className="text-sm font-semibold leading-6 text-white"
           >
             About Us
-          </Link>
+          </a>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
           <button
             className="relative text-white p-2.5 rounded-md hover:bg-red-500"
-            onClick={() => setShowNotifications(!showNotifications)}
+            onClick={() => dispatch(toggleNotifications())}
           >
             <BellIcon className="h-6 w-6" aria-hidden="true" />
             {notifications.length > 0 && (
@@ -58,34 +71,34 @@ export default function NavBar({ notifications }) {
               </span>
             )}
           </button>
-          <Link
-            to="#"
+          <a
+            href="#"
             className="ml-6 text-sm font-semibold leading-6 text-white"
           >
             Log in <span aria-hidden="true">&rarr;</span>
-          </Link>
+          </a>
         </div>
       </nav>
       <Dialog
         className="lg:hidden"
         open={mobileMenuOpen}
-        onClose={setMobileMenuOpen}
+        onClose={() => dispatch(toggleMobileMenu())}
       >
         <div className="fixed inset-0 z-10" />
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <Link to="/" className="-m-1.5 p-1.5">
+            <a href="/" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
               <img
                 className="h-8 w-auto"
                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                 alt=""
               />
-            </Link>
+            </a>
             <button
               type="button"
               className="-m-2.5 rounded-md p-2.5 text-gray-700"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => dispatch(toggleMobileMenu())}
             >
               <span className="sr-only">Close menu</span>
               <XMarkIcon className="h-6 w-6" aria-hidden="true" />
@@ -94,32 +107,32 @@ export default function NavBar({ notifications }) {
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
-                <Link
-                  to="/"
+                <a
+                  href="/"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Home
-                </Link>
-                <Link
-                  to="/create-article"
+                </a>
+                <a
+                  href="/articles"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Create Article
-                </Link>
-                <Link
-                  to="/about"
+                </a>
+                <a
+                  href="/about"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   About Us
-                </Link>
+                </a>
               </div>
               <div className="py-6">
-                <Link
-                  to="#"
+                <a
+                  href="#"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Log out
-                </Link>
+                </a>
               </div>
             </div>
           </div>

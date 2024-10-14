@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { FaHeart, FaRegBookmark } from "react-icons/fa";
+import { SelectedCategoryContext } from "../pages/Home";
 
 const TopCategoryRecipes = ({ recipes }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,7 +24,7 @@ const TopCategoryRecipes = ({ recipes }) => {
       />
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         {filteredRecipes.map((recipe) => (
-          <Link to={`/view-article/${recipe.id}`} key={recipe.id}>
+          <Link to={`/articles/${recipe.id}`} key={recipe.id}>
             <div className="relative rounded-lg shadow-lg overflow-hidden">
               <img
                 src={recipe.imageUrl}

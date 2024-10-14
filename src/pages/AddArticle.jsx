@@ -3,15 +3,21 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addArticle } from "../features/article/articleSlice";
+import { v4 as uuidv4 } from "uuid"; // to generate unique id
 
-const AddArticle = ({ onSubmit }) => {
+const AddArticle = () => {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState(null); // Changed to single category state
   const [imageUrl, setImageUrl] = useState(null);
   const [file, setFile] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const tagOptions = [
     { value: "Tech", label: "Tech" },
@@ -20,32 +26,37 @@ const AddArticle = ({ onSubmit }) => {
   ];
 
   const categoryOptions = [
-    { value: "Lifestyle", label: "Lifestyle" },
-    { value: "Education", label: "Education" },
-    { value: "Business", label: "Business" },
+    { value: "Breakfast", label: "Breakfast" },
+    { value: "Main Course", label: "Main Course" },
+    { value: "Appetizer", label: "Appetizer" },
+    { value: "Dessert", label: "Dessert" },
   ];
+
+  const handleTagChange = (selectedOptions) => {
+    setTags(selectedOptions);
+  };
+
+  const handleCategoryChange = (selectedOption) => {
+    setCategory(selectedOption);
+  };
 
   const handleImageUpload = async (e) => {
     e.preventDefault();
     try {
       setFile(e.target.files[0]);
       setImageUrl(URL.createObjectURL(e.target.files[0]));
-      console.log("file", file);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleTagChange = (selectedOptions) => {
-    setTags(selectedOptions);
-  };
-
-  const handleCategoryChange = (selectedOptions) => {
-    setCategories(selectedOptions);
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!category) {
+      alert("Please select a category.");
+      return;
+    }
+
     const form = new FormData();
     form.append("file", file);
     form.append("upload_preset", "cg4zfcut");
@@ -55,14 +66,24 @@ const AddArticle = ({ onSubmit }) => {
     );
 
     const articleData = {
+      id: uuidv4(),
       title,
       subtitle,
       content,
       tags: tags.map((tag) => tag.value),
-      categories: categories.map((category) => category.value),
+      category: category.value, // Accessing single category value
       imageUrl: img.data.secure_url,
+      views: 0,
+      likes: 0,
+      publishedDate: new Date().toISOString(),
+      publisher: {
+        name: "Anonymous",
+        image: "https://via.placeholder.com/40x40.png?text=JD",
+      },
     };
-    onSubmit(articleData);
+
+    dispatch(addArticle(articleData));
+    navigate(`/`);
   };
 
   return (
@@ -164,30 +185,21 @@ const AddArticle = ({ onSubmit }) => {
           </div>
           <div>
             <label
-              htmlFor="categories"
+              htmlFor="category"
               className="block text-lg font-medium text-gray-700 mb-2"
             >
-              Categories
+              Category
             </label>
             <Select
-              id="categories"
-              isMulti
-              value={categories}
+              id="category"
+              value={category}
               onChange={handleCategoryChange}
               options={categoryOptions}
-              className="basic-multi-select"
+              className="basic-single-select"
               classNamePrefix="select"
+              isClearable={true}
+              placeholder="Select a category..."
             />
-            <div className="mt-4">
-              {categories.map((category) => (
-                <span
-                  key={category.value}
-                  className="inline-block bg-green-500 text-white px-2 py-1 rounded-full mr-2 mb-2"
-                >
-                  {category.label}
-                </span>
-              ))}
-            </div>
           </div>
         </div>
         <div className="text-center mt-8 md:col-span-4">

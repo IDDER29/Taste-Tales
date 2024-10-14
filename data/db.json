@@ -8,15 +8,8 @@
       "imageUrl": "https://media.istockphoto.com/id/1081422898/photo/pan-fried-duck.jpg?s=2048x2048&w=is&k=20&c=KcDScs6hE2epagNeSD5tUuCAomdL1YK0eLLMCd5mtGU=",
       "views": 2400,
       "likes": 500,
-      "tags": [
-        "pulled pork",
-        "instant pot",
-        "pork",
-        "main course"
-      ],
-      "categories": [
-        "Main Course"
-      ],
+      "tags": ["pulled pork", "instant pot", "pork", "main course"],
+      "categories": ["Main Course"],
       "publishedDate": "May 10, 2005",
       "publisher": {
         "name": "Jane Smith",
