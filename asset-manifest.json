@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/Taste-Tales/static/css/main.32561191.css",
-    "main.js": "/Taste-Tales/static/js/main.c6e8fffa.js",
-    "static/js/453.bbe7adac.chunk.js": "/Taste-Tales/static/js/453.bbe7adac.chunk.js",
-    "index.html": "/Taste-Tales/index.html",
-    "main.32561191.css.map": "/Taste-Tales/static/css/main.32561191.css.map",
-    "main.c6e8fffa.js.map": "/Taste-Tales/static/js/main.c6e8fffa.js.map",
-    "453.bbe7adac.chunk.js.map": "/Taste-Tales/static/js/453.bbe7adac.chunk.js.map"
+    "main.css": "/my-blog/static/css/main.1e2174eb.css",
+    "main.js": "/my-blog/static/js/main.f14f98e5.js",
+    "static/js/453.bbe7adac.chunk.js": "/my-blog/static/js/453.bbe7adac.chunk.js",
+    "index.html": "/my-blog/index.html",
+    "main.1e2174eb.css.map": "/my-blog/static/css/main.1e2174eb.css.map",
+    "main.f14f98e5.js.map": "/my-blog/static/js/main.f14f98e5.js.map",
+    "453.bbe7adac.chunk.js.map": "/my-blog/static/js/453.bbe7adac.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.32561191.css",
-    "static/js/main.c6e8fffa.js"
+    "static/css/main.1e2174eb.css",
+    "static/js/main.f14f98e5.js"
   ]
 }
