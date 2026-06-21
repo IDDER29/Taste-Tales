@@ -12,6 +12,26 @@ import {
   selectArticlesStatus,
 } from "../features/article/articleSlice";
 import { uploadImage } from "../api/cloudinary";
+import RecipeFormFields from "../components/RecipeFormFields";
+import { CATEGORY_OPTIONS } from "../utils/recipe";
+
+// Coerce a possibly-blank value to a Number, or null when empty/invalid.
+const toNumberOrNull = (v) => {
+  if (v === "" || v === null || v === undefined) return null;
+  const n = Number(v);
+  return Number.isNaN(n) ? null : n;
+};
+
+const emptyRecipe = {
+  ingredients: [{ quantity: "", unit: "", name: "" }],
+  instructions: [""],
+  prepTime: "",
+  cookTime: "",
+  servings: "",
+  cuisine: "",
+  diet: [],
+  nutrition: { calories: "", protein: "", carbs: "", fat: "" },
+};
 
 const EditArticle = () => {
   const { id } = useParams();
@@ -27,13 +47,12 @@ const EditArticle = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [file, setFile] = useState(null);
   const [category, setCategory] = useState(null);
+  const [recipe, setRecipe] = useState(emptyRecipe);
 
-  const categoryOptions = [
-    { value: "Breakfast", label: "Breakfast" },
-    { value: "Main Course", label: "Main Course" },
-    { value: "Appetizer", label: "Appetizer" },
-    { value: "Dessert", label: "Dessert" },
-  ];
+  const categoryOptions = CATEGORY_OPTIONS.map((c) => ({
+    value: c,
+    label: c,
+  }));
 
   useEffect(() => {
     if (!article) {
@@ -46,6 +65,31 @@ const EditArticle = () => {
       setCategory(
         categoryOptions.find((cat) => cat.value === article.category)
       );
+      setRecipe({
+        ingredients:
+          article.ingredients && article.ingredients.length
+            ? article.ingredients.map((ing) => ({
+                quantity: ing.quantity ?? "",
+                unit: ing.unit || "",
+                name: ing.name || "",
+              }))
+            : [{ quantity: "", unit: "", name: "" }],
+        instructions:
+          article.instructions && article.instructions.length
+            ? article.instructions
+            : [""],
+        prepTime: article.prepTime ?? "",
+        cookTime: article.cookTime ?? "",
+        servings: article.servings ?? "",
+        cuisine: article.cuisine || "",
+        diet: article.diet || [],
+        nutrition: {
+          calories: article.nutrition?.calories ?? "",
+          protein: article.nutrition?.protein ?? "",
+          carbs: article.nutrition?.carbs ?? "",
+          fat: article.nutrition?.fat ?? "",
+        },
+      });
     }
   }, [dispatch, id, article]);
 
@@ -70,6 +114,18 @@ const EditArticle = () => {
       uploadedImageUrl = await uploadImage(file);
     }
 
+    const cleanedIngredients = recipe.ingredients
+      .filter((ing) => ing.name && ing.name.trim())
+      .map((ing) => ({
+        quantity: toNumberOrNull(ing.quantity),
+        unit: ing.unit || "",
+        name: ing.name.trim(),
+      }));
+
+    const cleanedInstructions = recipe.instructions
+      .map((step) => step.trim())
+      .filter((step) => step);
+
     const updatedArticleData = {
       id,
       title,
@@ -77,6 +133,19 @@ const EditArticle = () => {
       content,
       imageUrl: uploadedImageUrl,
       category: category ? category.value : article.category,
+      ingredients: cleanedIngredients,
+      instructions: cleanedInstructions,
+      prepTime: toNumberOrNull(recipe.prepTime),
+      cookTime: toNumberOrNull(recipe.cookTime),
+      servings: toNumberOrNull(recipe.servings),
+      cuisine: recipe.cuisine || "",
+      diet: recipe.diet,
+      nutrition: {
+        calories: toNumberOrNull(recipe.nutrition.calories),
+        protein: toNumberOrNull(recipe.nutrition.protein),
+        carbs: toNumberOrNull(recipe.nutrition.carbs),
+        fat: toNumberOrNull(recipe.nutrition.fat),
+      },
       views: article.views,
       likes: article.likes,
       publishedDate: article.publishedDate,
@@ -165,6 +234,9 @@ const EditArticle = () => {
             />
           </div>
           <div className="mb-8">
+            <label className="block text-lg font-medium text-gray-700 mb-2">
+              Intro / story (optional)
+            </label>
             <ReactQuill
               value={content}
               onChange={setContent}
@@ -172,6 +244,9 @@ const EditArticle = () => {
               theme="snow"
               placeholder="Write your article content here..."
             />
+          </div>
+          <div className="mt-16">
+            <RecipeFormFields value={recipe} onChange={setRecipe} />
           </div>
         </div>
         <div className="md:col-span-1 space-y-6">

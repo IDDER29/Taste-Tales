@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Dialog, DialogPanel, PopoverGroup } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, BellIcon } from "@heroicons/react/24/outline";
@@ -10,10 +9,6 @@ import {
   selectShowNotifications,
 } from "../features/ui/uiSlice";
 import { selectNotifications } from "../features/article/articleSlice";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function NavBar() {
   const dispatch = useDispatch();

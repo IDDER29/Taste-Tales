@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ArticleHeader from "../components/ArticleHeader";
 import Sidebar from "../components/Sidebar";
+import RecipeJsonLd from "../components/RecipeJsonLd";
 import {
   getArticleById,
   deleteAnArticle,
@@ -50,6 +51,8 @@ const ArticlePage = () => {
 
   return (
     <div className="App max-w-7xl mx-auto p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <RecipeJsonLd article={article} />
+
       {/* Main Article Section */}
       <div className="lg:col-span-2">
         <ArticleHeader articleData={article} onDelete={handleDelete} />

@@ -7,6 +7,26 @@ import { useDispatch } from "react-redux";
 import { addArticle } from "../features/article/articleSlice";
 import { uploadImage } from "../api/cloudinary";
 import { v4 as uuidv4 } from "uuid"; // to generate unique id
+import RecipeFormFields from "../components/RecipeFormFields";
+import { CATEGORY_OPTIONS } from "../utils/recipe";
+
+// Coerce a possibly-blank value to a Number, or null when empty/invalid.
+const toNumberOrNull = (v) => {
+  if (v === "" || v === null || v === undefined) return null;
+  const n = Number(v);
+  return Number.isNaN(n) ? null : n;
+};
+
+const emptyRecipe = {
+  ingredients: [{ quantity: "", unit: "", name: "" }],
+  instructions: [""],
+  prepTime: "",
+  cookTime: "",
+  servings: "",
+  cuisine: "",
+  diet: [],
+  nutrition: { calories: "", protein: "", carbs: "", fat: "" },
+};
 
 const AddArticle = () => {
   const [title, setTitle] = useState("");
@@ -16,6 +36,7 @@ const AddArticle = () => {
   const [category, setCategory] = useState(null); // Changed to single category state
   const [imageUrl, setImageUrl] = useState(null);
   const [file, setFile] = useState(null);
+  const [recipe, setRecipe] = useState(emptyRecipe);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -25,12 +46,10 @@ const AddArticle = () => {
     { value: "Food", label: "Food" },
   ];
 
-  const categoryOptions = [
-    { value: "Breakfast", label: "Breakfast" },
-    { value: "Main Course", label: "Main Course" },
-    { value: "Appetizer", label: "Appetizer" },
-    { value: "Dessert", label: "Dessert" },
-  ];
+  const categoryOptions = CATEGORY_OPTIONS.map((c) => ({
+    value: c,
+    label: c,
+  }));
 
   const handleTagChange = (selectedOptions) => {
     setTags(selectedOptions);
@@ -63,6 +82,18 @@ const AddArticle = () => {
 
     const imageUrl = await uploadImage(file);
 
+    const cleanedIngredients = recipe.ingredients
+      .filter((ing) => ing.name && ing.name.trim())
+      .map((ing) => ({
+        quantity: toNumberOrNull(ing.quantity),
+        unit: ing.unit || "",
+        name: ing.name.trim(),
+      }));
+
+    const cleanedInstructions = recipe.instructions
+      .map((step) => step.trim())
+      .filter((step) => step);
+
     const articleData = {
       id: uuidv4(),
       title,
@@ -71,6 +102,19 @@ const AddArticle = () => {
       tags: tags.map((tag) => tag.value),
       category: category.value, // Accessing single category value
       imageUrl,
+      ingredients: cleanedIngredients,
+      instructions: cleanedInstructions,
+      prepTime: toNumberOrNull(recipe.prepTime),
+      cookTime: toNumberOrNull(recipe.cookTime),
+      servings: toNumberOrNull(recipe.servings),
+      cuisine: recipe.cuisine || "",
+      diet: recipe.diet,
+      nutrition: {
+        calories: toNumberOrNull(recipe.nutrition.calories),
+        protein: toNumberOrNull(recipe.nutrition.protein),
+        carbs: toNumberOrNull(recipe.nutrition.carbs),
+        fat: toNumberOrNull(recipe.nutrition.fat),
+      },
       views: 0,
       likes: 0,
       publishedDate: new Date().toISOString(),
@@ -144,6 +188,9 @@ const AddArticle = () => {
             />
           </div>
           <div className="mb-8">
+            <label className="block text-lg font-medium text-gray-700 mb-2">
+              Intro / story (optional)
+            </label>
             <ReactQuill
               value={content}
               onChange={setContent}
@@ -151,6 +198,9 @@ const AddArticle = () => {
               theme="snow"
               placeholder="Write your article content here..."
             />
+          </div>
+          <div className="mt-16">
+            <RecipeFormFields value={recipe} onChange={setRecipe} />
           </div>
         </div>
         <div className="md:col-span-1 space-y-6">

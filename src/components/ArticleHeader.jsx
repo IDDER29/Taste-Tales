@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaHeart, FaTag } from "react-icons/fa";
+import { hasStructuredRecipe } from "../utils/recipe";
+import RecipeDetails from "./RecipeDetails";
 
 const ArticleHeader = ({ articleData, onDelete }) => {
   const navigate = useNavigate();
@@ -58,12 +60,26 @@ const ArticleHeader = ({ articleData, onDelete }) => {
         </div>
       </section>
 
-      <section className="prose lg:prose-xl prose-blue mb-8 text-left">
-        <div
-          dangerouslySetInnerHTML={{ __html: articleData.content }}
-          className="text-lg leading-relaxed"
-        ></div>
-      </section>
+      {hasStructuredRecipe(articleData) ? (
+        <>
+          {articleData.content && (
+            <section className="prose lg:prose-xl prose-blue mb-8 text-left">
+              <div
+                dangerouslySetInnerHTML={{ __html: articleData.content }}
+                className="text-lg leading-relaxed"
+              ></div>
+            </section>
+          )}
+          <RecipeDetails article={articleData} />
+        </>
+      ) : (
+        <section className="prose lg:prose-xl prose-blue mb-8 text-left">
+          <div
+            dangerouslySetInnerHTML={{ __html: articleData.content }}
+            className="text-lg leading-relaxed"
+          ></div>
+        </section>
+      )}
 
       <footer className="flex justify-end space-x-4">
         <button
