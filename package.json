@@ -1,5 +1,5 @@
 {
-  "homepage": "https://IDDER29.github.io/my-blog/",
+  "homepage": "https://IDDER29.github.io/taste-tales/",
   "name": "TASTE-TALES",
   "version": "0.1.0",
   "private": true,
@@ -13,8 +13,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
-    "cloudinary-core": "^2.13.1",
-    "cloudinary-react": "^1.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.2.1",
@@ -23,7 +21,6 @@
     "react-router-dom": "^6.24.0",
     "react-scripts": "^5.0.1",
     "react-select": "^5.8.0",
-    "react-tag-input": "^6.10.2",
     "util": "^0.12.5",
     "uuid": "^9.0.0",
     "web-vitals": "^2.1.4"
@@ -32,6 +29,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:ci": "react-scripts test --watchAll=false",
+    "server": "json-server --watch data/db.json --port 8000",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
@@ -41,6 +40,11 @@
       "react-app",
       "react-app/jest"
     ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^axios$": "axios/dist/node/axios.cjs"
+    }
   },
   "browserslist": {
     "production": [
@@ -65,6 +69,7 @@
     "autoprefixer": "^10.4.19",
     "eslint-webpack-plugin": "^4.0.2",
     "gh-pages": "^6.1.1",
+    "json-server": "^0.17.4",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4"
   }

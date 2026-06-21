@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaHeart, FaTag } from "react-icons/fa";
 
 const ArticleHeader = ({ articleData, onDelete }) => {
   const navigate = useNavigate();
@@ -43,33 +44,15 @@ const ArticleHeader = ({ articleData, onDelete }) => {
       <section className="mb-8">
         <div className="flex justify-center space-x-6 text-sm text-gray-600">
           <span className="flex items-center space-x-2">
-            <svg
-              className="w-5 h-5 text-blue-500"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.05 3.636a1 1 0 011.9 0l.341 1.027a1 1 00.95.688h1.084a1 1 01.588 1.81l-.886.646a1 1 00-.364 1.118l.341 1.027a1 1 01-1.537 1.118l-.886-.646a1 1 00-1.176 0l-.886.646a1 1 01-1.537-1.118l.341-1.027a1 1 00-.364-1.118l-.886-.646a1 1 01.588-1.81h1.084a1 1 00.95-.688l.341-1.027z" />
-            </svg>
+            <FaEye className="w-5 h-5 text-blue-500" />
             <span>{articleData.views} Views</span>
           </span>
           <span className="flex items-center space-x-2">
-            <svg
-              className="w-5 h-5 text-red-500"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.05 3.636a1 1 0 011.9 0l.341 1.027a1 1 00.95.688h1.084a1 1 01.588 1.81l-.886.646a1 1 00-.364 1.118l.341 1.027a1 1 01-1.537 1.118l-.886-.646a1 1 00-1.176 0l-.886.646a1 1 01-1.537-1.118l.341-1.027a1 1 00-.364-1.118l-.886-.646a1 1 01.588-1.81h1.084a1 1 00.95-.688l.341-1.027z" />
-            </svg>
+            <FaHeart className="w-5 h-5 text-red-500" />
             <span>{articleData.likes} Likes</span>
           </span>
           <span className="flex items-center space-x-2">
-            <svg
-              className="w-5 h-5 text-green-500"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.05 3.636a1 1 0 011.9 0l.341 1.027a1 1 00.95.688h1.084a1 1 01.588 1.81l-.886.646a1 1 00-.364 1.118l.341 1.027a1 1 01-1.537 1.118l-.886-.646a1 1 00-1.176 0l-.886.646a1 1 01-1.537-1.118l.341-1.027a1 1 00-.364-1.118l-.886-.646a1 1 01.588-1.81h1.084a1 1 00.95-.688l.341-1.027z" />
-            </svg>
+            <FaTag className="w-5 h-5 text-green-500" />
             <span>{articleData.category}</span>
           </span>
         </div>

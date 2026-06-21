@@ -1,12 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { selectTopArticlesByViews } from "../features/article/articleSlice";
 
 const TrendyRecipes = () => {
-  const articles = useSelector((state) => state.article.articles);
-  const sortedArticlesByViews = [...articles]
-    .sort((a, b) => b.views - a.views)
-    .slice(0, 3);
+  const topArticles = useSelector(selectTopArticlesByViews);
   return (
     <div className="relative bg-white p-6 rounded-lg ">
       <div
@@ -27,12 +25,9 @@ const TrendyRecipes = () => {
           <span className="text-red-500">Trendy</span> Recipes
         </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {sortedArticlesByViews.map((article) => (
+          {topArticles.map((article) => (
             <Link to={`/articles/${article.id}`} key={article.id}>
-              <div
-                key={article.id}
-                className="bg-white rounded-lg shadow-lg overflow-hidden"
-              >
+              <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                 <img
                   src={article.imageUrl}
                   alt={article.title}

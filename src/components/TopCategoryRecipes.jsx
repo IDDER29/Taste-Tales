@@ -1,7 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaHeart, FaRegBookmark } from "react-icons/fa";
-import { SelectedCategoryContext } from "../pages/Home";
 
 const TopCategoryRecipes = ({ recipes }) => {
   const [searchQuery, setSearchQuery] = useState("");

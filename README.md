@@ -1,70 +1,70 @@
-# Getting Started with Create React App
+# Taste-Tales
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Taste-Tales is a recipe/food blog single-page app built with React 18, Redux Toolkit, React Router, and Tailwind CSS. Users can browse, view, create, edit, and delete recipe "articles" with rich-text content. Article images are uploaded directly from the browser to Cloudinary, and article data is served by a [json-server](https://github.com/typicode/json-server) backend.
 
-## Available Scripts
+> Note: there is no backend code in this repository. `data/db.json` is the json-server database used as the REST API during development.
 
-In the project directory, you can run:
+## Prerequisites
 
-### `npm start`
+- Node.js 18
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Setup
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+npm install
+cp .env.example .env
+```
 
-### `npm test`
+Then adjust the values in `.env` for your environment (see [Environment Variables](#environment-variables)).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Running the backend
 
-### `npm run build`
+The frontend talks to a REST API serving recipe articles. In development this is provided by json-server using `data/db.json`. It must be running for the app to load and persist data:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm run server
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+This serves the API at http://localhost:8000.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Running the app
 
-### `npm run eject`
+In a separate terminal:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm start
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The app runs at http://localhost:3000.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Testing
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+npm test        # interactive watch mode
+npm run test:ci # single run, non-watch (used in CI)
+```
 
-## Learn More
+## Building
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm run build
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Produces an optimized production build in the `build/` folder.
 
-### Code Splitting
+## Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- **GitHub Pages** — CI publishes the build on every push to `main` (see `.github/workflows/ci.yml`). The workflow installs dependencies, runs tests, builds, and deploys `build/` to GitHub Pages. You can also deploy locally with `npm run deploy`.
+- **Netlify-style SPA hosts** — `public/_redirects` (`/* /index.html 200`) rewrites all routes to `index.html` so client-side routing works.
 
-### Analyzing the Bundle Size
+## Environment Variables
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Create React App only exposes variables prefixed with `REACT_APP_`. Copy `.env.example` to `.env` and set:
 
-### Making a Progressive Web App
+| Variable | Description |
+| --- | --- |
+| `REACT_APP_API_URL` | Base URL of the blog REST API (e.g. `http://localhost:8000/` for json-server). |
+| `REACT_APP_CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name used for unsigned image uploads. |
+| `REACT_APP_CLOUDINARY_UPLOAD_PRESET` | Cloudinary unsigned upload preset. |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Image uploads go directly from the browser to Cloudinary using the cloud name and unsigned upload preset above; the returned image URL is stored on the article.

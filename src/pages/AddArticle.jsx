@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addArticle } from "../features/article/articleSlice";
+import { uploadImage } from "../api/cloudinary";
 import { v4 as uuidv4 } from "uuid"; // to generate unique id
 
 const AddArticle = () => {
@@ -56,14 +56,12 @@ const AddArticle = () => {
       alert("Please select a category.");
       return;
     }
+    if (!file) {
+      alert("Please select an image.");
+      return;
+    }
 
-    const form = new FormData();
-    form.append("file", file);
-    form.append("upload_preset", "cg4zfcut");
-    const img = await axios.post(
-      "https://api.cloudinary.com/v1_1/dvnwx89ao/upload",
-      form
-    );
+    const imageUrl = await uploadImage(file);
 
     const articleData = {
       id: uuidv4(),
@@ -72,7 +70,7 @@ const AddArticle = () => {
       content,
       tags: tags.map((tag) => tag.value),
       category: category.value, // Accessing single category value
-      imageUrl: img.data.secure_url,
+      imageUrl,
       views: 0,
       likes: 0,
       publishedDate: new Date().toISOString(),

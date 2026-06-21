@@ -7,12 +7,12 @@ const Sidebar = () => {
       <div className="bg-white p-4 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold mb-4">About Me</h2>
         <img
-          src="[Chef Image URL]"
+          src="https://via.placeholder.com/96?text=Chef"
           alt="Chef"
           className="w-24 h-24 rounded-full mx-auto mb-4"
         />
         <p className="text-center text-lg">
-          Hi! I'm Chef [Name], a passionate cook and food blogger. Welcome to my
+          Hi! I'm Chef, a passionate cook and food blogger. Welcome to my
           kitchen!
         </p>
       </div>
