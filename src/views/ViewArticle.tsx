@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import ArticleHeader from "../components/ArticleHeader";
 import Sidebar from "../components/Sidebar";
@@ -23,6 +24,7 @@ import { averageRating } from "../utils/recipe";
 const ArticlePage = ({ id }: { id: string }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { data: session } = useSession();
 
   const article = useAppSelector(selectArticleById(id));
   const status = useAppSelector(selectArticlesStatus);
@@ -69,7 +71,15 @@ const ArticlePage = ({ id }: { id: string }) => {
 
       {/* Main Article Section */}
       <div className="lg:col-span-2 space-y-8">
-        <ArticleHeader articleData={article} onDelete={handleDelete} />
+        <ArticleHeader
+          articleData={article}
+          onDelete={handleDelete}
+          canManage={
+            !!session?.user &&
+            (session.user.id === article.authorId ||
+              session.user.role === "ADMIN")
+          }
+        />
         <Reviews blogId={id} />
       </div>
 

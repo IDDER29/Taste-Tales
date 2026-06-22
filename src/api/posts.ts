@@ -1,9 +1,11 @@
 import axios from "axios";
 
-// Base URL is environment-driven so production builds can point at a real API.
-// Falls back to the local json-server used in development.
-const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/";
+// Talks to the in-app backend at /api/v1 (same origin) by default. Cookies are
+// sent so authenticated writes work. Override with NEXT_PUBLIC_API_URL only if
+// the API is hosted elsewhere.
+const baseURL = process.env.NEXT_PUBLIC_API_URL || "/api/v1";
 
 export default axios.create({
     baseURL,
+    withCredentials: true,
 });

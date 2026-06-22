@@ -7,22 +7,36 @@ import { hasStructuredRecipe } from "../utils/recipe";
 import { sanitizeHtml } from "../utils/sanitize";
 import RecipeDetails from "./RecipeDetails";
 import SaveButton from "./SaveButton";
+import { useConfirm } from "./ui";
 import type { Article } from "../types";
 
 interface ArticleHeaderProps {
   articleData: Article;
   onDelete: (id: string) => void;
+  // Whether the current user may edit/delete this recipe (owner or admin).
+  canManage?: boolean;
 }
 
-const ArticleHeader = ({ articleData, onDelete }: ArticleHeaderProps) => {
+const ArticleHeader = ({
+  articleData,
+  onDelete,
+  canManage = false,
+}: ArticleHeaderProps) => {
   const router = useRouter();
+  const confirm = useConfirm();
 
   const handleEdit = () => {
     router.push(`/edit-article/${articleData.id}`);
   };
 
-  const handleDelete = () => {
-    onDelete(articleData.id);
+  const handleDelete = async () => {
+    const ok = await confirm({
+      title: "Delete this recipe?",
+      description: "This can't be undone.",
+      confirmLabel: "Delete",
+      danger: true,
+    });
+    if (ok) onDelete(articleData.id);
   };
 
   return (
@@ -100,20 +114,22 @@ const ArticleHeader = ({ articleData, onDelete }: ArticleHeaderProps) => {
         </section>
       )}
 
-      <footer className="flex justify-end space-x-4">
-        <button
-          onClick={handleEdit}
-          className="px-4 py-2 bg-indigo-500 text-white rounded-md shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-50"
-        >
-          Edit
-        </button>
-        <button
-          onClick={handleDelete}
-          className="px-4 py-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
-        >
-          Delete
-        </button>
-      </footer>
+      {canManage && (
+        <footer className="flex justify-end space-x-4">
+          <button
+            onClick={handleEdit}
+            className="px-4 py-2 bg-indigo-500 text-white rounded-md shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-50"
+          >
+            Edit
+          </button>
+          <button
+            onClick={handleDelete}
+            className="px-4 py-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
+          >
+            Delete
+          </button>
+        </footer>
+      )}
     </article>
   );
 };

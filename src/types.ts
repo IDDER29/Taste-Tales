@@ -26,6 +26,7 @@ export interface Article {
   views: number;
   likes: number;
   publisher: Publisher;
+  authorId?: string;
   subtitle?: string;
   cuisine?: string;
   diet?: string[];

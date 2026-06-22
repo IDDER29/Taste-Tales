@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
 import { fetchReviewsByBlog, createReview } from "../../services/apiReviews";
 import type { RootState } from "../../app/store";
 import type { Review } from "../../types";
@@ -14,7 +13,6 @@ interface ReviewState {
 
 interface PostReviewArgs {
     blogId: string;
-    author?: string;
     rating: number | string;
     comment?: string;
 }
@@ -26,16 +24,12 @@ export const getReviews = createAsyncThunk("reviews/get", async (blogId: string)
 
 export const postReview = createAsyncThunk(
     "reviews/post",
-    async ({ blogId, author, rating, comment }: PostReviewArgs) => {
-        const review: Review = {
-            id: uuidv4(),
+    async ({ blogId, rating, comment }: PostReviewArgs) => {
+        const response = await createReview(
             blogId,
-            author: author || "Anonymous",
-            rating: Number(rating) || 0,
-            comment: comment || "",
-            date: new Date().toISOString(),
-        };
-        const response = await createReview(review);
+            Number(rating) || 0,
+            comment || ""
+        );
         return response.data;
     }
 );

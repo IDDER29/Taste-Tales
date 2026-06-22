@@ -16,27 +16,22 @@ Taste-Tales is a recipe/food blog app built with Next.js 14 (App Router), React 
 - `npm run typecheck` — type-check with `tsc --noEmit`
 - `npm run server` — json-server mock backend at http://localhost:8000
 
-### Backend (required for the app to function in dev)
+### Backend (the real backend — Prisma + Auth.js, in-app)
 
-The frontend talks to a REST API at `http://localhost:8000/` (base URL in `src/api/posts.ts`, configured via `NEXT_PUBLIC_API_URL`) with a single `/blogs` resource. There is **no real backend in this repo** — `data/db.json` is a [json-server](https://github.com/typicode/json-server) database. Run it alongside `npm run dev`:
-
-```
-npm run server
-```
-
-Note the mismatch worth knowing: json-server's default route would be `/blogs` matching the API, but the `db.json` records use string `id`s.
+The app talks to its own backend under **`/api/v1`** (Next.js Route Handlers, same origin) — see `docs/BACKEND.md` and `docs/BACKEND_ARCHITECTURE.md`. To run it you need a Postgres DB (Neon) and `AUTH_SECRET`; then `npm run prisma:migrate && npm run db:seed && npm run dev`. The old `json-server` (`data/db.json`, `npm run server`) is now only a legacy offline fallback, not the data source.
 
 ## Architecture
 
 **Data flow:** Components dispatch async thunks → thunks call service functions → services call the shared axios instance → reducers update the store → components re-render via `useSelector`. The layering is strict:
 
-- `src/api/posts.ts` — the single axios instance (only place the base URL lives; reads `NEXT_PUBLIC_API_URL`).
-- `src/services/apiPostes.ts` — thin CRUD wrappers (`fetchArticles`, `createArticle`, `deleteArticle`, `updateArticle`, `fetchArticleById`) over `/blogs`. (Filename is intentionally `apiPostes`.)
+- `src/api/posts.ts` — the single axios instance (base URL defaults to `/api/v1`, same origin; `withCredentials` so session cookies ride along).
+- `src/api/mappers.ts` — translates the API's recipe/review shapes ↔ the app's `Article`/`Review` types (one source of truth for the mapping).
+- `src/services/apiPostes.ts` — thin CRUD wrappers (`fetchArticles`, `createArticle`, `deleteArticle`, `updateArticle`, `fetchArticleById`) over `/api/v1/recipes`, mapping the `{ data, meta }` envelope. (Filename is intentionally `apiPostes`.)
 - `src/features/article/articleSlice.ts` — `createAsyncThunk`s wrap the services; `extraReducers` apply results to `state.article.articles`. Also holds `selectedCategory` (category filter) and `notifications`.
 - `src/features/ui/uiSlice.ts` — UI-only state (mobile menu, notifications dropdown). Note `notifications` exists in *both* slices; the app reads `state.article.notifications`, so `uiSlice.notifications` is effectively unused.
 - `src/app/store.ts` — combines `ui` and `article` reducers.
 
-**Entry & routing (App Router):** Routes are file-based under `app/`. `app/layout.tsx` is the root layout: it renders `NavBar`, the page, and `Footer` inside a client `Providers` component (`app/providers.tsx`) that wraps the Redux `<Provider>` and dispatches `getAllArticles()` once on mount. `app/globals.css` holds the Tailwind directives. Routes: `app/page.tsx` (Home), `app/articles/page.tsx` (create), `app/articles/[id]/page.tsx` (view), `app/edit-article/[id]/page.tsx` (edit), `app/about`, `app/saved`, `app/cook`, and `app/not-found.tsx` (404). Most components/pages are Client Components (`"use client"`); the app is still client-rendered and fetches from json-server via the axios instance — SSR/data-fetching moves server-side when the real backend lands. `HeroSection` renders only on Home (not globally).
+**Entry & routing (App Router):** Routes are file-based under `app/`. `app/layout.tsx` is the root layout: it renders `NavBar`, the page, and `Footer` inside a client `Providers` component (`app/providers.tsx`) that wraps the Redux `<Provider>` and dispatches `getAllArticles()` once on mount. `app/globals.css` holds the Tailwind directives. Routes: `app/page.tsx` (Home), `app/articles/page.tsx` (create), `app/articles/[id]/page.tsx` (view), `app/edit-article/[id]/page.tsx` (edit), `app/about`, `app/saved`, `app/cook`, and `app/not-found.tsx` (404). Most components/pages are Client Components (`"use client"`); the app is client-rendered and fetches from its own `/api/v1` backend via the axios instance + thunks — SSR/data-fetching can move server-side later. Create/edit pages require auth (redirect to `/login`); reviews require sign-in; Edit/Delete show only to the owner/admin. `HeroSection` renders only on Home (not globally).
 
 **Route files vs views vs components:** The `app/` route files are thin wrappers that render the page components, which live in **`src/views/`** (renamed from `src/pages/`, which Next reserves). `src/components/` holds reusable building blocks (Home composes `Categories`, `TrendyRecipes`, `RecipeBlogs`, `Sidebar`, `Subscription`, etc.).
 

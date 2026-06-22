@@ -7,6 +7,7 @@ import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 
 // react-quill touches `document` at import time — load it client-side only.
@@ -19,6 +20,7 @@ import {
 } from "../features/article/articleSlice";
 import { uploadImage } from "../api/cloudinary";
 import RecipeFormFields from "../components/RecipeFormFields";
+import { useToast } from "../components/ui";
 import { CATEGORY_OPTIONS } from "../utils/recipe";
 import type { Article, RecipeFormValue } from "../types";
 
@@ -47,6 +49,15 @@ const emptyRecipe: RecipeFormValue = {
 const EditArticle = ({ id }: { id: string }) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { toast } = useToast();
+  const { status: authStatus } = useSession();
+
+  // Editing requires an account (ownership is enforced server-side too).
+  useEffect(() => {
+    if (authStatus === "unauthenticated") {
+      router.push(`/login?callbackUrl=/edit-article/${id}`);
+    }
+  }, [authStatus, router, id]);
 
   const article = useAppSelector(selectArticleById(id));
   const status = useAppSelector(selectArticlesStatus);
@@ -164,8 +175,17 @@ const EditArticle = ({ id }: { id: string }) => {
       publisher: article!.publisher,
     };
 
-    await dispatch(updateAnArticle({ id, data: updatedArticleData }));
-    router.push(`/articles/${id}`);
+    try {
+      await dispatch(updateAnArticle({ id, data: updatedArticleData })).unwrap();
+      toast({ title: "Recipe updated!", variant: "success" });
+      router.push(`/articles/${id}`);
+    } catch {
+      toast({
+        title: "Could not update",
+        description: "You can only edit your own recipes.",
+        variant: "error",
+      });
+    }
   };
 
   if (!article) {

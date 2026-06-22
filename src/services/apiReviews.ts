@@ -1,8 +1,28 @@
 import api from "../api/posts";
-import { Review } from "../types";
+import type { Review } from "../types";
+import { apiReviewToReview, type ApiReview, type Envelope } from "../api/mappers";
 
-// Reviews are a json-server resource: /reviews, filtered by blogId.
-export const fetchReviewsByBlog = (blogId: string) =>
-    api.get<Review[]>(`/reviews?blogId=${encodeURIComponent(blogId)}`);
+// Reviews are nested under a recipe: /api/v1/recipes/:id/reviews.
 
-export const createReview = (data: Review) => api.post<Review>("/reviews", data);
+export const fetchReviewsByBlog = async (
+    blogId: string
+): Promise<{ data: Review[] }> => {
+    const res = await api.get<Envelope<ApiReview[]>>(
+        `/recipes/${blogId}/reviews`
+    );
+    return { data: res.data.data.map(apiReviewToReview) };
+};
+
+// Author is taken from the authenticated session server-side; the client only
+// sends rating + comment.
+export const createReview = async (
+    blogId: string,
+    rating: number,
+    comment: string
+): Promise<{ data: Review }> => {
+    const res = await api.post<Envelope<ApiReview>>(
+        `/recipes/${blogId}/reviews`,
+        { rating, comment }
+    );
+    return { data: apiReviewToReview(res.data.data) };
+};

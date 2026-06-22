@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useAppDispatch } from "../app/hooks";
 import { addArticle } from "../features/article/articleSlice";
 import { uploadImage } from "../api/cloudinary";
 import { v4 as uuidv4 } from "uuid"; // to generate unique id
 import RecipeFormFields from "../components/RecipeFormFields";
+import { useToast } from "../components/ui";
 import { CATEGORY_OPTIONS } from "../utils/recipe";
 import type { Article, RecipeFormValue } from "../types";
 
@@ -48,6 +50,15 @@ const AddArticle = () => {
   const [recipe, setRecipe] = useState<RecipeFormValue>(emptyRecipe);
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { toast } = useToast();
+  const { status: authStatus } = useSession();
+
+  // Creating a recipe requires an account.
+  useEffect(() => {
+    if (authStatus === "unauthenticated") {
+      router.push("/login?callbackUrl=/articles");
+    }
+  }, [authStatus, router]);
 
   const tagOptions = [
     { value: "Tech", label: "Tech" },
@@ -135,8 +146,17 @@ const AddArticle = () => {
       },
     };
 
-    dispatch(addArticle(articleData));
-    router.push(`/`);
+    try {
+      const created = await dispatch(addArticle(articleData)).unwrap();
+      toast({ title: "Recipe published!", variant: "success" });
+      router.push(`/articles/${created.id}`);
+    } catch {
+      toast({
+        title: "Could not publish",
+        description: "Please make sure you're signed in and try again.",
+        variant: "error",
+      });
+    }
   };
 
   return (

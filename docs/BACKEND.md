@@ -79,17 +79,21 @@ Rate limiting (auth/AI/writes) and Cloudinary signing activate automatically whe
 their env vars are present; without them the app still runs (limits no-op, uploads
 fall back to the unsigned preset).
 
-## Frontend (already wired)
+## Frontend (wired to the real backend)
 
-- **Auth UI:** `/login` and `/register` pages (`src/views/Login.tsx`, `src/views/Register.tsx`),
-  `SessionProvider` in `app/providers.tsx`, and the NavBar now shows the signed-in
-  user + Log out (Auth.js `signIn`/`signOut`/`useSession`).
-- **RTK Query data layer:** `src/features/api/apiSlice.ts` — typed `getRecipes`,
-  `getRecipe`, `create/update/deleteRecipe`, `getReviews`, `addReview` hooks pointed
-  at `/api`, with `transformResponse` mapping the API shape to the app's `Article`/`Review`
-  types. Registered in the store (`src/app/store.ts`) with its middleware.
+The app no longer uses json-server. The Redux thunk/service layer now talks to
+`/api/v1`:
 
-These are built and type-checked but exercise the live backend only once `DATABASE_URL`
+- **Data layer:** `src/api/posts.ts` (axios → `/api/v1`, `withCredentials`),
+  `src/api/mappers.ts` (API ↔ `Article`/`Review`), `src/services/apiPostes.ts` +
+  `apiReviews.ts` (CRUD over `/recipes` and nested reviews). `articleSlice`/`reviewSlice`
+  consume these unchanged; all read components/selectors are untouched. (The standalone
+  RTK Query `apiSlice` was removed to keep a single source of truth.)
+- **Auth UI:** `/login` + `/register`, `SessionProvider`, NavBar session state.
+- **Auth-gated writes:** create/edit pages redirect to `/login` when signed out; reviews
+  require sign-in; Edit/Delete render only for the owner/admin; delete uses a confirm dialog.
+
+Everything is built and type-checked; it exercises the live backend once `DATABASE_URL`
 + `AUTH_SECRET` are set and migrations have run.
 
 ## Done (backend hardening — ready to flip on with keys)
@@ -102,13 +106,16 @@ These are built and type-checked but exercise the live backend only once `DATABA
   `UPSTASH_REDIS_REST_*` are set.
 - **Consistent API**: `/api/v1` versioning, `{ data, meta }` / `{ error }` envelopes, Zod validation,
   central `ApiError` handling, ownership/role checks, self-review block, transactional rating aggregates.
-- **Server-synced Recipe Box** endpoints (`/api/v1/saved`) + RTK Query `useGetSaved/useSave/useUnsave`.
+- **Server-synced Recipe Box** endpoints (`/api/v1/saved`) — backend ready (client still uses localStorage; see below).
 - **Health check** (`/api/health`) for uptime monitors.
+- **Frontend cutover:** the app reads/writes through `/api/v1` (json-server retired); writes are auth-gated.
 
 ## Still to do (needs a live DB / browser to verify)
 
-- **Flip the frontend** from json-server thunks (`articleSlice`/`reviewSlice`, `NEXT_PUBLIC_API_URL`)
-  to the RTK Query hooks; migrate the Recipe Box from localStorage to `/api/v1/saved` (merge guest saves on login).
-- **Route protection** for create/edit pages (Auth.js v5 edge-safe split-config for middleware).
+- **Server-sync the Recipe Box:** switch `savedSlice` from localStorage to `/api/v1/saved`
+  (and merge a guest's local saves into their account on first login).
+- **Edge middleware** route protection (currently enforced client-side + server-side) — needs
+  the Auth.js v5 edge-safe split-config.
 - **Email verification + password reset** (`VerificationToken` + Resend, sent via QStash).
+- **Idempotency keys** on create endpoints; **observability** (Sentry + structured logs).
 - **Idempotency keys** on create endpoints; **observability** (Sentry + structured logs).
