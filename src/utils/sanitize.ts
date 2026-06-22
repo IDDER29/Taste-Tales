@@ -1,4 +1,4 @@
-import DOMPurify from "dompurify";
+import DOMPurify from "isomorphic-dompurify";
 
 // Tags/attributes we allow in article "content" (rich text from react-quill).
 // Anything else — <script>, event handlers, <iframe>, javascript: URIs — is

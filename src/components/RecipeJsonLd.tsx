@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { hasStructuredRecipe, buildRecipeJsonLd } from "../utils/recipe";
 import type { Article, Rating } from "../types";

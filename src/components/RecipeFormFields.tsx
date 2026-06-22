@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { CUISINE_OPTIONS, DIET_OPTIONS, UNIT_OPTIONS } from "../utils/recipe";
 import type { Ingredient, RecipeFormValue } from "../types";

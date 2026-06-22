@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { FaEye, FaHeart, FaTag } from "react-icons/fa";
 import { hasStructuredRecipe } from "../utils/recipe";
 import { sanitizeHtml } from "../utils/sanitize";
@@ -13,10 +15,10 @@ interface ArticleHeaderProps {
 }
 
 const ArticleHeader = ({ articleData, onDelete }: ArticleHeaderProps) => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleEdit = () => {
-    navigate(`/edit-article/${articleData.id}`);
+    router.push(`/edit-article/${articleData.id}`);
   };
 
   const handleDelete = () => {

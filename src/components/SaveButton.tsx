@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "../app/hooks";

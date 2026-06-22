@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { FaMagic, FaBookmark } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import HeroSection from "../components/HeroSection";
@@ -59,7 +61,7 @@ function Home() {
       {/* Surface the flagship features */}
       <div className="grid gap-6 sm:grid-cols-2 p-6">
         <Link
-          to="/cook"
+          href="/cook"
           className="group flex items-center gap-4 rounded-lg bg-gradient-to-r from-red-500 to-orange-400 p-6 text-white shadow-md hover:shadow-lg transition-shadow"
         >
           <FaMagic className="h-8 w-8 flex-none" />
@@ -71,7 +73,7 @@ function Home() {
           </div>
         </Link>
         <Link
-          to="/saved"
+          href="/saved"
           className="group flex items-center gap-4 rounded-lg bg-white p-6 shadow-md hover:shadow-lg transition-shadow"
         >
           <FaBookmark className="h-8 w-8 flex-none text-red-500" />

@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { FaHeart } from "react-icons/fa";
 import { formatMinutes, totalMinutes } from "../utils/recipe";
 import SaveButton from "./SaveButton";
@@ -25,7 +27,7 @@ const TopCategoryRecipes: React.FC<TopCategoryRecipesProps> = ({ recipes }) => {
             const time = formatMinutes(totalMinutes(recipe));
             const diets = recipe.diet || [];
             return (
-              <Link to={`/articles/${recipe.id}`} key={recipe.id}>
+              <Link href={`/articles/${recipe.id}`} key={recipe.id}>
                 <div className="relative rounded-lg shadow-lg overflow-hidden">
                   <SaveButton
                     id={recipe.id}

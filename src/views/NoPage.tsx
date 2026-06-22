@@ -1,7 +1,9 @@
+"use client";
+
 // pages/NoPage.jsx
 
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const NoPage = () => {
   return (
@@ -14,7 +16,7 @@ const NoPage = () => {
         Sorry, the page you're looking for doesn't exist or has been moved.
       </p>
       <Link
-        to="/"
+        href="/"
         className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
       >
         Back to Home

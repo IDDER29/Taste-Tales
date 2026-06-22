@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useAppSelector } from "../app/hooks";
 import { selectTopArticlesByViews } from "../features/article/articleSlice";
 
@@ -26,7 +28,7 @@ const TrendyRecipes: React.FC = () => {
         </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {topArticles.map((article) => (
-            <Link to={`/articles/${article.id}`} key={article.id}>
+            <Link href={`/articles/${article.id}`} key={article.id}>
               <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                 <img
                   src={article.imageUrl}

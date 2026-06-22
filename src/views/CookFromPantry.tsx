@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { FaTimes, FaMagic } from "react-icons/fa";
 import { useAppSelector } from "../app/hooks";
 import { selectAllArticles } from "../features/article/articleSlice";
@@ -123,7 +125,7 @@ const CookFromPantry = () => {
             <div className="grid gap-4 sm:grid-cols-2">
               {matches.map(({ recipe, have, missing, score }) => (
                 <Link
-                  to={`/articles/${recipe.id}`}
+                  href={`/articles/${recipe.id}`}
                   key={recipe.id}
                   className="block bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden"
                 >
@@ -169,7 +171,7 @@ const CookFromPantry = () => {
           <p className="text-gray-600 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             AI generation is disabled. Set{" "}
             <code className="bg-yellow-100 px-1 rounded">
-              REACT_APP_ANTHROPIC_API_KEY
+              NEXT_PUBLIC_ANTHROPIC_API_KEY
             </code>{" "}
             in your <code className="bg-yellow-100 px-1 rounded">.env</code> to
             enable it. The pantry matcher above works without a key.

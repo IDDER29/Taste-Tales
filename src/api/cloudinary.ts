@@ -3,9 +3,9 @@ import axios from "axios";
 // Cloudinary unsigned upload config. Overridable via env vars; falls back to the
 // project's existing values so local dev keeps working without setup.
 const CLOUD_NAME =
-    process.env.REACT_APP_CLOUDINARY_CLOUD_NAME || "dvnwx89ao";
+    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dvnwx89ao";
 const UPLOAD_PRESET =
-    process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET || "cg4zfcut";
+    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "cg4zfcut";
 
 /**
  * Upload a single image file to Cloudinary and return its secure URL.

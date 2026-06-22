@@ -11,10 +11,10 @@ import type { GeneratedRecipe } from "../types";
 // for direct browser requests.
 
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
-const API_KEY = process.env.REACT_APP_ANTHROPIC_API_KEY;
+const API_KEY = process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY;
 // Default to the most capable model; override via env (e.g. claude-haiku-4-5
 // for a cheaper/faster demo).
-const MODEL = process.env.REACT_APP_ANTHROPIC_MODEL || "claude-opus-4-8";
+const MODEL = process.env.NEXT_PUBLIC_ANTHROPIC_MODEL || "claude-opus-4-8";
 
 // True when an API key is present, so the UI can hide/disable AI features.
 export const isAiConfigured = (): boolean => Boolean(API_KEY);
@@ -81,7 +81,7 @@ export async function generateRecipeFromIngredients(
 ): Promise<GeneratedRecipe> {
   if (!API_KEY) {
     throw new Error(
-      "AI is not configured. Set REACT_APP_ANTHROPIC_API_KEY to enable recipe generation."
+      "AI is not configured. Set NEXT_PUBLIC_ANTHROPIC_API_KEY to enable recipe generation."
     );
   }
 

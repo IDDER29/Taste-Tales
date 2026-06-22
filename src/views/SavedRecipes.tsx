@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useAppSelector } from "../app/hooks";
 import { selectSavedIds } from "../features/saved/savedSlice";
 import { selectAllArticles } from "../features/article/articleSlice";
@@ -34,7 +36,7 @@ const SavedRecipes = () => {
             You haven't saved any recipes yet.
           </p>
           <Link
-            to="/"
+            href="/"
             className="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
           >
             Browse recipes
@@ -51,7 +53,7 @@ const SavedRecipes = () => {
 
             return (
               <Link
-                to={`/articles/${article.id}`}
+                href={`/articles/${article.id}`}
                 key={article.id}
                 className="group bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden flex flex-col"
               >

@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const FEATURES = [
   {
@@ -76,13 +78,13 @@ const AboutPage = () => {
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <Link
-            to="/"
+            href="/"
             className="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600"
           >
             Browse recipes
           </Link>
           <Link
-            to="/articles"
+            href="/articles"
             className="px-6 py-3 border border-red-500 text-red-500 font-semibold rounded-lg hover:bg-red-50"
           >
             Create a recipe

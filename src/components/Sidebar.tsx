@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { FaMagic } from "react-icons/fa";
 import { useAppSelector } from "../app/hooks";
 import {
@@ -23,7 +25,7 @@ const Sidebar: React.FC = () => {
     <div className="space-y-8">
       {/* Cook CTA */}
       <Link
-        to="/cook"
+        href="/cook"
         className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-red-500 to-orange-400 p-4 text-white shadow-lg hover:shadow-xl transition-shadow"
       >
         <FaMagic className="h-6 w-6 flex-none" />
@@ -43,7 +45,7 @@ const Sidebar: React.FC = () => {
             {topArticles.map((article) => (
               <li key={article.id}>
                 <Link
-                  to={`/articles/${article.id}`}
+                  href={`/articles/${article.id}`}
                   className="text-lg text-blue-500 hover:underline"
                 >
                   {article.title}
@@ -64,7 +66,7 @@ const Sidebar: React.FC = () => {
             {recent.map((article) => (
               <li key={article.id}>
                 <Link
-                  to={`/articles/${article.id}`}
+                  href={`/articles/${article.id}`}
                   className="text-lg text-blue-500 hover:underline"
                 >
                   {article.title}

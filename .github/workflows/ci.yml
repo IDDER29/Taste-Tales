@@ -1,22 +1,25 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Use Node.js 18
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Type check
         run: npm run typecheck
@@ -25,13 +28,7 @@ jobs:
         run: npm run test:ci
 
       - name: Build
-        run: |
-          echo "Building the project..."
-          CI=false npm run build
-          echo "Build completed"
+        run: npm run build
 
-      - name: Deploy with GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4 # Updated to v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build # Ensure this matches your build output directory
+# Deployment is handled by Vercel's GitHub integration (it builds and deploys
+# the Next.js app on push). This workflow is the quality gate only.

@@ -1,5 +1,8 @@
+"use client";
+
 import React, { useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import ArticleHeader from "../components/ArticleHeader";
 import Sidebar from "../components/Sidebar";
@@ -17,9 +20,8 @@ import {
 } from "../features/review/reviewSlice";
 import { averageRating } from "../utils/recipe";
 
-const ArticlePage = () => {
-  const { id = "" } = useParams();
-  const navigate = useNavigate();
+const ArticlePage = ({ id }: { id: string }) => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
 
   const article = useAppSelector(selectArticleById(id));
@@ -39,7 +41,7 @@ const ArticlePage = () => {
 
   const handleDelete = async () => {
     await dispatch(deleteAnArticle(id));
-    navigate("/");
+    router.push("/");
   };
 
   if (!article) {
@@ -54,7 +56,7 @@ const ArticlePage = () => {
         <p className="text-gray-600 mb-6">
           The article you're looking for doesn't exist or could not be loaded.
         </p>
-        <Link to="/" className="text-red-500 font-medium hover:underline">
+        <Link href="/" className="text-red-500 font-medium hover:underline">
           Back to Home
         </Link>
       </div>

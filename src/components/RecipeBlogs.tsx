@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useAppSelector } from "../app/hooks";
 import { selectTopArticlesByViews } from "../features/article/articleSlice";
 
@@ -45,7 +47,7 @@ const RecipeBlog: React.FC = () => {
           </div>
           <div className="lg:col-span-1 space-y-8 flex flex-col">
             {topArticles.map((article) => (
-              <Link to={`/articles/${article.id}`} key={article.id}>
+              <Link href={`/articles/${article.id}`} key={article.id}>
                 <div className="flex flex-col lg:flex-row bg-white rounded-lg shadow-md overflow-hidden">
                   <div
                     className="h-48 lg:h-auto lg:w-48 flex-none bg-cover"

@@ -1,20 +1,19 @@
-// src/pages/EditArticle.js
-import React, { useState, useEffect } from "react";
-import ReactQuill from "react-quill";
+"use client";
+
+import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import Select from "react-select";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import {
-  getArticleById,
-  updateAnArticle,
-  selectArticleById,
-  selectArticlesStatus,
-} from "../features/article/articleSlice";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "../app/hooks";
+import { addArticle } from "../features/article/articleSlice";
 import { uploadImage } from "../api/cloudinary";
+import { v4 as uuidv4 } from "uuid"; // to generate unique id
 import RecipeFormFields from "../components/RecipeFormFields";
 import { CATEGORY_OPTIONS } from "../utils/recipe";
 import type { Article, RecipeFormValue } from "../types";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 // Coerce a possibly-blank value to a Number, or null when empty/invalid.
 const toNumberOrNull = (v: number | string | null | undefined): number | null => {
@@ -22,8 +21,6 @@ const toNumberOrNull = (v: number | string | null | undefined): number | null =>
   const n = Number(v);
   return Number.isNaN(n) ? null : n;
 };
-
-type SelectOption = { value: string; label: string };
 
 const emptyRecipe: RecipeFormValue = {
   // Ingredient quantity is kept as an empty string while editing the controlled
@@ -38,67 +35,41 @@ const emptyRecipe: RecipeFormValue = {
   nutrition: { calories: "", protein: "", carbs: "", fat: "" },
 };
 
-const EditArticle = () => {
-  const { id = "" } = useParams();
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+type SelectOption = { value: string; label: string };
 
-  const article = useAppSelector(selectArticleById(id));
-  const status = useAppSelector(selectArticlesStatus);
-
+const AddArticle = () => {
   const [title, setTitle] = useState<string>("");
   const [subtitle, setSubtitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [imageUrl, setImageUrl] = useState<string>("");
+  const [tags, setTags] = useState<SelectOption[]>([]);
+  const [category, setCategory] = useState<SelectOption | null>(null); // Changed to single category state
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [category, setCategory] = useState<SelectOption | null>(null);
   const [recipe, setRecipe] = useState<RecipeFormValue>(emptyRecipe);
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const tagOptions = [
+    { value: "Tech", label: "Tech" },
+    { value: "Health", label: "Health" },
+    { value: "Food", label: "Food" },
+  ];
 
   const categoryOptions = CATEGORY_OPTIONS.map((c) => ({
     value: c,
     label: c,
   }));
 
-  useEffect(() => {
-    if (!article) {
-      dispatch(getArticleById(id));
-    } else {
-      setTitle(article.title);
-      setSubtitle(article.subtitle ?? "");
-      setContent(article.content ?? "");
-      setImageUrl(article.imageUrl);
-      setCategory(
-        categoryOptions.find((cat) => cat.value === article.category) ?? null
-      );
-      setRecipe({
-        ingredients:
-          article.ingredients && article.ingredients.length
-            ? article.ingredients.map((ing) => ({
-                quantity: (ing.quantity ?? "") as unknown as number | null,
-                unit: ing.unit || "",
-                name: ing.name || "",
-              }))
-            : [{ quantity: "" as unknown as number | null, unit: "", name: "" }],
-        instructions:
-          article.instructions && article.instructions.length
-            ? article.instructions
-            : [""],
-        prepTime: article.prepTime ?? "",
-        cookTime: article.cookTime ?? "",
-        servings: article.servings ?? "",
-        cuisine: article.cuisine || "",
-        diet: article.diet || [],
-        nutrition: {
-          calories: article.nutrition?.calories ?? "",
-          protein: article.nutrition?.protein ?? "",
-          carbs: article.nutrition?.carbs ?? "",
-          fat: article.nutrition?.fat ?? "",
-        },
-      });
-    }
-  }, [dispatch, id, article]);
+  const handleTagChange = (selectedOptions: any) => {
+    setTags(selectedOptions);
+  };
+
+  const handleCategoryChange = (selectedOption: any) => {
+    setCategory(selectedOption);
+  };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     try {
       const selected = e.target.files?.[0];
       if (!selected) return;
@@ -115,11 +86,12 @@ const EditArticle = () => {
       alert("Please select a category.");
       return;
     }
-
-    let uploadedImageUrl = imageUrl || article!.imageUrl;
-    if (file) {
-      uploadedImageUrl = await uploadImage(file);
+    if (!file) {
+      alert("Please select an image.");
+      return;
     }
+
+    const imageUrl = await uploadImage(file);
 
     const cleanedIngredients = recipe.ingredients
       .filter((ing) => ing.name && ing.name.trim())
@@ -133,13 +105,14 @@ const EditArticle = () => {
       .map((step) => step.trim())
       .filter((step) => step);
 
-    const updatedArticleData: Article = {
-      id,
+    const articleData: Article = {
+      id: uuidv4(),
       title,
       subtitle,
       content,
-      imageUrl: uploadedImageUrl,
-      category: category ? category.value : article!.category,
+      tags: tags.map((tag) => tag.value),
+      category: category.value, // Accessing single category value
+      imageUrl,
       ingredients: cleanedIngredients,
       instructions: cleanedInstructions,
       prepTime: toNumberOrNull(recipe.prepTime),
@@ -153,39 +126,24 @@ const EditArticle = () => {
         carbs: toNumberOrNull(recipe.nutrition.carbs),
         fat: toNumberOrNull(recipe.nutrition.fat),
       },
-      views: article!.views,
-      likes: article!.likes,
-      publishedDate: article!.publishedDate,
-      publisher: article!.publisher,
+      views: 0,
+      likes: 0,
+      publishedDate: new Date().toISOString(),
+      publisher: {
+        name: "Anonymous",
+        image: "https://via.placeholder.com/40x40.png?text=JD",
+      },
     };
 
-    await dispatch(updateAnArticle({ id, data: updatedArticleData }));
-    navigate(`/articles/${id}`);
+    dispatch(addArticle(articleData));
+    router.push(`/`);
   };
-
-  if (!article) {
-    if (status === "failed" || status === "succeeded") {
-      return (
-        <div className="container mx-auto py-20 px-4 text-center">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
-            Article not found
-          </h1>
-          <p className="text-gray-600 mb-6">
-            The article you're trying to edit doesn't exist or could not be
-            loaded.
-          </p>
-          <Link to="/" className="text-red-500 font-medium hover:underline">
-            Back to Home
-          </Link>
-        </div>
-      );
-    }
-    return <p>Loading...</p>;
-  }
 
   return (
     <div className="container mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold text-center mb-8">Edit Your Article</h1>
+      <h1 className="text-4xl font-bold text-center mb-8">
+        Create and Publish an Article
+      </h1>
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-4 gap-6"
@@ -259,6 +217,33 @@ const EditArticle = () => {
         <div className="md:col-span-1 space-y-6">
           <div>
             <label
+              htmlFor="tags"
+              className="block text-lg font-medium text-gray-700 mb-2"
+            >
+              Tags
+            </label>
+            <Select
+              id="tags"
+              isMulti
+              value={tags}
+              onChange={handleTagChange}
+              options={tagOptions}
+              className="basic-multi-select"
+              classNamePrefix="select"
+            />
+            <div className="mt-4">
+              {tags.map((tag) => (
+                <span
+                  key={tag.value}
+                  className="inline-block bg-blue-500 text-white px-2 py-1 rounded-full mr-2 mb-2"
+                >
+                  {tag.label}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label
               htmlFor="category"
               className="block text-lg font-medium text-gray-700 mb-2"
             >
@@ -267,7 +252,7 @@ const EditArticle = () => {
             <Select
               id="category"
               value={category}
-              onChange={(selectedOption: any) => setCategory(selectedOption)}
+              onChange={handleCategoryChange}
               options={categoryOptions}
               className="basic-single-select"
               classNamePrefix="select"
@@ -281,7 +266,7 @@ const EditArticle = () => {
             type="submit"
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Update
+            Publish
           </button>
         </div>
       </form>
@@ -289,4 +274,4 @@ const EditArticle = () => {
   );
 };
 
-export default EditArticle;
+export default AddArticle;

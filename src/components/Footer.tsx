@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { FaTiktok, FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 
 const Footer: React.FC = () => {
@@ -8,22 +10,22 @@ const Footer: React.FC = () => {
       <div className="container mx-auto py-6">
         <div className="flex flex-col sm:flex-row justify-between items-center pb-6">
           <div className="flex justify-start items-center">
-            <img src="./blogLogo.png" alt="Blog Logo" className="h-16" />
+            <img src="/blogLogo.png" alt="Blog Logo" className="h-16" />
           </div>
           <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 my-4 sm:my-0">
-            <Link to="/" className="hover:underline">
+            <Link href="/" className="hover:underline">
               Home
             </Link>
-            <Link to="/articles" className="hover:underline">
+            <Link href="/articles" className="hover:underline">
               Create Article
             </Link>
-            <Link to="/cook" className="hover:underline">
+            <Link href="/cook" className="hover:underline">
               Cook
             </Link>
-            <Link to="/saved" className="hover:underline">
+            <Link href="/saved" className="hover:underline">
               Recipe Box
             </Link>
-            <Link to="/about" className="hover:underline">
+            <Link href="/about" className="hover:underline">
               About Us
             </Link>
           </div>

@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { Dialog, DialogPanel, PopoverGroup } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, BellIcon } from "@heroicons/react/24/outline";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
@@ -25,9 +27,9 @@ export default function NavBar() {
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
-          <Link to="/" className="-m-1.5 p-1.5">
+          <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img className="h-14 w-auto" src="./blogLogo.png" alt="" />
+            <img className="h-14 w-auto" src="/blogLogo.png" alt="" />
           </Link>
         </div>
         <div className="flex lg:hidden">
@@ -41,29 +43,29 @@ export default function NavBar() {
           </button>
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-          <Link to="/" className="text-sm font-semibold leading-6 text-white ">
+          <Link href="/" className="text-sm font-semibold leading-6 text-white ">
             Home
           </Link>
           <Link
-            to="/articles"
+            href="/articles"
             className="text-sm font-semibold leading-6 text-white"
           >
             Create Article
           </Link>
           <Link
-            to="/cook"
+            href="/cook"
             className="text-sm font-semibold leading-6 text-white"
           >
             Cook
           </Link>
           <Link
-            to="/about"
+            href="/about"
             className="text-sm font-semibold leading-6 text-white"
           >
             About Us
           </Link>
           <Link
-            to="/saved"
+            href="/saved"
             className="text-sm font-semibold leading-6 text-white"
           >
             Recipe Box{savedCount > 0 ? ` (${savedCount})` : ""}
@@ -97,7 +99,7 @@ export default function NavBar() {
         <div className="fixed inset-0 z-10" />
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <Link to="/" className="-m-1.5 p-1.5">
+            <Link href="/" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
               <img
                 className="h-8 w-auto"
@@ -118,31 +120,31 @@ export default function NavBar() {
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
                 <Link
-                  to="/"
+                  href="/"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Home
                 </Link>
                 <Link
-                  to="/articles"
+                  href="/articles"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Create Article
                 </Link>
                 <Link
-                  to="/cook"
+                  href="/cook"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Cook
                 </Link>
                 <Link
-                  to="/about"
+                  href="/about"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   About Us
                 </Link>
                 <Link
-                  to="/saved"
+                  href="/saved"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Recipe Box{savedCount > 0 ? ` (${savedCount})` : ""}
