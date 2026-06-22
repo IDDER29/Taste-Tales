@@ -23,12 +23,19 @@ handlers (`sanitizeHtml`), in addition to the existing client-side sanitization.
 
 ## One-time setup
 
-1. **Provision Postgres** (e.g. a free [Neon](https://neon.tech) project) and copy its connection string.
-2. **Configure env** — copy `.env.example` to `.env.local` and set:
+1. **Provision Postgres** (e.g. a free [Neon](https://neon.tech) project).
+2. **Configure env** — copy `.env.example` to `.env.local` and set both connection
+   strings plus the auth secret:
    ```
-   DATABASE_URL=postgresql://...    # from Neon
-   AUTH_SECRET=...                  # openssl rand -base64 32
+   # POOLED (PgBouncer) — used by the app at runtime. On Neon: the "-pooler" host.
+   DATABASE_URL=postgresql://…-pooler.…/db?sslmode=require&pgbouncer=true&connection_limit=1
+   # DIRECT (non-pooled) — used by prisma migrate/generate. On Neon: same host WITHOUT "-pooler".
+   DIRECT_URL=postgresql://….neon.tech/db?sslmode=require
+   AUTH_SECRET=…                    # openssl rand -base64 32
    ```
+   > Why two URLs: serverless functions open many short-lived connections and will
+   > exhaust Postgres on the direct endpoint under load. The app uses the pooled URL;
+   > Prisma migrations need the direct one (configured via `directUrl` in `schema.prisma`).
 3. **Create the schema & client:**
    ```bash
    npm run prisma:migrate     # prisma migrate dev — creates tables
