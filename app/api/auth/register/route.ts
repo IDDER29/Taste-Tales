@@ -4,6 +4,8 @@ import { hashPassword } from "@/lib/password";
 import { registerSchema } from "@/lib/validation";
 import { ApiError, jsonOk, toErrorResponse, getClientIp } from "@/lib/errors";
 import { enforceRateLimit } from "@/lib/rate-limit";
+import { createToken } from "@/lib/tokens";
+import { sendVerificationEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -31,7 +33,14 @@ export async function POST(req: NextRequest) {
       select: { id: true, email: true, name: true, role: true },
     });
 
-    // TODO: enqueue verification email once the email provider is configured.
+    // Best-effort verification email — never fails the registration.
+    try {
+      const token = await createToken(email, "verify");
+      await sendVerificationEmail(email, token);
+    } catch (err) {
+      console.error("[register] verification email failed", err);
+    }
+
     return jsonOk(user, { status: 201 });
   } catch (err) {
     return toErrorResponse(err);

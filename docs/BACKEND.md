@@ -60,8 +60,11 @@ under `/api/v1`; Auth.js stays at `/api/auth` (framework convention).
 | Method | Path | Auth | Notes |
 |---|---|---|---|
 | GET | `/api/health` | — | liveness + DB ping (`{ status, db }`) |
-| POST | `/api/auth/register` | — | `{ email, password, name? }` → creates a user (rate-limited) |
+| POST | `/api/auth/register` | — | `{ email, password, name? }` → creates a user + sends verification email (rate-limited) |
 | `*` | `/api/auth/[...nextauth]` | — | Auth.js sign-in/out/session endpoints |
+| POST | `/api/auth/forgot-password` | — | `{ email }` → emails a reset link (always 200; rate-limited) |
+| POST | `/api/auth/reset-password` | — | `{ token, password }` → sets a new password |
+| POST | `/api/auth/verify-email` | — | `{ token }` → marks the email verified |
 | GET | `/api/v1/recipes` | — | `?page=&pageSize=&category=&q=&sort=` → `{ data: [...], meta }` |
 | POST | `/api/v1/recipes` | required | create (author = current user; rate-limited) |
 | GET | `/api/v1/recipes/[id]` | — | single recipe |
@@ -112,11 +115,15 @@ Everything is built and type-checked; it exercises the live backend once `DATABA
 - **Server-synced Recipe Box:** `savedSlice` uses `/api/v1/saved` when signed in (optimistic
   save/unsave), falls back to localStorage for guests, and merges a guest's local saves into
   their account on login. The whole app is now off json-server *and* localStorage for data.
+- **Email verification + password reset:** `lib/email.ts` (Resend; logs instead of sending when
+  `RESEND_API_KEY` is unset), `lib/tokens.ts` (single-use `VerificationToken`s), endpoints
+  (`forgot-password`/`reset-password`/`verify-email`), and UI flows (`/forgot-password`,
+  `/reset-password`, `/verify-email`). Registration sends a verification email best-effort.
 
 ## Still to do (needs a live DB / browser to verify)
 
 - **Edge middleware** route protection (currently enforced client-side + server-side) — needs
   the Auth.js v5 edge-safe split-config.
-- **Email verification + password reset** (`VerificationToken` + Resend, sent via QStash).
 - **Idempotency keys** on create endpoints; **observability** (Sentry + structured logs).
+- **Send emails async** (via QStash) once volume warrants (currently sent inline, best-effort).
 - **Idempotency keys** on create endpoints; **observability** (Sentry + structured logs).
