@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
+import { randomUUID } from "crypto";
 import { ZodError } from "zod";
+import { logger } from "./logger";
+import { captureException } from "./observability";
 
 // Stable, machine-readable error codes returned in the API error envelope.
 export type ErrorCode =
@@ -71,9 +74,17 @@ export function toErrorResponse(err: unknown): NextResponse {
       )
     );
   }
-  // Unexpected — log server-side, never leak details to the client.
-  console.error("[api] Unhandled error:", err);
-  return jsonError(new ApiError("INTERNAL", "Something went wrong."));
+  // Unexpected — log + report with a correlation id; never leak details.
+  const requestId = randomUUID();
+  logger.error("Unhandled API error", {
+    requestId,
+    error: err instanceof Error ? err.message : String(err),
+    stack: err instanceof Error ? err.stack : undefined,
+  });
+  captureException(err, { requestId });
+  return jsonError(
+    new ApiError("INTERNAL", "Something went wrong.", { requestId })
+  );
 }
 
 // Best-effort client identifier for rate limiting / logging.

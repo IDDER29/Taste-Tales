@@ -119,11 +119,16 @@ Everything is built and type-checked; it exercises the live backend once `DATABA
   `RESEND_API_KEY` is unset), `lib/tokens.ts` (single-use `VerificationToken`s), endpoints
   (`forgot-password`/`reset-password`/`verify-email`), and UI flows (`/forgot-password`,
   `/reset-password`, `/verify-email`). Registration sends a verification email best-effort.
+- **Observability:** structured JSON logging (`lib/logger.ts`) + Sentry (`lib/observability.ts`,
+  `sentry.*.config.ts`, `instrumentation.ts`). Disabled (no-op) without a DSN; the build only
+  wraps with the Sentry plugin when `NEXT_PUBLIC_SENTRY_DSN`/`SENTRY_AUTH_TOKEN` are set. Unhandled
+  API errors are logged + captured with a `requestId` returned to the client.
 
 ## Still to do (needs a live DB / browser to verify)
 
 - **Edge middleware** route protection (currently enforced client-side + server-side) — needs
   the Auth.js v5 edge-safe split-config.
-- **Idempotency keys** on create endpoints; **observability** (Sentry + structured logs).
+- **Idempotency keys** on create endpoints.
 - **Send emails async** (via QStash) once volume warrants (currently sent inline, best-effort).
+- **Alerting + log drains** (wire Vercel log drains → Axiom/Better Stack; Sentry alert rules).
 - **Idempotency keys** on create endpoints; **observability** (Sentry + structured logs).
