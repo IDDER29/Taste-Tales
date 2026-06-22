@@ -187,6 +187,45 @@ export const filterRecipes = <T extends FilterableRecipe>(
     });
 };
 
+// ---- Pantry matching ("what can I cook from what I have") ----
+
+export interface PantryMatch<T> {
+    recipe: T;
+    have: string[];
+    missing: string[];
+    score: number; // fraction of the recipe's ingredients the user has
+}
+
+// Rank recipes by how many of their ingredients the user already has.
+// Matching is a loose case-insensitive substring check (so "chicken" matches
+// "chicken breast"). Recipes with no structured ingredients are skipped.
+export const matchPantry = <T extends { ingredients?: QtyIngredient[] }>(
+    recipes: T[] | null | undefined,
+    owned: string[]
+): PantryMatch<T>[] => {
+    const terms = owned.map((o) => o.trim().toLowerCase()).filter(Boolean);
+    if (!terms.length) return [];
+
+    const results: PantryMatch<T>[] = [];
+    for (const recipe of recipes || []) {
+        const names = (recipe.ingredients || [])
+            .map((i) => (i.name || "").toLowerCase())
+            .filter(Boolean);
+        if (!names.length) continue;
+
+        const have: string[] = [];
+        const missing: string[] = [];
+        for (const name of names) {
+            if (terms.some((t) => name.includes(t))) have.push(name);
+            else missing.push(name);
+        }
+        if (have.length) {
+            results.push({ recipe, have, missing, score: have.length / names.length });
+        }
+    }
+    return results.sort((a, b) => b.score - a.score);
+};
+
 // ---- Ratings ----
 
 // Average rating from a list of reviews -> { value, count }.

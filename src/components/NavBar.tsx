@@ -51,6 +51,12 @@ export default function NavBar() {
             Create Article
           </Link>
           <Link
+            to="/cook"
+            className="text-sm font-semibold leading-6 text-white"
+          >
+            Cook
+          </Link>
+          <Link
             to="/about"
             className="text-sm font-semibold leading-6 text-white"
           >
@@ -122,6 +128,12 @@ export default function NavBar() {
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Create Article
+                </Link>
+                <Link
+                  to="/cook"
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                >
+                  Cook
                 </Link>
                 <Link
                   to="/about"

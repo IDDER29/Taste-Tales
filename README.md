@@ -66,5 +66,13 @@ Create React App only exposes variables prefixed with `REACT_APP_`. Copy `.env.e
 | `REACT_APP_API_URL` | Base URL of the blog REST API (e.g. `http://localhost:8000/` for json-server). |
 | `REACT_APP_CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name used for unsigned image uploads. |
 | `REACT_APP_CLOUDINARY_UPLOAD_PRESET` | Cloudinary unsigned upload preset. |
+| `REACT_APP_ANTHROPIC_API_KEY` | Optional. Enables the AI "Cook From Your Pantry" recipe generator. Leave unset to disable AI (the pantry matcher still works). |
+| `REACT_APP_ANTHROPIC_MODEL` | Optional. Model id for AI generation (defaults to `claude-opus-4-8`). |
 
 Image uploads go directly from the browser to Cloudinary using the cloud name and unsigned upload preset above; the returned image URL is stored on the article.
+
+### AI "Cook From Your Pantry" (`/cook`)
+
+Enter the ingredients you have and the app ranks existing recipes by how many you already have (works with no API key, using the structured ingredient data). If `REACT_APP_ANTHROPIC_API_KEY` is set, you can also generate a brand-new recipe with Claude.
+
+> **Security note:** the AI feature calls the Anthropic API directly from the browser, which exposes the API key in the client bundle. This is fine for a local/demo build only — a production deployment should proxy these calls through a backend so the key is never shipped to the browser.

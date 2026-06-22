@@ -54,6 +54,19 @@ export interface Rating {
   count: number;
 }
 
+// A recipe invented by the AI from a list of ingredients.
+export interface GeneratedRecipe {
+  title: string;
+  subtitle: string;
+  cuisine: string;
+  servings: number;
+  prepTime: number;
+  cookTime: number;
+  ingredients: Ingredient[];
+  instructions: string[];
+  tip: string;
+}
+
 export interface AppNotification {
   type: string;
   message: string;

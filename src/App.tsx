@@ -8,6 +8,7 @@ import ViewArticle from './pages/ViewArticle';
 import EditArticle from './pages/EditArticle';
 import About from './pages/About';
 import SavedRecipes from './pages/SavedRecipes';
+import CookFromPantry from './pages/CookFromPantry';
 import NavBar from './components/NavBar';
 import NoPage from './pages/NoPage';
 import HeroSection from './components/HeroSection';
@@ -33,6 +34,7 @@ function App() {
           <Route path="edit-article/:id" element={<EditArticle />} />
           <Route path="about" element={<About />} />
           <Route path="saved" element={<SavedRecipes />} />
+          <Route path="cook" element={<CookFromPantry />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
         <Footer />

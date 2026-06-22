@@ -9,6 +9,7 @@ import {
   filterRecipes,
   buildRecipeJsonLd,
   averageRating,
+  matchPantry,
 } from "./recipe";
 
 describe("time formatting", () => {
@@ -166,6 +167,46 @@ describe("buildRecipeJsonLd", () => {
     });
     const noRating = buildRecipeJsonLd(article, { value: 0, count: 0 }) as any;
     expect("aggregateRating" in noRating).toBe(false);
+  });
+});
+
+describe("matchPantry", () => {
+  const recipes = [
+    {
+      id: "1",
+      title: "Chicken Rice Bowl",
+      ingredients: [
+        { quantity: 1, unit: "", name: "chicken breast" },
+        { quantity: 1, unit: "cup", name: "rice" },
+        { quantity: 2, unit: "clove", name: "garlic" },
+      ],
+    },
+    {
+      id: "2",
+      title: "Beef Stew",
+      ingredients: [
+        { quantity: 1, unit: "lb", name: "beef" },
+        { quantity: 2, unit: "", name: "carrots" },
+      ],
+    },
+  ];
+
+  test("returns empty when nothing is owned", () => {
+    expect(matchPantry(recipes, [])).toEqual([]);
+  });
+
+  test("loose substring match counts owned ingredients", () => {
+    const result = matchPantry(recipes, ["chicken", "rice"]);
+    expect(result[0].recipe.id).toBe("1");
+    expect(result[0].have).toContain("chicken breast");
+    expect(result[0].score).toBeCloseTo(2 / 3);
+    expect(result[0].missing).toContain("garlic");
+  });
+
+  test("ranks higher-overlap recipes first", () => {
+    const result = matchPantry(recipes, ["beef", "carrots", "chicken"]);
+    expect(result[0].recipe.id).toBe("2"); // 2/2 = 1.0 beats 1/3
+    expect(result[0].score).toBe(1);
   });
 });
 
