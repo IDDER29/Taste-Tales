@@ -169,12 +169,13 @@ const CookFromPantry = () => {
           </button>
         ) : (
           <p className="text-gray-600 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            AI generation is disabled. Set{" "}
+            AI generation is disabled. Set the server-side{" "}
+            <code className="bg-yellow-100 px-1 rounded">ANTHROPIC_API_KEY</code>{" "}
+            and{" "}
             <code className="bg-yellow-100 px-1 rounded">
-              NEXT_PUBLIC_ANTHROPIC_API_KEY
+              NEXT_PUBLIC_AI_ENABLED=true
             </code>{" "}
-            in your <code className="bg-yellow-100 px-1 rounded">.env</code> to
-            enable it. The pantry matcher above works without a key.
+            to enable it. The pantry matcher above works without a key.
           </p>
         )}
 

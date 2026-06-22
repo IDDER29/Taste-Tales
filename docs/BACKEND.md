@@ -46,20 +46,38 @@ handlers (`sanitizeHtml`), in addition to the existing client-side sanitization.
    npm run db:seed            # imports data/db.json; creates demo@taste-tales.test / password123
    ```
 5. **Run the app:** `npm run dev` (the API routes live at `/api/*`).
+6. **Optional features (set keys to enable — no code change):** see `.env.example` for
+   `ANTHROPIC_API_KEY` + `NEXT_PUBLIC_AI_ENABLED` (AI generation), `CLOUDINARY_API_KEY`/
+   `CLOUDINARY_API_SECRET` (signed uploads), and `UPSTASH_REDIS_REST_URL`/`_TOKEN` (rate limiting).
+   Each degrades gracefully when unset.
 
 ## API reference
 
+All responses use the envelope `{ data, meta? }` on success and
+`{ error: { code, message, details? } }` on failure. Domain resources are versioned
+under `/api/v1`; Auth.js stays at `/api/auth` (framework convention).
+
 | Method | Path | Auth | Notes |
 |---|---|---|---|
-| POST | `/api/auth/register` | — | `{ email, password, name? }` → creates a user |
+| GET | `/api/health` | — | liveness + DB ping (`{ status, db }`) |
+| POST | `/api/auth/register` | — | `{ email, password, name? }` → creates a user (rate-limited) |
 | `*` | `/api/auth/[...nextauth]` | — | Auth.js sign-in/out/session endpoints |
-| GET | `/api/recipes` | — | `?page=&pageSize=&category=` → `{ data, total, page, pageSize }` |
-| POST | `/api/recipes` | required | create a recipe (author = current user) |
-| GET | `/api/recipes/[id]` | — | single recipe |
-| PUT | `/api/recipes/[id]` | owner/admin | update |
-| DELETE | `/api/recipes/[id]` | owner/admin | delete |
-| GET | `/api/recipes/[id]/reviews` | — | list reviews |
-| POST | `/api/recipes/[id]/reviews` | required | add/update the caller's review (1 per user) |
+| GET | `/api/v1/recipes` | — | `?page=&pageSize=&category=&q=&sort=` → `{ data: [...], meta }` |
+| POST | `/api/v1/recipes` | required | create (author = current user; rate-limited) |
+| GET | `/api/v1/recipes/[id]` | — | single recipe |
+| PUT / PATCH | `/api/v1/recipes/[id]` | owner/admin | update |
+| DELETE | `/api/v1/recipes/[id]` | owner/admin | delete (reviews & saves cascade) |
+| GET | `/api/v1/recipes/[id]/reviews` | — | list reviews |
+| POST | `/api/v1/recipes/[id]/reviews` | required | upsert caller's review (1/user, no self-review; updates rating aggregates) |
+| GET | `/api/v1/saved` | required | the user's saved recipes |
+| POST | `/api/v1/saved` | required | `{ recipeId }` → save (idempotent) |
+| DELETE | `/api/v1/saved?recipeId=` | required | unsave (idempotent) |
+| POST | `/api/v1/uploads/sign` | required | signed Cloudinary upload payload |
+| POST | `/api/v1/ai/recipes/generate` | required | `{ ingredients }` → AI recipe (rate-limited, server key) |
+
+Rate limiting (auth/AI/writes) and Cloudinary signing activate automatically when
+their env vars are present; without them the app still runs (limits no-op, uploads
+fall back to the unsigned preset).
 
 ## Frontend (already wired)
 
@@ -74,15 +92,23 @@ handlers (`sanitizeHtml`), in addition to the existing client-side sanitization.
 These are built and type-checked but exercise the live backend only once `DATABASE_URL`
 + `AUTH_SECRET` are set and migrations have run.
 
-## Still to do (next Phase 1 steps)
+## Done (backend hardening — ready to flip on with keys)
 
-- **Flip the switch:** swap the existing views from the json-server thunks
-  (`articleSlice`/`reviewSlice`, `NEXT_PUBLIC_API_URL`) to the RTK Query hooks above,
-  and move the recipe box server-side. (Kept on json-server for now so the app stays
-  runnable without a database.)
-- **Route protection** for create/edit pages — note Auth.js v5 needs the edge-safe
-  split-config pattern since Credentials/Prisma can't run on the edge.
-- **Email verification + password reset** (the `VerificationToken` model + an email provider like Resend).
-- **Signed Cloudinary uploads** + **proxy the Anthropic AI call** through a server route
-  (so neither key ships to the browser).
-- **Rate limiting** on auth, write, and AI endpoints.
+- **Server-side AI proxy** (`/api/v1/ai/recipes/generate`): the Anthropic key is server-only;
+  the client calls our route. UI gated by `NEXT_PUBLIC_AI_ENABLED`.
+- **Signed Cloudinary uploads** (`/api/v1/uploads/sign`): secret server-only; client falls back
+  to the unsigned preset when signing isn't configured.
+- **Rate limiting** (Upstash Redis) on auth/register, AI, recipe writes, reviews — no-op until
+  `UPSTASH_REDIS_REST_*` are set.
+- **Consistent API**: `/api/v1` versioning, `{ data, meta }` / `{ error }` envelopes, Zod validation,
+  central `ApiError` handling, ownership/role checks, self-review block, transactional rating aggregates.
+- **Server-synced Recipe Box** endpoints (`/api/v1/saved`) + RTK Query `useGetSaved/useSave/useUnsave`.
+- **Health check** (`/api/health`) for uptime monitors.
+
+## Still to do (needs a live DB / browser to verify)
+
+- **Flip the frontend** from json-server thunks (`articleSlice`/`reviewSlice`, `NEXT_PUBLIC_API_URL`)
+  to the RTK Query hooks; migrate the Recipe Box from localStorage to `/api/v1/saved` (merge guest saves on login).
+- **Route protection** for create/edit pages (Auth.js v5 edge-safe split-config for middleware).
+- **Email verification + password reset** (`VerificationToken` + Resend, sent via QStash).
+- **Idempotency keys** on create endpoints; **observability** (Sentry + structured logs).

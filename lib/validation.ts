@@ -53,6 +53,27 @@ export const reviewInputSchema = z.object({
   comment: z.string().max(2000).optional().default(""),
 });
 
+// ---- Saved recipes ----
+export const savedInputSchema = z.object({
+  recipeId: z.string().min(1),
+});
+
+// ---- AI generation ----
+export const aiGenerateSchema = z.object({
+  ingredients: z.array(z.string().min(1)).min(1).max(50),
+});
+
+// ---- Uploads ----
+export const uploadSignSchema = z.object({
+  folder: z
+    .string()
+    .regex(/^[a-z0-9_\-/]+$/i)
+    .max(60)
+    .optional(),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type RecipeInput = z.infer<typeof recipeInputSchema>;
 export type ReviewInput = z.infer<typeof reviewInputSchema>;
+export type SavedInput = z.infer<typeof savedInputSchema>;
+export type AiGenerateInput = z.infer<typeof aiGenerateSchema>;

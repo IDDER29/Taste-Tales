@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { Article, Review, Nutrition, Ingredient } from "../../types";
 import type { RecipeInput } from "@/lib/validation";
 
-// ---- Backend (Prisma) response shapes returned by /api ----
+// ---- Backend (Prisma) response shapes returned by /api/v1 ----
 
 interface ApiAuthor {
   id: string;
@@ -31,6 +31,8 @@ interface ApiRecipe {
   status: string;
   views: number;
   likes: number;
+  ratingAvg: number;
+  ratingCount: number;
   publishedAt: string | null;
   createdAt: string;
   updatedAt: string;
@@ -47,11 +49,10 @@ interface ApiReview {
   author?: ApiAuthor;
 }
 
-interface RecipeListResponse {
-  data: ApiRecipe[];
-  total: number;
-  page: number;
-  pageSize: number;
+// All responses use the envelope { data, meta? }.
+interface Envelope<T> {
+  data: T;
+  meta?: { total: number; page: number; pageSize: number };
 }
 
 export interface RecipeListResult {
@@ -97,32 +98,34 @@ const toReview = (r: ApiReview): Review => ({
   date: r.createdAt,
 });
 
-// ---- The data layer. Once the backend is live, views switch from the
-// json-server thunks to these hooks (baseUrl points at the in-app /api). ----
+// ---- The data layer. Views switch from the json-server thunks to these hooks
+// once the backend is live (baseUrl points at the in-app /api/v1). ----
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
-  tagTypes: ["Recipe", "Review"],
+  baseQuery: fetchBaseQuery({ baseUrl: "/api/v1" }),
+  tagTypes: ["Recipe", "Review", "Saved"],
   endpoints: (builder) => ({
     getRecipes: builder.query<
       RecipeListResult,
-      { page?: number; pageSize?: number; category?: string } | void
+      { page?: number; pageSize?: number; category?: string; q?: string; sort?: string } | void
     >({
       query: (args) => {
-        const { page = 1, pageSize = 12, category } = args ?? {};
+        const { page = 1, pageSize = 12, category, q, sort } = args ?? {};
         const params = new URLSearchParams({
           page: String(page),
           pageSize: String(pageSize),
         });
         if (category) params.set("category", category);
+        if (q) params.set("q", q);
+        if (sort) params.set("sort", sort);
         return `/recipes?${params.toString()}`;
       },
-      transformResponse: (res: RecipeListResponse): RecipeListResult => ({
+      transformResponse: (res: Envelope<ApiRecipe[]>): RecipeListResult => ({
         items: res.data.map(toArticle),
-        total: res.total,
-        page: res.page,
-        pageSize: res.pageSize,
+        total: res.meta?.total ?? res.data.length,
+        page: res.meta?.page ?? 1,
+        pageSize: res.meta?.pageSize ?? res.data.length,
       }),
       providesTags: (result) =>
         result
@@ -135,36 +138,38 @@ export const apiSlice = createApi({
 
     getRecipe: builder.query<Article, string>({
       query: (id) => `/recipes/${id}`,
-      transformResponse: (res: ApiRecipe) => toArticle(res),
+      transformResponse: (res: Envelope<ApiRecipe>) => toArticle(res.data),
       providesTags: (_r, _e, id) => [{ type: "Recipe", id }],
     }),
 
     createRecipe: builder.mutation<Article, RecipeInput>({
       query: (body) => ({ url: "/recipes", method: "POST", body }),
-      transformResponse: (res: ApiRecipe) => toArticle(res),
+      transformResponse: (res: Envelope<ApiRecipe>) => toArticle(res.data),
       invalidatesTags: [{ type: "Recipe", id: "LIST" }],
     }),
 
     updateRecipe: builder.mutation<Article, { id: string; data: RecipeInput }>({
       query: ({ id, data }) => ({ url: `/recipes/${id}`, method: "PUT", body: data }),
-      transformResponse: (res: ApiRecipe) => toArticle(res),
+      transformResponse: (res: Envelope<ApiRecipe>) => toArticle(res.data),
       invalidatesTags: (_r, _e, { id }) => [
         { type: "Recipe", id },
         { type: "Recipe", id: "LIST" },
       ],
     }),
 
-    deleteRecipe: builder.mutation<{ ok: boolean }, string>({
+    deleteRecipe: builder.mutation<{ id: string }, string>({
       query: (id) => ({ url: `/recipes/${id}`, method: "DELETE" }),
+      transformResponse: (res: Envelope<{ id: string }>) => res.data,
       invalidatesTags: (_r, _e, id) => [
         { type: "Recipe", id },
         { type: "Recipe", id: "LIST" },
+        { type: "Saved", id: "LIST" },
       ],
     }),
 
     getReviews: builder.query<Review[], string>({
       query: (recipeId) => `/recipes/${recipeId}/reviews`,
-      transformResponse: (res: ApiReview[]) => res.map(toReview),
+      transformResponse: (res: Envelope<ApiReview[]>) => res.data.map(toReview),
       providesTags: (_r, _e, recipeId) => [{ type: "Review", id: recipeId }],
     }),
 
@@ -177,10 +182,40 @@ export const apiSlice = createApi({
         method: "POST",
         body,
       }),
-      transformResponse: (res: ApiReview) => toReview(res),
+      transformResponse: (res: Envelope<ApiReview>) => toReview(res.data),
       invalidatesTags: (_r, _e, { recipeId }) => [
         { type: "Review", id: recipeId },
         { type: "Recipe", id: recipeId },
+      ],
+    }),
+
+    // ---- Saved recipes (server-synced Recipe Box) ----
+    getSaved: builder.query<Article[], void>({
+      query: () => "/saved",
+      transformResponse: (res: Envelope<ApiRecipe[]>) => res.data.map(toArticle),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map((a) => ({ type: "Saved" as const, id: a.id })),
+              { type: "Saved" as const, id: "LIST" },
+            ]
+          : [{ type: "Saved" as const, id: "LIST" }],
+    }),
+
+    saveRecipe: builder.mutation<{ recipeId: string; saved: boolean }, string>({
+      query: (recipeId) => ({ url: "/saved", method: "POST", body: { recipeId } }),
+      transformResponse: (res: Envelope<{ recipeId: string; saved: boolean }>) =>
+        res.data,
+      invalidatesTags: [{ type: "Saved", id: "LIST" }],
+    }),
+
+    unsaveRecipe: builder.mutation<{ recipeId: string; saved: boolean }, string>({
+      query: (recipeId) => ({ url: `/saved?recipeId=${recipeId}`, method: "DELETE" }),
+      transformResponse: (res: Envelope<{ recipeId: string; saved: boolean }>) =>
+        res.data,
+      invalidatesTags: (_r, _e, recipeId) => [
+        { type: "Saved", id: recipeId },
+        { type: "Saved", id: "LIST" },
       ],
     }),
   }),
@@ -194,4 +229,7 @@ export const {
   useDeleteRecipeMutation,
   useGetReviewsQuery,
   useAddReviewMutation,
+  useGetSavedQuery,
+  useSaveRecipeMutation,
+  useUnsaveRecipeMutation,
 } = apiSlice;

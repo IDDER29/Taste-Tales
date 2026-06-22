@@ -66,6 +66,10 @@ model Recipe {
   status       RecipeStatus @default(PUBLISHED)
   views        Int          @default(0)
   likes        Int          @default(0)
+  // Denormalized review aggregates (maintained transactionally on review writes)
+  // so hot list/detail reads never aggregate.
+  ratingAvg    Float        @default(0)
+  ratingCount  Int          @default(0)
 
   publishedAt  DateTime?
   createdAt    DateTime     @default(now())
@@ -75,6 +79,7 @@ model Recipe {
   savedBy      SavedRecipe[]
 
   @@index([status, publishedAt])
+  @@index([status, ratingAvg])
   @@index([category])
   @@index([authorId])
 }
