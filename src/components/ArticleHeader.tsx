@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaHeart, FaTag } from "react-icons/fa";
 import { hasStructuredRecipe } from "../utils/recipe";
+import { sanitizeHtml } from "../utils/sanitize";
 import RecipeDetails from "./RecipeDetails";
 import SaveButton from "./SaveButton";
 import type { Article } from "../types";
@@ -77,7 +78,9 @@ const ArticleHeader = ({ articleData, onDelete }: ArticleHeaderProps) => {
           {articleData.content && (
             <section className="prose lg:prose-xl prose-blue mb-8 text-left">
               <div
-                dangerouslySetInnerHTML={{ __html: articleData.content }}
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeHtml(articleData.content),
+                }}
                 className="text-lg leading-relaxed"
               ></div>
             </section>
@@ -87,7 +90,9 @@ const ArticleHeader = ({ articleData, onDelete }: ArticleHeaderProps) => {
       ) : (
         <section className="prose lg:prose-xl prose-blue mb-8 text-left">
           <div
-            dangerouslySetInnerHTML={{ __html: articleData.content || "" }}
+            dangerouslySetInnerHTML={{
+              __html: sanitizeHtml(articleData.content),
+            }}
             className="text-lg leading-relaxed"
           ></div>
         </section>
