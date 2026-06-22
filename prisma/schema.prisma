@@ -1,0 +1,112 @@
+// Prisma schema for Taste-Tales (Phase 1 backend).
+// Run `npx prisma migrate dev` against a Postgres database (e.g. Neon) to apply.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  AUTHOR
+  ADMIN
+}
+
+enum RecipeStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String?
+  name          String?
+  avatarUrl     String?
+  role          Role     @default(USER)
+  emailVerified DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  recipes Recipe[]
+  reviews Review[]
+  saved   SavedRecipe[]
+}
+
+model Recipe {
+  id           String       @id @default(cuid())
+  slug         String       @unique
+  authorId     String
+  author       User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  title        String
+  subtitle     String?
+  category     String
+  cuisine      String?
+  diet         String[]
+  tags         String[]
+  imageUrl     String
+
+  prepTime     Int?
+  cookTime     Int?
+  servings     Int?
+  nutrition    Json?
+  ingredients  Json
+  instructions Json
+  content      String?      @db.Text // sanitized HTML "story"/intro
+
+  status       RecipeStatus @default(PUBLISHED)
+  views        Int          @default(0)
+  likes        Int          @default(0)
+
+  publishedAt  DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  reviews      Review[]
+  savedBy      SavedRecipe[]
+
+  @@index([status, publishedAt])
+  @@index([category])
+  @@index([authorId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  recipeId  String
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  rating    Int // 1-5
+  comment   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@unique([recipeId, authorId]) // one review per user per recipe
+  @@index([recipeId])
+}
+
+model SavedRecipe {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipeId  String
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, recipeId])
+  @@index([userId])
+}
+
+// Email verification + password reset tokens (email/password auth).
+model VerificationToken {
+  identifier String // email
+  token      String   @unique
+  expires    DateTime
+  type       String   @default("verify") // "verify" | "reset"
+
+  @@unique([identifier, token])
+}
