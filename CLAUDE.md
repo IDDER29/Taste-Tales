@@ -42,7 +42,7 @@ Note the mismatch worth knowing: json-server's default route would be `/blogs` m
 
 **Image uploads** go directly from the browser to Cloudinary (unsigned upload), not through the backend — see the Add/Edit article views. The Cloudinary cloud name and unsigned upload preset come from `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` / `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET`; the returned `secure_url` is stored as the article's `imageUrl`.
 
-**Rich text:** Article `content` is HTML produced by `react-quill`, sanitized with `isomorphic-dompurify` (`src/utils/sanitize.ts`), then rendered with `dangerouslySetInnerHTML` / Tailwind Typography (`prose`) in the view page. New article IDs are generated client-side with `uuid`.
+**Rich text:** Article `content` is HTML produced by `react-quill`, sanitized with `sanitize-html` (`src/utils/sanitize.ts`) — chosen over DOMPurify so the same code runs in the browser, in server route handlers, and in tests without pulling in jsdom — then rendered with `dangerouslySetInnerHTML` / Tailwind Typography (`prose`) in the view page. The `/api` write handlers sanitize again server-side (defense in depth). New article IDs are generated client-side with `uuid`.
 
 ## Styling
 

@@ -1,9 +1,11 @@
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtmlLib from "sanitize-html";
 
-// Tags/attributes we allow in article "content" (rich text from react-quill).
-// Anything else — <script>, event handlers, <iframe>, javascript: URIs — is
-// stripped. This is the render-time defense against stored XSS; the backend
-// should also sanitize on write (defense in depth) once it exists.
+// Tags we allow in article "content" (rich text from react-quill). Anything
+// else — <script>, event handlers, <iframe>, javascript: URIs — is stripped.
+// This is the render-time defense against stored XSS; the API also sanitizes on
+// write (defense in depth). sanitize-html is used (rather than DOMPurify) so the
+// same code runs in the browser, in server route handlers, and in tests without
+// pulling in jsdom.
 const ALLOWED_TAGS = [
     "h1", "h2", "h3", "h4", "h5", "h6",
     "p", "br", "hr", "span", "div",
@@ -23,10 +25,12 @@ const ALLOWED_ATTR = ["href", "src", "alt", "title", "target", "rel", "class"];
  */
 export const sanitizeHtml = (dirty?: string | null): string => {
     if (!dirty) return "";
-    return DOMPurify.sanitize(dirty, {
-        ALLOWED_TAGS,
-        ALLOWED_ATTR,
-        // Forbid javascript:/data: URIs on links and only allow safe schemes.
-        ALLOWED_URI_REGEXP: /^(?:https?|mailto|tel|#|\/)/i,
+    return sanitizeHtmlLib(dirty, {
+        allowedTags: ALLOWED_TAGS,
+        // Allow the curated attribute set on any permitted tag.
+        allowedAttributes: { "*": ALLOWED_ATTR },
+        // Only safe URL schemes; relative URLs (/path) and anchors (#id) are
+        // permitted by default. javascript:/data: are dropped.
+        allowedSchemes: ["http", "https", "mailto", "tel"],
     });
 };

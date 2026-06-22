@@ -10,7 +10,6 @@
     "@tailwindcss/typography": "^0.5.13",
     "axios": "^1.7.2",
     "bcryptjs": "^3.0.3",
-    "isomorphic-dompurify": "^3.18.0",
     "next": "^14.2.35",
     "next-auth": "^5.0.0-beta.31",
     "react": "^18.3.1",
@@ -19,6 +18,7 @@
     "react-quill": "^2.0.0",
     "react-redux": "^9.1.2",
     "react-select": "^5.8.0",
+    "sanitize-html": "^2.17.5",
     "uuid": "^9.0.0",
     "zod": "^4.4.3"
   },
@@ -47,6 +47,7 @@
     "@types/node": "^18.19.130",
     "@types/react": "^18.3.31",
     "@types/react-dom": "^18.3.7",
+    "@types/sanitize-html": "^2.16.1",
     "@types/uuid": "^9.0.8",
     "autoprefixer": "^10.4.19",
     "jest": "^29.7.0",
