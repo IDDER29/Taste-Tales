@@ -1,6 +1,6 @@
 # Taste-Tales
 
-Taste-Tales is a recipe/food blog single-page app built with React 18, Redux Toolkit, React Router, and Tailwind CSS. Users can browse, view, create, edit, and delete recipe "articles" with rich-text content. Article images are uploaded directly from the browser to Cloudinary, and article data is served by a [json-server](https://github.com/typicode/json-server) backend.
+Taste-Tales is a recipe/food blog single-page app built with React 18, TypeScript, Redux Toolkit, React Router, and Tailwind CSS. Users can browse, view, create, edit, and delete recipe "articles" with rich-text content. Article images are uploaded directly from the browser to Cloudinary, and article data is served by a [json-server](https://github.com/typicode/json-server) backend.
 
 > Note: there is no backend code in this repository. `data/db.json` is the json-server database used as the REST API during development.
 

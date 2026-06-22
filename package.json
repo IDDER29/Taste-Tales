@@ -30,6 +30,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:ci": "react-scripts test --watchAll=false",
+    "typecheck": "tsc --noEmit",
     "server": "json-server --watch data/db.json --port 8000",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
@@ -66,11 +67,17 @@
     "@babel/plugin-transform-optional-chaining": "^7.21.0",
     "@babel/plugin-transform-private-methods": "^7.21.5",
     "@babel/plugin-transform-private-property-in-object": "^7.21.11",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^18.19.130",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@types/uuid": "^9.0.8",
     "autoprefixer": "^10.4.19",
     "eslint-webpack-plugin": "^4.0.2",
     "gh-pages": "^6.1.1",
     "json-server": "^0.17.4",
     "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.4"
+    "tailwindcss": "^3.4.4",
+    "typescript": "^4.9.5"
   }
 }
