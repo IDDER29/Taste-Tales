@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaEye, FaHeart, FaTag } from "react-icons/fa";
 import { hasStructuredRecipe } from "../utils/recipe";
 import RecipeDetails from "./RecipeDetails";
+import SaveButton from "./SaveButton";
 
 const ArticleHeader = ({ articleData, onDelete }) => {
   const navigate = useNavigate();
@@ -18,9 +19,12 @@ const ArticleHeader = ({ articleData, onDelete }) => {
   return (
     <article className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <header className="mb-8">
-        <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
-          {articleData.title}
-        </h1>
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <h1 className="text-4xl font-extrabold text-gray-900">
+            {articleData.title}
+          </h1>
+          <SaveButton id={articleData.id} className="shrink-0" />
+        </div>
         <p className="text-xl text-gray-700 mb-4">{articleData.subtitle}</p>
         <div className="flex justify-center items-center space-x-3 text-sm text-gray-600">
           <img

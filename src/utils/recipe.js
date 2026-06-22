@@ -161,12 +161,22 @@ export const filterRecipes = (articles, criteria = {}) => {
     });
 };
 
+// ---- Ratings ----
+
+// Average rating from a list of reviews -> { value, count }.
+export const averageRating = (reviews) => {
+    if (!reviews || !reviews.length) return { value: 0, count: 0 };
+    const sum = reviews.reduce((s, r) => s + (Number(r.rating) || 0), 0);
+    return { value: Math.round((sum / reviews.length) * 10) / 10, count: reviews.length };
+};
+
 // ---- SEO: schema.org/Recipe JSON-LD ----
 
 // Build a schema.org/Recipe object suitable for a <script type="application/ld+json">.
 // Only `name` and `image` are strictly required by Google; everything else is
-// included when available. Undefined keys are stripped.
-export const buildRecipeJsonLd = (article) => {
+// included when available. Undefined keys are stripped. An optional `rating`
+// ({ value, count }) adds aggregateRating when count > 0.
+export const buildRecipeJsonLd = (article, rating) => {
     if (!article) return null;
     const total = totalMinutes(article);
 
@@ -204,6 +214,14 @@ export const buildRecipeJsonLd = (article) => {
               }
             : undefined,
     };
+
+    if (rating && rating.count > 0) {
+        jsonLd.aggregateRating = {
+            "@type": "AggregateRating",
+            ratingValue: rating.value,
+            ratingCount: rating.count,
+        };
+    }
 
     // Strip undefined values for clean output.
     Object.keys(jsonLd).forEach((k) => jsonLd[k] === undefined && delete jsonLd[k]);

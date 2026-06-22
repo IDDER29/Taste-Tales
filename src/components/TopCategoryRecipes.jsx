@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaHeart, FaRegBookmark } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import { formatMinutes, totalMinutes } from "../utils/recipe";
+import SaveButton from "./SaveButton";
 
 const TopCategoryRecipes = ({ recipes }) => {
   return (
@@ -21,6 +22,10 @@ const TopCategoryRecipes = ({ recipes }) => {
             return (
               <Link to={`/articles/${recipe.id}`} key={recipe.id}>
                 <div className="relative rounded-lg shadow-lg overflow-hidden">
+                  <SaveButton
+                    id={recipe.id}
+                    className="absolute top-2 right-2 z-10 bg-white/80 hover:bg-white"
+                  />
                   <img
                     src={recipe.imageUrl}
                     alt={recipe.title}
@@ -62,7 +67,6 @@ const TopCategoryRecipes = ({ recipes }) => {
                     <div className="flex items-center mt-2">
                       <FaHeart className="text-red-500 mr-2" />
                       <span>{recipe.likes}</span>
-                      <FaRegBookmark className="ml-4 text-gray-600" />
                     </div>
                     <div className="mt-2 text-gray-600 text-sm">
                       Views: {recipe.views}

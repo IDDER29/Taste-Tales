@@ -239,5 +239,39 @@
         "image": "https://via.placeholder.com/40x40.png?text=JD"
       }
     }
+  ],
+  "reviews": [
+    {
+      "id": "r1",
+      "blogId": "2",
+      "author": "Daniel K.",
+      "rating": 5,
+      "comment": "Fall-apart tender and so easy. The vinegar really balances the BBQ sauce.",
+      "date": "2024-05-20T14:00:00.000Z"
+    },
+    {
+      "id": "r2",
+      "blogId": "2",
+      "author": "Priya S.",
+      "rating": 4,
+      "comment": "Great weeknight meal. I added a little extra paprika for smokiness.",
+      "date": "2024-06-01T09:30:00.000Z"
+    },
+    {
+      "id": "r3",
+      "blogId": "3",
+      "author": "Marcus T.",
+      "rating": 5,
+      "comment": "Perfectly flaky. Don't overcook it and you're golden.",
+      "date": "2024-07-02T18:45:00.000Z"
+    },
+    {
+      "id": "r4",
+      "blogId": "10",
+      "author": "Elena R.",
+      "rating": 5,
+      "comment": "That molten center is everything. Pulled them at 12 minutes exactly.",
+      "date": "2024-10-10T20:15:00.000Z"
+    }
   ]
 }

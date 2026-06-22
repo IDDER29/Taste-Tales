@@ -4,12 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 import ArticleHeader from "../components/ArticleHeader";
 import Sidebar from "../components/Sidebar";
 import RecipeJsonLd from "../components/RecipeJsonLd";
+import Reviews from "../components/Reviews";
 import {
   getArticleById,
   deleteAnArticle,
   selectArticleById,
   selectArticlesStatus,
 } from "../features/article/articleSlice";
+import {
+  getReviews,
+  selectReviewsForBlog,
+} from "../features/review/reviewSlice";
+import { averageRating } from "../utils/recipe";
 
 const ArticlePage = () => {
   const { id } = useParams();
@@ -18,12 +24,18 @@ const ArticlePage = () => {
 
   const article = useSelector(selectArticleById(id));
   const status = useSelector(selectArticlesStatus);
+  const reviews = useSelector(selectReviewsForBlog(id));
+  const rating = averageRating(reviews);
 
   useEffect(() => {
     if (!article) {
       dispatch(getArticleById(id));
     }
   }, [dispatch, id, article]);
+
+  useEffect(() => {
+    dispatch(getReviews(id));
+  }, [dispatch, id]);
 
   const handleDelete = async () => {
     await dispatch(deleteAnArticle(id));
@@ -51,11 +63,12 @@ const ArticlePage = () => {
 
   return (
     <div className="App max-w-7xl mx-auto p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <RecipeJsonLd article={article} />
+      <RecipeJsonLd article={article} rating={rating} />
 
       {/* Main Article Section */}
-      <div className="lg:col-span-2">
+      <div className="lg:col-span-2 space-y-8">
         <ArticleHeader articleData={article} onDelete={handleDelete} />
+        <Reviews blogId={id} />
       </div>
 
       {/* Sidebar Section */}

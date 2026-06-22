@@ -9,12 +9,14 @@ import {
   selectShowNotifications,
 } from "../features/ui/uiSlice";
 import { selectNotifications } from "../features/article/articleSlice";
+import { selectSavedCount } from "../features/saved/savedSlice";
 
 export default function NavBar() {
   const dispatch = useDispatch();
   const notifications = useSelector(selectNotifications);
   const mobileMenuOpen = useSelector(selectMobileMenuOpen);
   const showNotifications = useSelector(selectShowNotifications);
+  const savedCount = useSelector(selectSavedCount);
 
   return (
     <header className="bg-red-400">
@@ -53,6 +55,12 @@ export default function NavBar() {
             className="text-sm font-semibold leading-6 text-white"
           >
             About Us
+          </Link>
+          <Link
+            to="/saved"
+            className="text-sm font-semibold leading-6 text-white"
+          >
+            Recipe Box{savedCount > 0 ? ` (${savedCount})` : ""}
           </Link>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
@@ -120,6 +128,12 @@ export default function NavBar() {
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   About Us
+                </Link>
+                <Link
+                  to="/saved"
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                >
+                  Recipe Box{savedCount > 0 ? ` (${savedCount})` : ""}
                 </Link>
               </div>
               <div className="py-6">

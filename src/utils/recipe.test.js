@@ -8,6 +8,7 @@ import {
   hasStructuredRecipe,
   filterRecipes,
   buildRecipeJsonLd,
+  averageRating,
 } from "./recipe";
 
 describe("time formatting", () => {
@@ -154,5 +155,33 @@ describe("buildRecipeJsonLd", () => {
     expect(ld.name).toBe("Bare");
     expect("recipeIngredient" in ld).toBe(false);
     expect("cookTime" in ld).toBe(false);
+  });
+
+  test("adds aggregateRating only when a rating with count is provided", () => {
+    const withRating = buildRecipeJsonLd(article, { value: 4.5, count: 2 });
+    expect(withRating.aggregateRating).toMatchObject({
+      "@type": "AggregateRating",
+      ratingValue: 4.5,
+      ratingCount: 2,
+    });
+    const noRating = buildRecipeJsonLd(article, { value: 0, count: 0 });
+    expect("aggregateRating" in noRating).toBe(false);
+  });
+});
+
+describe("averageRating", () => {
+  test("returns zeroed result for no reviews", () => {
+    expect(averageRating([])).toEqual({ value: 0, count: 0 });
+    expect(averageRating(undefined)).toEqual({ value: 0, count: 0 });
+  });
+
+  test("averages ratings and counts them", () => {
+    const reviews = [{ rating: 5 }, { rating: 4 }, { rating: 3 }];
+    expect(averageRating(reviews)).toEqual({ value: 4, count: 3 });
+  });
+
+  test("rounds the average to one decimal", () => {
+    const reviews = [{ rating: 5 }, { rating: 4 }];
+    expect(averageRating(reviews)).toEqual({ value: 4.5, count: 2 });
   });
 });
