@@ -10,26 +10,25 @@ ticketed plan. Ordered so each phase unblocks the next and the app stays shippab
 
 ---
 
-## Phase 0 — Foundations (no DB required)
+## Phase 0 — Foundations (no DB required)  — ✅ DONE (F0.1–F0.4), 🟡 PARTIAL (F0.5)
 
 Build the primitives everything else inherits. Do this first to prevent UI divergence.
+Implemented in `src/components/ui/` (barrel `index.ts`); see `docs/UI_PRIMITIVES.md`.
 
-- **F0.1 — Design tokens & Tailwind theme.** `M`
-  Define color (audit red contrast for AA), spacing, radius, typography, shadow tokens in
-  `tailwind.config.js`; document usage. *AC:* tokens used by primitives; contrast ≥ 4.5:1 for text.
-- **F0.2 — Core UI primitives.** `L`
-  `Button, Input, Textarea, Select, Card, Badge/Chip, Modal, Toast(+provider), Skeleton, Rating,
-  Tabs, EmptyState, Avatar, Spinner`. Headless UI + Tailwind. *AC:* each has stories/examples,
-  keyboard + focus states, a11y roles.
-- **F0.3 — Standard state-set components.** `M`
-  `LoadingState`, `EmptyState`, `ErrorState` (retry slot), `AsyncBoundary` wrapper. *AC:* one
-  reusable pattern adopted by all later data screens.
-- **F0.4 — Toast + confirm-dialog system.** `S`
-  Global toast hook (`useToast`) and `useConfirm()` for destructive actions. *AC:* success/error
-  variants; confirm returns a promise.
-- **F0.5 — `next/image` migration + image aspect ratios.** `M`
-  Replace plain `<img>` on cards/recipe/hero; configure remote patterns (Cloudinary). *AC:* CLS
-  near zero on recipe + grid; build passes with image config.
+- **F0.1 — Design tokens & Tailwind theme.** `M` — ✅ **done**
+  `brand` accent scale + animations in `tailwind.config.js`; `cn()` helper (`src/utils/cn.ts`);
+  app glob added to Tailwind content. *(Red-on-white contrast still to audit per-component in F8.1.)*
+- **F0.2 — Core UI primitives.** `L` — ✅ **done**
+  `Button, Badge, Card/CardBody, Input, Textarea, Select, Field, Avatar, Spinner, Skeleton,
+  Rating, Tabs, Modal, AppImage` (cva variants, forwardRef, focus/a11y states).
+- **F0.3 — Standard state-set components.** `M` — ✅ **done**
+  `LoadingState`, `EmptyState`, `ErrorState` (retry), `AsyncBoundary`.
+- **F0.4 — Toast + confirm-dialog system.** `S` — ✅ **done**
+  `useToast()` + `useConfirm()` via `UIProvider` (mounted in `app/providers.tsx`).
+- **F0.5 — `next/image` migration + image aspect ratios.** `M` — 🟡 **partial**
+  `AppImage` (aspect-ratio box, no CLS) built; `next/image` enabled (`images.unoptimized: true`
+  so any host works). **Deferred:** mass-migrating existing `<img>` usages (needs visual QA) and
+  re-enabling optimization (`remotePatterns`) once images normalize to Cloudinary.
 
 ---
 
