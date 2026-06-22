@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { Dialog, DialogPanel, PopoverGroup } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, BellIcon } from "@heroicons/react/24/outline";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
@@ -15,6 +16,7 @@ import { selectSavedCount } from "../features/saved/savedSlice";
 
 export default function NavBar() {
   const dispatch = useAppDispatch();
+  const { data: session } = useSession();
   const notifications = useAppSelector(selectNotifications);
   const mobileMenuOpen = useAppSelector(selectMobileMenuOpen);
   const showNotifications = useAppSelector(selectShowNotifications);
@@ -83,12 +85,26 @@ export default function NavBar() {
               </span>
             )}
           </button>
-          <a
-            href="#"
-            className="ml-6 text-sm font-semibold leading-6 text-white"
-          >
-            Log in <span aria-hidden="true">&rarr;</span>
-          </a>
+          {session?.user ? (
+            <div className="ml-6 flex items-center gap-3">
+              <span className="text-sm font-semibold leading-6 text-white">
+                {session.user.name || session.user.email}
+              </span>
+              <button
+                onClick={() => signOut()}
+                className="text-sm font-semibold leading-6 text-white hover:underline"
+              >
+                Log out
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => signIn()}
+              className="ml-6 text-sm font-semibold leading-6 text-white"
+            >
+              Log in <span aria-hidden="true">&rarr;</span>
+            </button>
+          )}
         </div>
       </nav>
       <Dialog
@@ -151,12 +167,21 @@ export default function NavBar() {
                 </Link>
               </div>
               <div className="py-6">
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Log out
-                </a>
+                {session?.user ? (
+                  <button
+                    onClick={() => signOut()}
+                    className="-mx-3 block w-full text-left rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  >
+                    Log out
+                  </button>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  >
+                    Log in
+                  </Link>
+                )}
               </div>
             </div>
           </div>

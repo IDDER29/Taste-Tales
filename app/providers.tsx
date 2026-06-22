@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { Provider } from "react-redux";
+import { SessionProvider } from "next-auth/react";
 import { store } from "../src/app/store";
 import { useAppDispatch } from "../src/app/hooks";
 import { getAllArticles } from "../src/features/article/articleSlice";
@@ -17,9 +18,11 @@ function AppInit() {
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <Provider store={store}>
-      <AppInit />
-      {children}
-    </Provider>
+    <SessionProvider>
+      <Provider store={store}>
+        <AppInit />
+        {children}
+      </Provider>
+    </SessionProvider>
   );
 }

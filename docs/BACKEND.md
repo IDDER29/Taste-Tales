@@ -54,14 +54,28 @@ handlers (`sanitizeHtml`), in addition to the existing client-side sanitization.
 | GET | `/api/recipes/[id]/reviews` | — | list reviews |
 | POST | `/api/recipes/[id]/reviews` | required | add/update the caller's review (1 per user) |
 
+## Frontend (already wired)
+
+- **Auth UI:** `/login` and `/register` pages (`src/views/Login.tsx`, `src/views/Register.tsx`),
+  `SessionProvider` in `app/providers.tsx`, and the NavBar now shows the signed-in
+  user + Log out (Auth.js `signIn`/`signOut`/`useSession`).
+- **RTK Query data layer:** `src/features/api/apiSlice.ts` — typed `getRecipes`,
+  `getRecipe`, `create/update/deleteRecipe`, `getReviews`, `addReview` hooks pointed
+  at `/api`, with `transformResponse` mapping the API shape to the app's `Article`/`Review`
+  types. Registered in the store (`src/app/store.ts`) with its middleware.
+
+These are built and type-checked but exercise the live backend only once `DATABASE_URL`
++ `AUTH_SECRET` are set and migrations have run.
+
 ## Still to do (next Phase 1 steps)
 
-- **Rewire the frontend** from json-server (`NEXT_PUBLIC_API_URL`) to these `/api`
-  routes (adopt RTK Query); move the recipe box & reviews server-side.
-- **Login/Register UI** + wire the fake NavBar Login/Logout to Auth.js `signIn`/`signOut`.
+- **Flip the switch:** swap the existing views from the json-server thunks
+  (`articleSlice`/`reviewSlice`, `NEXT_PUBLIC_API_URL`) to the RTK Query hooks above,
+  and move the recipe box server-side. (Kept on json-server for now so the app stays
+  runnable without a database.)
+- **Route protection** for create/edit pages — note Auth.js v5 needs the edge-safe
+  split-config pattern since Credentials/Prisma can't run on the edge.
 - **Email verification + password reset** (the `VerificationToken` model + an email provider like Resend).
-- **Route protection** (middleware) for create/edit pages — note Auth.js v5 needs the
-  edge-safe split-config pattern since Credentials/Prisma can't run on the edge.
 - **Signed Cloudinary uploads** + **proxy the Anthropic AI call** through a server route
   (so neither key ships to the browser).
 - **Rate limiting** on auth, write, and AI endpoints.
