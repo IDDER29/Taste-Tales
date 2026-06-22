@@ -51,7 +51,9 @@ Reaching production is mostly a **backend, security, and operations** effort. Th
 
 ## 4. Recommended target architecture
 
-For a content-driven recipe site, **SEO and a real API are the two biggest levers.** Recommended stack consolidates both:
+> **DECISION (locked):** Next.js (App Router) + Postgres (Prisma) + Auth.js. Hosting, auth providers, budget, and timeline are still open — see §8.
+
+For a content-driven recipe site, **SEO and a real API are the two biggest levers.** The chosen stack consolidates both:
 
 ```
                       ┌─────────────────────────────────────────┐
@@ -164,9 +166,9 @@ Effort: **S** ≈ ≤1 day, **M** ≈ 2–4 days, **L** ≈ 1–2 weeks. Priorit
 
 ## 8. Decisions needed from you
 
-1. **Framework/SEO:** Next.js (recommended — SSR/SEO + API in one) **or** Vite SPA + Supabase (fastest backend, SPA SEO needs prerender)?
-2. **Backend approach:** custom API (Next/Prisma) **or** BaaS (Supabase/Firebase)?
-3. **Hosting & budget:** Vercel + Neon, Netlify + Supabase, or a cloud (AWS/Render/Fly)? Expected monthly budget?
+1. ~~**Framework/SEO**~~ — ✅ **DECIDED: Next.js (App Router).**
+2. ~~**Backend approach**~~ — ✅ **DECIDED: custom API via Next.js Route Handlers + Prisma + Postgres (Auth.js for auth).**
+3. **Hosting & budget:** Vercel + Neon (recommended for this stack), or a cloud (AWS/Render/Fly)? Expected monthly budget?
 4. **Auth providers:** email/password only, or also Google/GitHub OAuth?
 5. **Timeline & people:** target launch date and how many developers?
 6. **Scope at launch:** is AI generation a launch feature (needs cost controls) or post-launch?
