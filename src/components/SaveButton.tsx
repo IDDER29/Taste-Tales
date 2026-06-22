@@ -2,25 +2,36 @@
 
 import React from "react";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
+import { useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { toggleSaved, selectIsSaved } from "../features/saved/savedSlice";
+import {
+  toggleSaved,
+  saveRecipe,
+  unsaveRecipe,
+  selectIsSaved,
+} from "../features/saved/savedSlice";
 
 interface SaveButtonProps {
   id: string;
   className?: string;
 }
 
-// Bookmark toggle for the "Recipe Box". Often rendered inside a react-router
-// <Link>, so the click handler must stop the event before it bubbles to the
-// surrounding navigation.
+// Bookmark toggle for the "Recipe Box". Often rendered inside a <Link>, so the
+// click handler stops propagation. Signed-in users sync to the server; guests
+// fall back to localStorage.
 const SaveButton = ({ id, className = "" }: SaveButtonProps) => {
   const dispatch = useAppDispatch();
+  const { data: session } = useSession();
   const isSaved = useAppSelector(selectIsSaved(id));
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch(toggleSaved(id));
+    if (session?.user) {
+      dispatch(isSaved ? unsaveRecipe(id) : saveRecipe(id));
+    } else {
+      dispatch(toggleSaved(id));
+    }
   };
 
   const label = isSaved ? "Remove from saved" : "Save recipe";

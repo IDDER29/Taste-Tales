@@ -7,18 +7,20 @@ import reducer, {
 } from "./savedSlice";
 
 describe("savedSlice reducer", () => {
+  const base = { items: [], status: "idle" as const };
+
   test("toggleSaved adds an id when absent", () => {
-    const state = reducer({ ids: [] }, toggleSaved("2"));
+    const state = reducer({ ids: [], ...base }, toggleSaved("2"));
     expect(state.ids).toEqual(["2"]);
   });
 
   test("toggleSaved removes an id when present", () => {
-    const state = reducer({ ids: ["2", "3"] }, toggleSaved("2"));
+    const state = reducer({ ids: ["2", "3"], ...base }, toggleSaved("2"));
     expect(state.ids).toEqual(["3"]);
   });
 
   test("clearSaved empties the list", () => {
-    const state = reducer({ ids: ["2", "3"] }, clearSaved());
+    const state = reducer({ ids: ["2", "3"], ...base }, clearSaved());
     expect(state.ids).toEqual([]);
   });
 });

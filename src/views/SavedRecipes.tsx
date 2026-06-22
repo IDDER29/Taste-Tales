@@ -1,28 +1,44 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
-import { useAppSelector } from "../app/hooks";
-import { selectSavedIds } from "../features/saved/savedSlice";
+import { useSession } from "next-auth/react";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import {
+  selectSavedIds,
+  selectSavedItems,
+  fetchSaved,
+} from "../features/saved/savedSlice";
 import { selectAllArticles } from "../features/article/articleSlice";
 import { formatMinutes, totalMinutes } from "../utils/recipe";
 import SaveButton from "../components/SaveButton";
 import type { Article } from "../types";
 
-// "My Recipe Box" — the saved recipes the user has bookmarked. Driven entirely
-// by the persisted saved id set intersected with the loaded articles.
+// "My Recipe Box". Signed-in users read the server-synced list; guests resolve
+// their localStorage ids against the loaded articles.
 const SavedRecipes = () => {
+  const dispatch = useAppDispatch();
+  const { data: session } = useSession();
   const savedIds = useAppSelector(selectSavedIds);
+  const savedItems = useAppSelector(selectSavedItems);
   const articles = useAppSelector(selectAllArticles);
 
-  // Preserve the order in which recipes were saved (savedIds order), and drop
-  // any ids that no longer resolve to a loaded article.
-  const byId = new Map<string, Article>(
-    articles.map((article) => [article.id, article])
-  );
-  const savedArticles = savedIds
-    .map((id) => byId.get(id))
-    .filter((article): article is Article => Boolean(article));
+  useEffect(() => {
+    if (session?.user) dispatch(fetchSaved());
+  }, [session, dispatch]);
+
+  let savedArticles: Article[];
+  if (session?.user) {
+    savedArticles = savedItems;
+  } else {
+    // Preserve save order; drop ids that don't resolve to a loaded article.
+    const byId = new Map<string, Article>(
+      articles.map((article) => [article.id, article])
+    );
+    savedArticles = savedIds
+      .map((id) => byId.get(id))
+      .filter((article): article is Article => Boolean(article));
+  }
 
   return (
     <div className="max-w-7xl mx-auto p-8">

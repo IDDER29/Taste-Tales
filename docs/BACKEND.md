@@ -109,11 +109,12 @@ Everything is built and type-checked; it exercises the live backend once `DATABA
 - **Server-synced Recipe Box** endpoints (`/api/v1/saved`) — backend ready (client still uses localStorage; see below).
 - **Health check** (`/api/health`) for uptime monitors.
 - **Frontend cutover:** the app reads/writes through `/api/v1` (json-server retired); writes are auth-gated.
+- **Server-synced Recipe Box:** `savedSlice` uses `/api/v1/saved` when signed in (optimistic
+  save/unsave), falls back to localStorage for guests, and merges a guest's local saves into
+  their account on login. The whole app is now off json-server *and* localStorage for data.
 
 ## Still to do (needs a live DB / browser to verify)
 
-- **Server-sync the Recipe Box:** switch `savedSlice` from localStorage to `/api/v1/saved`
-  (and merge a guest's local saves into their account on first login).
 - **Edge middleware** route protection (currently enforced client-side + server-side) — needs
   the Auth.js v5 edge-safe split-config.
 - **Email verification + password reset** (`VerificationToken` + Resend, sent via QStash).
