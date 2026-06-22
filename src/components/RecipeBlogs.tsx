@@ -73,9 +73,6 @@ const RecipeBlog: React.FC = () => {
             ))}
           </div>
         </div>
-        <div className="mt-8 text-center">
-          <button className="text-blue-500 hover:underline">View more</button>
-        </div>
       </div>
 
       <div

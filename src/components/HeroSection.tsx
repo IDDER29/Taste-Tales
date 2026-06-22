@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaFacebook, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
 
-const HeroSection: React.FC = () => {
+interface HeroSectionProps {
+  // Called when the hero search is submitted (Home wires this to the filters).
+  onSearch?: (query: string) => void;
+}
+
+const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
+  const [query, setQuery] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSearch?.(query);
+  };
+
   return (
     <div className="relative flex items-center justify-center py-24 text-white bg-cover bg-center  bg-[url('https://wallpapercave.com/wp/wp9754130.jpg')]">
       <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -14,14 +26,18 @@ const HeroSection: React.FC = () => {
           Explore a world of culinary delights, where each recipe brings a new
           adventure. Join us on a journey through the finest flavors.
         </p>
-        <div className="flex justify-center mb-6">
+        <form className="flex justify-center mb-6" onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Search for articles..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search recipes by name, ingredient, or tag..."
             className="w-full max-w-md p-3 rounded-l-lg text-gray-700"
           />
-          <button className="p-3 bg-red-500 rounded-r-lg">Search</button>
-        </div>
+          <button type="submit" className="p-3 bg-red-500 rounded-r-lg">
+            Search
+          </button>
+        </form>
       </div>
       <div className="absolute left-0 top-1/2 transform -translate-y-1/2">
         <div className="flex flex-col space-y-4">

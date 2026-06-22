@@ -11,7 +11,6 @@ import SavedRecipes from './pages/SavedRecipes';
 import CookFromPantry from './pages/CookFromPantry';
 import NavBar from './components/NavBar';
 import NoPage from './pages/NoPage';
-import HeroSection from './components/HeroSection';
 import Footer from './components/Footer';
 import { getAllArticles } from './features/article/articleSlice';
 
@@ -26,7 +25,6 @@ function App() {
     <Router>
       <div>
         <NavBar />
-        <HeroSection />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="articles" element={<AddArticle />} />

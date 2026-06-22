@@ -1,64 +1,78 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { FaMagic } from "react-icons/fa";
+import { useAppSelector } from "../app/hooks";
+import {
+  selectAllArticles,
+  selectTopArticlesByViews,
+} from "../features/article/articleSlice";
 
 const Sidebar: React.FC = () => {
+  const topArticles = useAppSelector(selectTopArticlesByViews);
+  const allArticles = useAppSelector(selectAllArticles);
+
+  const recent = [...allArticles]
+    .sort(
+      (a, b) =>
+        new Date(b.publishedDate ?? 0).getTime() -
+        new Date(a.publishedDate ?? 0).getTime()
+    )
+    .slice(0, 3);
+
   return (
     <div className="space-y-8">
-      {/* About Me Section */}
+      {/* Cook CTA */}
+      <Link
+        to="/cook"
+        className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-red-500 to-orange-400 p-4 text-white shadow-lg hover:shadow-xl transition-shadow"
+      >
+        <FaMagic className="h-6 w-6 flex-none" />
+        <div>
+          <p className="font-bold">Cook From Your Pantry</p>
+          <p className="text-xs opacity-90">Got ingredients? Find a recipe.</p>
+        </div>
+      </Link>
+
+      {/* Most popular */}
       <div className="bg-white p-4 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold mb-4">About Me</h2>
-        <img
-          src="https://via.placeholder.com/96?text=Chef"
-          alt="Chef"
-          className="w-24 h-24 rounded-full mx-auto mb-4"
-        />
-        <p className="text-center text-lg">
-          Hi! I'm Chef, a passionate cook and food blogger. Welcome to my
-          kitchen!
-        </p>
+        <h2 className="text-2xl font-semibold mb-4">Most Popular</h2>
+        {topArticles.length === 0 ? (
+          <p className="text-gray-500">No recipes yet.</p>
+        ) : (
+          <ul className="space-y-4">
+            {topArticles.map((article) => (
+              <li key={article.id}>
+                <Link
+                  to={`/articles/${article.id}`}
+                  className="text-lg text-blue-500 hover:underline"
+                >
+                  {article.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
-      {/* Top Articles Section */}
-      <div className="bg-white p-4 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold mb-4">Top Articles</h2>
-        <ul className="space-y-4">
-          <li>
-            <a href="#" className="text-lg text-blue-500">
-              10 Kitchen Essentials You Definitely Need
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-lg text-blue-500">
-              5 Tips to Improve Your Cooking Skills
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-lg text-blue-500">
-              The Best Desserts to Try This Summer
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      {/* Recently Published Articles Section */}
+      {/* Recently published */}
       <div className="bg-white p-4 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold mb-4">Recently Published</h2>
-        <ul className="space-y-4">
-          <li>
-            <a href="#" className="text-lg text-blue-500">
-              How to Master the Art of French Cooking
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-lg text-blue-500">
-              The Secrets to Perfectly Grilled Steak
-            </a>
-          </li>
-          <li>
-            <a href="#" className="text-lg text-blue-500">
-              Vegetarian Recipes That Will Make You Forget Meat
-            </a>
-          </li>
-        </ul>
+        {recent.length === 0 ? (
+          <p className="text-gray-500">No recipes yet.</p>
+        ) : (
+          <ul className="space-y-4">
+            {recent.map((article) => (
+              <li key={article.id}>
+                <Link
+                  to={`/articles/${article.id}`}
+                  className="text-lg text-blue-500 hover:underline"
+                >
+                  {article.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

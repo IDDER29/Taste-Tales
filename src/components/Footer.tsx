@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { FaTiktok, FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 
 const Footer: React.FC = () => {
@@ -9,16 +10,22 @@ const Footer: React.FC = () => {
           <div className="flex justify-start items-center">
             <img src="./blogLogo.png" alt="Blog Logo" className="h-16" />
           </div>
-          <div className="flex justify-center items-center space-x-4 my-4 sm:my-0">
-            <a href="#home" className="hover:underline">
+          <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 my-4 sm:my-0">
+            <Link to="/" className="hover:underline">
               Home
-            </a>
-            <a href="#create-blog" className="hover:underline">
-              Create a Blog
-            </a>
-            <a href="#about-us" className="hover:underline">
+            </Link>
+            <Link to="/articles" className="hover:underline">
+              Create Article
+            </Link>
+            <Link to="/cook" className="hover:underline">
+              Cook
+            </Link>
+            <Link to="/saved" className="hover:underline">
+              Recipe Box
+            </Link>
+            <Link to="/about" className="hover:underline">
               About Us
-            </a>
+            </Link>
           </div>
           <div className="flex justify-end items-center space-x-4">
             <a href="#tiktok" className="text-white hover:text-gray-500">
