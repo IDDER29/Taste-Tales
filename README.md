@@ -1,70 +1,79 @@
-# Getting Started with Create React App
+# Taste-Tales
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Taste-Tales is a recipe/food blog app built with Next.js 14 (App Router), React 18, TypeScript (strict), Redux Toolkit, and Tailwind CSS. Users can browse, view, create, edit, and delete recipe "articles" with rich-text content. Article images are uploaded directly from the browser to Cloudinary, and article data is served by a [json-server](https://github.com/typicode/json-server) backend.
 
-## Available Scripts
+> Note: there is no backend code in this repository. `data/db.json` is the json-server database used as the REST API during development.
 
-In the project directory, you can run:
+## Prerequisites
 
-### `npm start`
+- Node.js 18
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Setup
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+npm install
+cp .env.example .env.local
+```
 
-### `npm test`
+Then adjust the values in `.env.local` for your environment (see [Environment Variables](#environment-variables)).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Running the backend
 
-### `npm run build`
+The frontend talks to a REST API serving recipe articles. In development this is provided by json-server using `data/db.json`. It must be running for the app to load and persist data:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm run server
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+This serves the API at http://localhost:8000.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Running the app
 
-### `npm run eject`
+In a separate terminal:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm run dev
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The app runs at http://localhost:3000.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Testing
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+npm run test     # Jest watch mode
+npm run test:ci  # single run, non-watch (used in CI)
+npm run typecheck # type-check with tsc --noEmit
+```
 
-## Learn More
+## Building
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm run build  # next build
+npm start      # next start — serve the production build
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+`next build` produces an optimized production build in the `.next/` folder.
 
-### Code Splitting
+## Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Deployment targets **Vercel** (a Next.js SSR host) via Vercel's GitHub integration: Vercel builds and deploys automatically on every push. The repo's `.github/workflows/ci.yml` is a quality gate only — it installs dependencies, type-checks, runs tests, and builds, but does not deploy.
 
-### Analyzing the Bundle Size
+## Environment Variables
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Next.js only exposes variables prefixed with `NEXT_PUBLIC_` to the browser. Copy `.env.example` to `.env.local` and set:
 
-### Making a Progressive Web App
+| Variable | Description |
+| --- | --- |
+| `NEXT_PUBLIC_API_URL` | Base URL of the blog REST API (e.g. `http://localhost:8000/` for json-server). |
+| `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name used for unsigned image uploads. |
+| `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` | Cloudinary unsigned upload preset. |
+| `NEXT_PUBLIC_ANTHROPIC_API_KEY` | Optional. Enables the AI "Cook From Your Pantry" recipe generator. Leave unset to disable AI (the pantry matcher still works). |
+| `NEXT_PUBLIC_ANTHROPIC_MODEL` | Optional. Model id for AI generation (defaults to `claude-opus-4-8`). |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Image uploads go directly from the browser to Cloudinary using the cloud name and unsigned upload preset above; the returned image URL is stored on the article.
 
-### Advanced Configuration
+### AI "Cook From Your Pantry" (`/cook`)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Enter the ingredients you have and the app ranks existing recipes by how many you already have (works with no API key, using the structured ingredient data). If `NEXT_PUBLIC_ANTHROPIC_API_KEY` is set, you can also generate a brand-new recipe with Claude.
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+> **Security note:** the AI feature calls the Anthropic API directly from the browser, which exposes the API key in the client bundle. This is fine for a local/demo build only — a production deployment should proxy these calls through a backend so the key is never shipped to the browser.

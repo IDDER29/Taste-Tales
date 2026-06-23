@@ -2,90 +2,234 @@
   "blogs": [
     {
       "id": "2",
-      "title": "Instant Pot Pulled beef",
-      "subtitle": "Quick and Easy",
+      "title": "Instant Pot Pulled Pork",
+      "subtitle": "Tender, smoky, and ready in under an hour",
       "category": "Main Course",
+      "cuisine": "American",
+      "diet": ["Gluten-Free", "Dairy-Free"],
+      "tags": ["pulled pork", "instant pot", "pork", "main course"],
       "imageUrl": "https://media.istockphoto.com/id/1081422898/photo/pan-fried-duck.jpg?s=2048x2048&w=is&k=20&c=KcDScs6hE2epagNeSD5tUuCAomdL1YK0eLLMCd5mtGU=",
       "views": 2400,
       "likes": 500,
-      "tags": ["pulled pork", "instant pot", "pork", "main course"],
-      "categories": ["Main Course"],
-      "publishedDate": "May 10, 2005",
+      "prepTime": 15,
+      "cookTime": 45,
+      "servings": 6,
+      "nutrition": { "calories": 420, "protein": 38, "carbs": 12, "fat": 24 },
+      "publishedDate": "2024-05-10T10:00:00.000Z",
       "publisher": {
         "name": "Jane Smith",
         "image": "https://via.placeholder.com/40x40.png?text=JS"
       },
-      "content": "<h2>Quick and hard</h2><p>This instant pot pulled pork recipe is perfect for those who want a quick and easy meal without sacrificing flavor. In just under an hour, you can have tender and juicy pulled pork ready to serve.</p><h3>Ingredients</h3><ul><li>2 pounds pork shoulder</li><li>1 cup BBQ sauce</li><li>1 tablespoon brown sugar</li></ul><h3>Preparation</h3><p>Place all ingredients in the instant pot. Set to high pressure and cook for 45 minutes. Allow pressure to release naturally for 10 minutes, then quick release. Shred the pork and mix with remaining sauce. Serve on buns or over rice.</p>"
+      "ingredients": [
+        { "quantity": 2, "unit": "lb", "name": "pork shoulder" },
+        { "quantity": 1, "unit": "cup", "name": "BBQ sauce" },
+        { "quantity": 0.5, "unit": "cup", "name": "apple cider vinegar" },
+        { "quantity": 1, "unit": "tbsp", "name": "brown sugar" },
+        { "quantity": 1, "unit": "tsp", "name": "smoked paprika" },
+        { "quantity": null, "unit": "", "name": "Salt and pepper to taste" }
+      ],
+      "instructions": [
+        "Season the pork shoulder generously with salt, pepper, and smoked paprika.",
+        "Place all ingredients in the Instant Pot and stir to combine.",
+        "Set to high pressure and cook for 45 minutes.",
+        "Allow pressure to release naturally for 10 minutes, then quick release.",
+        "Shred the pork with two forks and toss with the remaining sauce.",
+        "Serve on buns or over rice."
+      ],
+      "content": "<p>This Instant Pot pulled pork is perfect for a quick and easy meal without sacrificing flavor. In just under an hour you get tender, juicy pork ready to serve.</p>"
     },
     {
       "id": "3",
       "title": "Best Grilled Salmon",
-      "subtitle": "Healthy and Tasty",
-      "category": "Appetizer",
+      "subtitle": "Healthy, flaky, and on the table in 20 minutes",
+      "category": "Main Course",
+      "cuisine": "Mediterranean",
+      "diet": ["Gluten-Free", "Dairy-Free", "Keto", "Low-Carb"],
+      "tags": ["salmon", "grilled", "seafood", "healthy"],
       "imageUrl": "https://media.istockphoto.com/id/516329534/photo/last-straw.jpg?s=2048x2048&w=is&k=20&c=1L46K6jtSK0cuy9YTGuR7yf8621sftHxEpTkoWtmmk4=",
       "views": 3100,
       "likes": 800,
-      "publishedDate": "Nov 22, 2006",
+      "prepTime": 5,
+      "cookTime": 14,
+      "servings": 4,
+      "nutrition": { "calories": 310, "protein": 34, "carbs": 1, "fat": 19 },
+      "publishedDate": "2024-06-22T10:00:00.000Z",
       "publisher": {
         "name": "Alice Johnson",
         "image": "https://via.placeholder.com/40x40.png?text=AJ"
       },
-      "content": "\n      <h1>Best Grilled Salmon</h1>\n      <h2>Healthy and Tasty</h2>\n      <p>Our grilled salmon is a delightful appetizer that combines healthiness with great taste. Perfectly grilled to bring out the rich flavors of the fish, it's sure to impress your guests.</p>\n      <h3>Ingredients</h3>\n      <ul>\n        <li>4 salmon fillets</li>\n        <li>2 tablespoons olive oil</li>\n        <li>1 tablespoon lemon juice</li>\n        <li>1 teaspoon garlic powder</li>\n        <li>Salt and pepper to taste</li>\n      </ul>\n      <h3>Preparation</h3>\n      <p>Brush salmon fillets with olive oil, lemon juice, and sprinkle with garlic powder, salt, and pepper. Grill over medium-high heat for about 5-7 minutes on each side or until the fish flakes easily with a fork. Serve with a side of vegetables or a fresh salad.</p>\n    "
-    },
-    {
-      "id": "6",
-      "title": "Best Grilled Salmon",
-      "subtitle": "Healthy and Tasty",
-      "category": "Appetizer",
-      "imageUrl": "https://media.istockphoto.com/id/516329534/photo/last-straw.jpg?s=2048x2048&w=is&k=20&c=1L46K6jtSK0cuy9YTGuR7yf8621sftHxEpTkoWtmmk4=",
-      "views": 3100,
-      "likes": 800,
-      "publishedDate": "Nov 22, 2006",
-      "publisher": {
-        "name": "Alice Johnson",
-        "image": "https://via.placeholder.com/40x40.png?text=AJ"
-      },
-      "content": "\n      <h1>Best Grilled Salmon</h1>\n      <h2>Healthy and Tasty</h2>\n      <p>Our grilled salmon is a delightful appetizer that combines healthiness with great taste. Perfectly grilled to bring out the rich flavors of the fish, it's sure to impress your guests.</p>\n      <h3>Ingredients</h3>\n      <ul>\n        <li>4 salmon fillets</li>\n        <li>2 tablespoons olive oil</li>\n        <li>1 tablespoon lemon juice</li>\n        <li>1 teaspoon garlic powder</li>\n        <li>Salt and pepper to taste</li>\n      </ul>\n      <h3>Preparation</h3>\n      <p>Brush salmon fillets with olive oil, lemon juice, and sprinkle with garlic powder, salt, and pepper. Grill over medium-high heat for about 5-7 minutes on each side or until the fish flakes easily with a fork. Serve with a side of vegetables or a fresh salad.</p>\n    "
+      "ingredients": [
+        { "quantity": 4, "unit": "", "name": "salmon fillets" },
+        { "quantity": 2, "unit": "tbsp", "name": "olive oil" },
+        { "quantity": 1, "unit": "tbsp", "name": "lemon juice" },
+        { "quantity": 1, "unit": "tsp", "name": "garlic powder" },
+        { "quantity": null, "unit": "", "name": "Salt and pepper to taste" }
+      ],
+      "instructions": [
+        "Brush the salmon fillets with olive oil and lemon juice.",
+        "Sprinkle with garlic powder, salt, and pepper.",
+        "Grill over medium-high heat for 5-7 minutes per side, until the fish flakes easily with a fork.",
+        "Serve with a side of vegetables or a fresh salad."
+      ],
+      "content": "<p>Our grilled salmon combines healthiness with great taste. Perfectly grilled to bring out the rich flavors of the fish, it is sure to impress your guests.</p>"
     },
     {
       "id": "7",
-      "title": "Instant Pot Pulled Pork",
-      "subtitle": "Quick and Easy",
-      "category": "Main Course",
-      "imageUrl": "https://media.istockphoto.com/id/1081422898/photo/pan-fried-duck.jpg?s=2048x2048&w=is&k=20&c=KcDScs6hE2epagNeSD5tUuCAomdL1YK0eLLMCd5mtGU=",
-      "views": 2400,
-      "likes": 500,
-      "publishedDate": "May 10, 2005",
+      "title": "Fluffy Buttermilk Pancakes",
+      "subtitle": "Light, airy stacks for a lazy weekend",
+      "category": "Breakfast",
+      "cuisine": "American",
+      "diet": ["Vegetarian"],
+      "tags": ["pancakes", "breakfast", "brunch"],
+      "imageUrl": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=1200&q=80",
+      "views": 1800,
+      "likes": 430,
+      "prepTime": 10,
+      "cookTime": 15,
+      "servings": 4,
+      "nutrition": { "calories": 290, "protein": 8, "carbs": 42, "fat": 9 },
+      "publishedDate": "2024-08-02T09:00:00.000Z",
       "publisher": {
-        "name": "Jane Smith",
-        "image": "https://via.placeholder.com/40x40.png?text=JS"
+        "name": "Marco Bianchi",
+        "image": "https://via.placeholder.com/40x40.png?text=MB"
       },
-      "content": "\n      <h1>Instant Pot Pulled Pork</h1>\n      <h2>Quick and Easy</h2>\n      <p>This instant pot pulled pork recipe is perfect for those who want a quick and easy meal without sacrificing flavor. In just under an hour, you can have tender and juicy pulled pork ready to serve.</p>\n      <h3>Ingredients</h3>\n      <ul>\n        <li>2 pounds pork shoulder</li>\n        <li>1 cup BBQ sauce</li>\n        <li>1/2 cup apple cider vinegar</li>\n        <li>1 tablespoon brown sugar</li>\n        <li>1 teaspoon smoked paprika</li>\n        <li>Salt and pepper to taste</li>\n      </ul>\n      <h3>Preparation</h3>\n      <p>Place all ingredients in the instant pot. Set to high pressure and cook for 45 minutes. Allow pressure to release naturally for 10 minutes, then quick release. Shred the pork and mix with remaining sauce. Serve on buns or over rice.</p>\n    "
+      "ingredients": [
+        { "quantity": 1.5, "unit": "cups", "name": "all-purpose flour" },
+        { "quantity": 2, "unit": "tbsp", "name": "sugar" },
+        { "quantity": 1, "unit": "tsp", "name": "baking powder" },
+        { "quantity": 0.5, "unit": "tsp", "name": "baking soda" },
+        { "quantity": 1.25, "unit": "cups", "name": "buttermilk" },
+        { "quantity": 1, "unit": "", "name": "egg" },
+        { "quantity": 3, "unit": "tbsp", "name": "melted butter" }
+      ],
+      "instructions": [
+        "Whisk together the flour, sugar, baking powder, and baking soda.",
+        "In a separate bowl, whisk the buttermilk, egg, and melted butter.",
+        "Fold the wet ingredients into the dry until just combined; lumps are fine.",
+        "Cook 1/4-cup portions on a buttered griddle over medium heat until bubbles form, then flip.",
+        "Serve warm with maple syrup."
+      ],
+      "content": "<p>The buttermilk and a touch of baking soda are the secret to tall, tender pancakes every time.</p>"
     },
     {
       "id": "8",
-      "title": "Best Grilled Salmon",
-      "subtitle": "Healthy and Tasty",
-      "category": "Appetizer",
-      "imageUrl": "https://media.istockphoto.com/id/516329534/photo/last-straw.jpg?s=2048x2048&w=is&k=20&c=1L46K6jtSK0cuy9YTGuR7yf8621sftHxEpTkoWtmmk4=",
-      "views": 3100,
-      "likes": 800,
-      "publishedDate": "Nov 22, 2006",
+      "title": "Classic Margherita Pizza",
+      "subtitle": "Blistered crust, basil, and fresh mozzarella",
+      "category": "Main Course",
+      "cuisine": "Italian",
+      "diet": ["Vegetarian"],
+      "tags": ["pizza", "italian", "vegetarian"],
+      "imageUrl": "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=1200&q=80",
+      "views": 2750,
+      "likes": 690,
+      "prepTime": 20,
+      "cookTime": 12,
+      "servings": 2,
+      "nutrition": { "calories": 540, "protein": 22, "carbs": 68, "fat": 20 },
+      "publishedDate": "2024-09-14T12:00:00.000Z",
       "publisher": {
-        "name": "Alice Johnson",
-        "image": "https://via.placeholder.com/40x40.png?text=AJ"
+        "name": "Sofia Rossi",
+        "image": "https://via.placeholder.com/40x40.png?text=SR"
       },
-      "content": "\n      <h1>Best Grilled Salmon</h1>\n      <h2>Healthy and Tasty</h2>\n      <p>Our grilled salmon is a delightful appetizer that combines healthiness with great taste. Perfectly grilled to bring out the rich flavors of the fish, it's sure to impress your guests.</p>\n      <h3>Ingredients</h3>\n      <ul>\n        <li>4 salmon fillets</li>\n        <li>2 tablespoons olive oil</li>\n        <li>1 tablespoon lemon juice</li>\n        <li>1 teaspoon garlic powder</li>\n        <li>Salt and pepper to taste</li>\n      </ul>\n      <h3>Preparation</h3>\n      <p>Brush salmon fillets with olive oil, lemon juice, and sprinkle with garlic powder, salt, and pepper. Grill over medium-high heat for about 5-7 minutes on each side or until the fish flakes easily with a fork. Serve with a side of vegetables or a fresh salad.</p>\n    "
+      "ingredients": [
+        { "quantity": 1, "unit": "", "name": "pizza dough ball" },
+        { "quantity": 0.5, "unit": "cup", "name": "crushed San Marzano tomatoes" },
+        { "quantity": 4, "unit": "oz", "name": "fresh mozzarella" },
+        { "quantity": 6, "unit": "", "name": "fresh basil leaves" },
+        { "quantity": 1, "unit": "tbsp", "name": "olive oil" },
+        { "quantity": null, "unit": "", "name": "Salt to taste" }
+      ],
+      "instructions": [
+        "Preheat your oven (with a stone or steel) to its highest setting, ideally 500F+.",
+        "Stretch the dough into a 10-inch round on a floured peel.",
+        "Spread the crushed tomatoes, season with salt, and tear the mozzarella over the top.",
+        "Bake 8-12 minutes until the crust is blistered and the cheese bubbles.",
+        "Finish with fresh basil and a drizzle of olive oil."
+      ],
+      "content": "<p>A handful of quality ingredients and a screaming-hot oven are all you need for pizzeria-style results at home.</p>"
+    },
+    {
+      "id": "10",
+      "title": "Molten Chocolate Lava Cake",
+      "subtitle": "Gooey centers in individual ramekins",
+      "category": "Dessert",
+      "cuisine": "French",
+      "diet": ["Vegetarian"],
+      "tags": ["dessert", "chocolate", "cake"],
+      "imageUrl": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=1200&q=80",
+      "views": 3600,
+      "likes": 1020,
+      "prepTime": 15,
+      "cookTime": 13,
+      "servings": 4,
+      "nutrition": { "calories": 480, "protein": 7, "carbs": 52, "fat": 28 },
+      "publishedDate": "2024-10-05T18:00:00.000Z",
+      "publisher": {
+        "name": "Pierre Dubois",
+        "image": "https://via.placeholder.com/40x40.png?text=PD"
+      },
+      "ingredients": [
+        { "quantity": 4, "unit": "oz", "name": "bittersweet chocolate" },
+        { "quantity": 0.5, "unit": "cup", "name": "butter" },
+        { "quantity": 2, "unit": "", "name": "eggs" },
+        { "quantity": 2, "unit": "", "name": "egg yolks" },
+        { "quantity": 0.25, "unit": "cup", "name": "sugar" },
+        { "quantity": 2, "unit": "tbsp", "name": "all-purpose flour" }
+      ],
+      "instructions": [
+        "Butter and lightly flour four ramekins; preheat the oven to 425F.",
+        "Melt the chocolate and butter together until smooth.",
+        "Whisk the eggs, yolks, and sugar until pale, then fold in the chocolate and flour.",
+        "Divide among the ramekins and bake 12-14 minutes until the edges are set but the centers jiggle.",
+        "Invert onto plates and serve immediately."
+      ],
+      "content": "<p>The trick is to pull them while the centers are still soft — a minute too long and you lose the molten flow.</p>"
+    },
+    {
+      "id": "11",
+      "title": "Thai Green Curry with Vegetables",
+      "subtitle": "Fragrant, creamy, and weeknight-fast",
+      "category": "Main Course",
+      "cuisine": "Thai",
+      "diet": ["Gluten-Free", "Dairy-Free", "Vegan", "Vegetarian"],
+      "tags": ["curry", "thai", "vegan", "spicy"],
+      "imageUrl": "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=1200&q=80",
+      "views": 2100,
+      "likes": 560,
+      "prepTime": 15,
+      "cookTime": 20,
+      "servings": 4,
+      "nutrition": { "calories": 360, "protein": 9, "carbs": 28, "fat": 24 },
+      "publishedDate": "2024-11-18T19:00:00.000Z",
+      "publisher": {
+        "name": "Anya Wong",
+        "image": "https://via.placeholder.com/40x40.png?text=AW"
+      },
+      "ingredients": [
+        { "quantity": 2, "unit": "tbsp", "name": "green curry paste" },
+        { "quantity": 1, "unit": "", "name": "can coconut milk" },
+        { "quantity": 1, "unit": "", "name": "diced bell pepper" },
+        { "quantity": 1, "unit": "cup", "name": "broccoli florets" },
+        { "quantity": 1, "unit": "cup", "name": "snap peas" },
+        { "quantity": 1, "unit": "tbsp", "name": "soy sauce" },
+        { "quantity": null, "unit": "", "name": "Thai basil and lime to finish" }
+      ],
+      "instructions": [
+        "Fry the curry paste in a splash of coconut milk until fragrant, about 1 minute.",
+        "Pour in the rest of the coconut milk and bring to a gentle simmer.",
+        "Add the vegetables and simmer 8-10 minutes until crisp-tender.",
+        "Season with soy sauce; finish with Thai basil and a squeeze of lime.",
+        "Serve over jasmine rice."
+      ],
+      "content": "<p>Blooming the curry paste in fat first is what unlocks its full aroma — don't skip it.</p>"
     },
     {
       "id": "9d7c1a00-8ec0-4666-a1ba-11a92a236a97",
-      "title": "One piece is great ",
+      "title": "One piece is great",
       "subtitle": "",
-      "content": "<p>gifyu uffhgf hgf </p><p>ug</p>",
+      "category": "Education",
       "tags": [],
-      "categories": [
-        "Education"
-      ],
+      "content": "<p>This is a legacy free-form post with no structured recipe data, kept to verify the app gracefully falls back to rendering rich-text content.</p>",
       "imageUrl": "https://res.cloudinary.com/dvnwx89ao/image/upload/v1720611690/oy3fvkccpo65a5afy0pp.jpg",
       "views": 0,
       "likes": 0,
@@ -94,6 +238,40 @@
         "name": "Anonymous",
         "image": "https://via.placeholder.com/40x40.png?text=JD"
       }
+    }
+  ],
+  "reviews": [
+    {
+      "id": "r1",
+      "blogId": "2",
+      "author": "Daniel K.",
+      "rating": 5,
+      "comment": "Fall-apart tender and so easy. The vinegar really balances the BBQ sauce.",
+      "date": "2024-05-20T14:00:00.000Z"
+    },
+    {
+      "id": "r2",
+      "blogId": "2",
+      "author": "Priya S.",
+      "rating": 4,
+      "comment": "Great weeknight meal. I added a little extra paprika for smokiness.",
+      "date": "2024-06-01T09:30:00.000Z"
+    },
+    {
+      "id": "r3",
+      "blogId": "3",
+      "author": "Marcus T.",
+      "rating": 5,
+      "comment": "Perfectly flaky. Don't overcook it and you're golden.",
+      "date": "2024-07-02T18:45:00.000Z"
+    },
+    {
+      "id": "r4",
+      "blogId": "10",
+      "author": "Elena R.",
+      "rating": 5,
+      "comment": "That molten center is everything. Pulled them at 12 minutes exactly.",
+      "date": "2024-10-10T20:15:00.000Z"
     }
   ]
 }
