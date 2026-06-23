@@ -66,6 +66,29 @@ export const reviewInputSchema = z.object({
   comment: z.string().max(2000).optional().default(""),
 });
 
+// ---- Reports / moderation ----
+export const reportInputSchema = z.object({
+  reason: z.string().min(3, "Please describe the problem").max(1000),
+});
+
+export const reportUpdateSchema = z.object({
+  status: z.enum(["OPEN", "RESOLVED", "DISMISSED"]),
+  deleteRecipe: z.boolean().optional(),
+});
+
+// ---- Account ----
+export const accountUpdateSchema = z
+  .object({
+    name: z.string().min(1).max(80).optional(),
+    email: z.email().optional(),
+    currentPassword: z.string().optional(),
+    newPassword: z.string().min(8, "Password must be at least 8 characters").optional(),
+  })
+  .refine((d) => !d.newPassword || Boolean(d.currentPassword), {
+    message: "Your current password is required to set a new one.",
+    path: ["currentPassword"],
+  });
+
 // ---- Saved recipes ----
 export const savedInputSchema = z.object({
   recipeId: z.string().min(1),

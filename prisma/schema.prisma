@@ -25,6 +25,12 @@ enum RecipeStatus {
   PUBLISHED
 }
 
+enum ReportStatus {
+  OPEN
+  RESOLVED
+  DISMISSED
+}
+
 model User {
   id            String   @id @default(cuid())
   email         String   @unique
@@ -39,6 +45,7 @@ model User {
   recipes Recipe[]
   reviews Review[]
   saved   SavedRecipe[]
+  reports Report[]
 }
 
 model Recipe {
@@ -77,6 +84,7 @@ model Recipe {
 
   reviews      Review[]
   savedBy      SavedRecipe[]
+  reports      Report[]
 
   @@index([status, publishedAt])
   @@index([status, ratingAvg])
@@ -108,6 +116,20 @@ model SavedRecipe {
 
   @@unique([userId, recipeId])
   @@index([userId])
+}
+
+model Report {
+  id         String       @id @default(cuid())
+  recipeId   String
+  recipe     Recipe       @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  reporterId String
+  reporter   User         @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  reason     String       @db.Text
+  status     ReportStatus @default(OPEN)
+  createdAt  DateTime     @default(now())
+
+  @@index([status])
+  @@index([recipeId])
 }
 
 // Email verification + password reset tokens (email/password auth).

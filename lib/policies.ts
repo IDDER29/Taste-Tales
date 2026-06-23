@@ -29,3 +29,12 @@ export function assertOwnerOrAdmin(user: SessionUser, ownerId: string): void {
     throw new ApiError("FORBIDDEN", "You don't have permission to do that.");
   }
 }
+
+// Require an authenticated admin; throws 401/403 otherwise.
+export async function requireAdmin(): Promise<SessionUser> {
+  const user = await requireUser();
+  if (user.role !== "ADMIN") {
+    throw new ApiError("FORBIDDEN", "Admins only.");
+  }
+  return user;
+}
