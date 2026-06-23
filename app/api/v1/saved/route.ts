@@ -5,6 +5,7 @@ import { savedInputSchema } from "@/lib/validation";
 import { ApiError, jsonOk, toErrorResponse } from "@/lib/errors";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 const authorSelect = {
   author: { select: { id: true, name: true, avatarUrl: true } },

@@ -3,6 +3,7 @@ import { requireUser } from "@/lib/policies";
 import { jsonOk, toErrorResponse } from "@/lib/errors";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 // GET /api/v1/account/export — the current user's data (GDPR-style export).
 export async function GET() {

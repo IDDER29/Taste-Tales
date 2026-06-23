@@ -1,5 +1,9 @@
+import { publishJob } from "./queue";
+
 // Transactional email via Resend. Optional: without RESEND_API_KEY, emails are
 // logged instead of sent, so flows work in dev / before infra is provisioned.
+// When QStash is configured, sends are dispatched async to /api/jobs/send-email;
+// otherwise they run inline (best-effort).
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const EMAIL_FROM =
   process.env.EMAIL_FROM || "Taste-Tales <onboarding@resend.dev>";
@@ -7,15 +11,16 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 export const isEmailConfigured = (): boolean => Boolean(RESEND_API_KEY);
 
-interface SendArgs {
+export interface EmailPayload {
   to: string;
   subject: string;
   html: string;
 }
 
-// Best-effort send — never throws, so callers (e.g. registration) don't fail if
-// email is down or unconfigured.
-async function sendEmail({ to, subject, html }: SendArgs): Promise<void> {
+// Actually delivers the email (called inline or by the QStash worker). Never
+// throws so it can't break a request or crash a job.
+export async function deliverEmail(payload: EmailPayload): Promise<void> {
+  const { to, subject, html } = payload;
   if (!RESEND_API_KEY) {
     console.info(`[email] (not configured) would send to ${to}: "${subject}"`);
     return;
@@ -41,6 +46,17 @@ async function sendEmail({ to, subject, html }: SendArgs): Promise<void> {
   }
 }
 
+// Dispatch: enqueue via QStash when available, otherwise deliver inline.
+async function dispatch(payload: EmailPayload): Promise<void> {
+  try {
+    const queued = await publishJob("/api/jobs/send-email", payload);
+    if (queued) return;
+  } catch (err) {
+    console.error("[email] enqueue failed, sending inline", err);
+  }
+  await deliverEmail(payload);
+}
+
 const layout = (heading: string, body: string, cta: { url: string; label: string }) => `
   <div style="font-family:system-ui,sans-serif;max-width:480px;margin:0 auto;padding:24px">
     <h1 style="color:#ef4444;font-size:22px">Taste-Tales</h1>
@@ -57,7 +73,7 @@ export async function sendVerificationEmail(
   token: string
 ): Promise<void> {
   const url = `${APP_URL}/verify-email?token=${token}`;
-  await sendEmail({
+  await dispatch({
     to,
     subject: "Verify your Taste-Tales email",
     html: layout(
@@ -73,7 +89,7 @@ export async function sendPasswordResetEmail(
   token: string
 ): Promise<void> {
   const url = `${APP_URL}/reset-password?token=${token}`;
-  await sendEmail({
+  await dispatch({
     to,
     subject: "Reset your Taste-Tales password",
     html: layout(

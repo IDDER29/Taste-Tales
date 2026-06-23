@@ -5,6 +5,7 @@ import { requireUser } from "@/lib/policies";
 import { recipeInputSchema } from "@/lib/validation";
 import { jsonOk, toErrorResponse } from "@/lib/errors";
 import { enforceRateLimit } from "@/lib/rate-limit";
+import { withIdempotency } from "@/lib/idempotency";
 import { slugify } from "@/lib/slug";
 import { sanitizeHtml } from "@/src/utils/sanitize";
 
@@ -67,29 +68,37 @@ export async function POST(req: NextRequest) {
 
     const input = recipeInputSchema.parse(await req.json().catch(() => null));
 
-    const recipe = await prisma.recipe.create({
-      data: {
-        title: input.title,
-        subtitle: input.subtitle,
-        category: input.category,
-        cuisine: input.cuisine,
-        diet: input.diet,
-        tags: input.tags,
-        imageUrl: input.imageUrl,
-        prepTime: input.prepTime ?? null,
-        cookTime: input.cookTime ?? null,
-        servings: input.servings ?? null,
-        nutrition: (input.nutrition ?? undefined) as Prisma.InputJsonValue,
-        ingredients: input.ingredients as unknown as Prisma.InputJsonValue,
-        instructions: input.instructions as unknown as Prisma.InputJsonValue,
-        content: input.content ? sanitizeHtml(input.content) : "",
-        status: input.status,
-        slug: `${slugify(input.title)}-${Math.random().toString(36).slice(2, 7)}`,
-        authorId: user.id,
-        publishedAt: input.status === "PUBLISHED" ? new Date() : null,
-      },
-      include: authorSelect,
-    });
+    // Safe to retry: an Idempotency-Key replays the first result (when Redis is on).
+    const recipe = await withIdempotency(
+      req.headers.get("Idempotency-Key"),
+      `recipes:create:${user.id}`,
+      () =>
+        prisma.recipe.create({
+          data: {
+            title: input.title,
+            subtitle: input.subtitle,
+            category: input.category,
+            cuisine: input.cuisine,
+            diet: input.diet,
+            tags: input.tags,
+            imageUrl: input.imageUrl,
+            prepTime: input.prepTime ?? null,
+            cookTime: input.cookTime ?? null,
+            servings: input.servings ?? null,
+            nutrition: (input.nutrition ?? undefined) as Prisma.InputJsonValue,
+            ingredients: input.ingredients as unknown as Prisma.InputJsonValue,
+            instructions: input.instructions as unknown as Prisma.InputJsonValue,
+            content: input.content ? sanitizeHtml(input.content) : "",
+            status: input.status,
+            slug: `${slugify(input.title)}-${Math.random()
+              .toString(36)
+              .slice(2, 7)}`,
+            authorId: user.id,
+            publishedAt: input.status === "PUBLISHED" ? new Date() : null,
+          },
+          include: authorSelect,
+        })
+    );
 
     return jsonOk(recipe, { status: 201 });
   } catch (err) {

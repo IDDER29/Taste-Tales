@@ -1,14 +1,10 @@
 import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
 import { ApiError } from "./errors";
+import { redis } from "./redis";
 
 // Upstash Redis is optional: when its env vars are absent (e.g. local dev or
 // before infra is provisioned) rate limiting is a no-op that allows the request.
 // Add UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN to turn it on — no code change.
-const url = process.env.UPSTASH_REDIS_REST_URL;
-const token = process.env.UPSTASH_REDIS_REST_TOKEN;
-const redis = url && token ? new Redis({ url, token }) : null;
-
 export const isRateLimitConfigured = (): boolean => redis !== null;
 
 type Duration = `${number} ${"s" | "m" | "h" | "d"}`;

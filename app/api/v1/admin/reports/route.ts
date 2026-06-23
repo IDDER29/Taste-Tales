@@ -5,6 +5,7 @@ import { requireAdmin } from "@/lib/policies";
 import { jsonOk, toErrorResponse } from "@/lib/errors";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 // GET /api/v1/admin/reports?status=OPEN — moderation queue (admin only).
 export async function GET(req: NextRequest) {
