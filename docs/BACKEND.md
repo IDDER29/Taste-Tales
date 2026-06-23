@@ -75,8 +75,16 @@ under `/api/v1`; Auth.js stays at `/api/auth` (framework convention).
 | GET | `/api/v1/saved` | required | the user's saved recipes |
 | POST | `/api/v1/saved` | required | `{ recipeId }` → save (idempotent) |
 | DELETE | `/api/v1/saved?recipeId=` | required | unsave (idempotent) |
+| POST | `/api/v1/recipes/[id]/report` | required | flag a recipe for moderation (rate-limited) |
 | POST | `/api/v1/uploads/sign` | required | signed Cloudinary upload payload |
 | POST | `/api/v1/ai/recipes/generate` | required | `{ ingredients }` → AI recipe (rate-limited, server key) |
+| PATCH | `/api/v1/account` | required | update name/email/password |
+| DELETE | `/api/v1/account` | required | delete account (cascades) |
+| GET | `/api/v1/account/export` | required | GDPR-style data export |
+| GET | `/api/v1/admin/reports` | admin | moderation queue (`?status=`) |
+| PATCH | `/api/v1/admin/reports/[id]` | admin | resolve/dismiss (optionally delete recipe) |
+| POST | `/api/jobs/send-email` | QStash sig | async email worker (internal) |
+| GET | `/api/openapi` | — | OpenAPI 3.1 contract (JSON) |
 
 Rate limiting (auth/AI/writes) and Cloudinary signing activate automatically when
 their env vars are present; without them the app still runs (limits no-op, uploads
@@ -95,6 +103,9 @@ The app no longer uses json-server. The Redux thunk/service layer now talks to
 - **Auth UI:** `/login` + `/register`, `SessionProvider`, NavBar session state.
 - **Auth-gated writes:** create/edit pages redirect to `/login` when signed out; reviews
   require sign-in; Edit/Delete render only for the owner/admin; delete uses a confirm dialog.
+- **Account & moderation UI:** `/account` (profile/password/export/delete), a Report control on
+  recipes, and an admin `/admin/reports` moderation queue (NavBar links when signed in / admin).
+- **Password recovery UI:** `/forgot-password`, `/reset-password`, `/verify-email`.
 
 Everything is built and type-checked; it exercises the live backend once `DATABASE_URL`
 + `AUTH_SECRET` are set and migrations have run.
@@ -123,12 +134,25 @@ Everything is built and type-checked; it exercises the live backend once `DATABA
   `sentry.*.config.ts`, `instrumentation.ts`). Disabled (no-op) without a DSN; the build only
   wraps with the Sentry plugin when `NEXT_PUBLIC_SENTRY_DSN`/`SENTRY_AUTH_TOKEN` are set. Unhandled
   API errors are logged + captured with a `requestId` returned to the client.
+- **Edge middleware** (`auth.config.ts` split-config + `middleware.ts`): server-side route
+  protection for `/articles` (create) and `/edit-article/*`, Prisma-free on the edge.
+- **Idempotency** (`lib/idempotency.ts`): `Idempotency-Key` on `POST /api/v1/recipes` replays the
+  first result (Upstash); no-op without Redis. Shared client in `lib/redis.ts`.
+- **Async jobs** (`lib/queue.ts` + `/api/jobs/send-email`): emails dispatch via QStash when
+  configured (signature-verified worker), else inline.
+- **Account management:** update profile/password, email change w/ re-verification, data export,
+  account deletion — endpoints + `/account` settings page.
+- **Moderation:** report a recipe (`/api/v1/recipes/[id]/report`), admin queue
+  (`/api/v1/admin/reports`) + `/admin/reports` page; self-review already blocked.
+- **OpenAPI** contract served at `/api/openapi`.
 
-## Still to do (needs a live DB / browser to verify)
+## Still to do (ops / scale — needs live infra)
 
-- **Edge middleware** route protection (currently enforced client-side + server-side) — needs
-  the Auth.js v5 edge-safe split-config.
-- **Idempotency keys** on create endpoints.
-- **Send emails async** (via QStash) once volume warrants (currently sent inline, best-effort).
-- **Alerting + log drains** (wire Vercel log drains → Axiom/Better Stack; Sentry alert rules).
-- **Idempotency keys** on create endpoints; **observability** (Sentry + structured logs).
+- **Alerting + log drains:** wire Vercel log drains → Axiom/Better Stack; configure Sentry alerts.
+- **Block unverified logins** if desired (currently login is allowed pre-verification; product call).
+- **CSP + security headers** (via `next.config` headers) — hardening pass.
+- **Read replicas / search service** — only when traffic warrants (see `BACKEND_ARCHITECTURE.md`).
+
+The backend is **feature-complete for launch**: every capability above is implemented and builds;
+each external dependency (DB, Auth, Anthropic, Cloudinary, Upstash Redis/QStash, Resend, Sentry)
+is key-gated and degrades gracefully. Going live = set env keys + `prisma:migrate` + `db:seed`.

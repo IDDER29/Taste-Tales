@@ -87,9 +87,20 @@ export default function NavBar() {
           </button>
           {session?.user ? (
             <div className="ml-6 flex items-center gap-3">
-              <span className="text-sm font-semibold leading-6 text-white">
+              {session.user.role === "ADMIN" && (
+                <Link
+                  href="/admin/reports"
+                  className="text-sm font-semibold leading-6 text-white hover:underline"
+                >
+                  Moderation
+                </Link>
+              )}
+              <Link
+                href="/account"
+                className="text-sm font-semibold leading-6 text-white hover:underline"
+              >
                 {session.user.name || session.user.email}
-              </span>
+              </Link>
               <button
                 onClick={() => signOut()}
                 className="text-sm font-semibold leading-6 text-white hover:underline"

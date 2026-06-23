@@ -7,6 +7,7 @@ import { hasStructuredRecipe } from "../utils/recipe";
 import { sanitizeHtml } from "../utils/sanitize";
 import RecipeDetails from "./RecipeDetails";
 import SaveButton from "./SaveButton";
+import ReportButton from "./ReportButton";
 import { useConfirm } from "./ui";
 import type { Article } from "../types";
 
@@ -86,6 +87,10 @@ const ArticleHeader = ({
           </span>
         </div>
       </section>
+
+      <div className="flex justify-end mb-4">
+        <ReportButton recipeId={articleData.id} hidden={canManage} />
+      </div>
 
       {hasStructuredRecipe(
         articleData as unknown as Parameters<typeof hasStructuredRecipe>[0]
