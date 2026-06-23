@@ -3,6 +3,9 @@ import type { NextAuthConfig } from "next-auth";
 // Edge-safe Auth.js config (no Prisma / bcrypt). Shared by the middleware and
 // the full server instance. Providers are added in auth.ts (server-only).
 export const authConfig = {
+  // Trust the deployment host (Vercel sets this automatically; required for
+  // self-hosted/proxied deployments so Auth.js accepts the request host).
+  trustHost: true,
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   providers: [],
