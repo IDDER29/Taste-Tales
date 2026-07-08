@@ -4,30 +4,36 @@ import React from "react";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import { cn } from "../utils/cn";
 
+// Self-contained tiles (emoji + brand gradient) so the section always renders
+// crisp — no dependency on external image hosts.
 const categories = [
   {
     id: 1,
     name: "Breakfast",
-    image:
-      "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=500&q=70",
+    emoji: "🍳",
+    blurb: "Bright morning starts",
+    gradient: "from-accent-400 to-brand-500",
   },
   {
     id: 2,
     name: "Main Course",
-    image:
-      "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=70",
+    emoji: "🍝",
+    blurb: "Hearty centerpieces",
+    gradient: "from-brand-500 to-brand-700",
   },
   {
     id: 3,
     name: "Appetizer",
-    image:
-      "https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&w=500&q=70",
+    emoji: "🥗",
+    blurb: "Small, shareable bites",
+    gradient: "from-accent-500 to-brand-600",
   },
   {
     id: 4,
     name: "Dessert",
-    image:
-      "https://images.unsplash.com/photo-1505250469679-203ad9ced0cb?auto=format&fit=crop&w=500&q=70",
+    emoji: "🍰",
+    blurb: "Sweet finishes",
+    gradient: "from-brand-600 to-accent-500",
   },
 ];
 
@@ -65,19 +71,19 @@ const Categories: React.FC<CategoriesProps> = ({
               onClick={() => handleCategoryClick(category.name)}
               aria-pressed={active}
               className={cn(
-                "group relative aspect-[4/5] overflow-hidden rounded-3xl shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/30",
+                "group relative aspect-[4/5] overflow-hidden rounded-3xl bg-gradient-to-br shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/30",
+                category.gradient,
                 active && "ring-4 ring-brand-500 ring-offset-2 ring-offset-[rgb(var(--surface))]"
               )}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={category.image}
-                alt={category.name}
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-sand-950/85 via-sand-950/20 to-transparent" />
+              {/* soft glow + emoji */}
+              <span className="pointer-events-none absolute -right-6 -top-8 h-28 w-28 rounded-full bg-white/15 blur-2xl" />
+              <span className="absolute inset-0 flex items-center justify-center text-6xl drop-shadow-sm transition-transform duration-500 group-hover:scale-110 sm:text-7xl">
+                {category.emoji}
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-t from-sand-950/55 via-transparent to-transparent" />
               {active && (
-                <span className="absolute right-3 top-3 inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-600 text-white shadow-glow">
+                <span className="absolute right-3 top-3 inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-brand-600 shadow-glow">
                   <CheckIcon className="h-4 w-4" />
                 </span>
               )}
@@ -85,8 +91,8 @@ const Categories: React.FC<CategoriesProps> = ({
                 <p className="font-display text-lg font-semibold text-white">
                   {category.name}
                 </p>
-                <p className="text-xs text-white/70">
-                  {active ? "Showing" : "Explore"}
+                <p className="text-xs text-white/80">
+                  {active ? "Showing" : category.blurb}
                 </p>
               </div>
             </button>

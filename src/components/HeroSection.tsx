@@ -33,22 +33,15 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onSearch }) => {
     <section className="relative overflow-hidden bg-hero-mesh">
       {/* Soft grain / gradient wash */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/0 via-white/0 to-[rgb(var(--surface))]" />
-      {/* Floating food photos on wide screens */}
-      <div className="pointer-events-none absolute -right-10 top-16 hidden h-64 w-64 rotate-6 overflow-hidden rounded-4xl border-8 border-white shadow-lift lg:block xl:right-20">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=70"
-          alt=""
-          className="h-full w-full object-cover"
-        />
+      {/* Floating food tiles on wide screens (self-contained — no external deps) */}
+      <div className="pointer-events-none absolute -right-10 top-16 hidden h-64 w-64 rotate-6 items-center justify-center overflow-hidden rounded-4xl border-8 border-white bg-gradient-to-br from-brand-500 to-accent-500 shadow-lift lg:flex xl:right-20">
+        <span className="text-8xl drop-shadow">🍜</span>
       </div>
-      <div className="pointer-events-none absolute right-40 top-72 hidden h-40 w-40 -rotate-6 overflow-hidden rounded-3xl border-8 border-white shadow-lift xl:block animate-float">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=400&q=70"
-          alt=""
-          className="h-full w-full object-cover"
-        />
+      <div className="animate-float pointer-events-none absolute right-40 top-72 hidden h-40 w-40 -rotate-6 items-center justify-center overflow-hidden rounded-3xl border-8 border-white bg-gradient-to-br from-accent-400 to-brand-600 shadow-lift xl:flex">
+        <span className="text-6xl drop-shadow">🥑</span>
+      </div>
+      <div className="animate-float pointer-events-none absolute right-64 top-24 hidden h-24 w-24 rotate-12 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-gradient-to-br from-brand-400 to-accent-400 shadow-lift xl:flex" style={{ animationDelay: "1.5s" }}>
+        <span className="text-4xl drop-shadow">🍓</span>
       </div>
 
       <div className="container-page relative py-20 sm:py-28 lg:py-32">

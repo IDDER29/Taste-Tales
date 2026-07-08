@@ -34,14 +34,12 @@ export default function AuthLayout({
       {/* Brand panel */}
       <div className="relative hidden overflow-hidden rounded-4xl bg-sand-950 p-10 text-white lg:flex lg:min-h-[36rem] lg:flex-col lg:justify-between">
         <div className="pointer-events-none absolute inset-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="https://images.unsplash.com/photo-1466637574441-749b8f19452f?auto=format&fit=crop&w=1000&q=70"
-            alt=""
-            className="h-full w-full object-cover opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-sand-950 via-sand-950/70 to-sand-950/30" />
-          <div className="absolute inset-0 bg-hero-mesh opacity-40" />
+          <div className="absolute inset-0 bg-hero-mesh opacity-60" />
+          <div className="absolute -right-10 -top-10 h-56 w-56 rounded-full bg-brand-500/30 blur-3xl" />
+          <div className="absolute bottom-0 left-0 h-56 w-56 rounded-full bg-accent-500/20 blur-3xl" />
+          {/* subtle floating food glyphs */}
+          <span className="absolute right-8 top-24 text-5xl opacity-25">🍋</span>
+          <span className="absolute right-24 top-1/2 text-4xl opacity-20">🌿</span>
         </div>
 
         <Brand inverted className="relative" />
