@@ -20,6 +20,7 @@ import {
   XMarkIcon,
   BellIcon,
   BookmarkIcon,
+  BookOpenIcon,
   PlusIcon,
   UserCircleIcon,
   ArrowRightOnRectangleIcon,
@@ -208,6 +209,15 @@ export default function NavBar() {
                 <div className="py-1">
                   <MenuItem>
                     <Link
+                      href="/dashboard"
+                      className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-sand-700 data-[focus]:bg-sand-50 data-[focus]:text-sand-950"
+                    >
+                      <BookOpenIcon className="h-5 w-5 text-sand-500" />
+                      My recipes
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link
                       href="/account"
                       className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-sand-700 data-[focus]:bg-sand-50 data-[focus]:text-sand-950"
                     >
@@ -321,6 +331,16 @@ export default function NavBar() {
               </span>
               {savedCount > 0 && <span className="chip py-0.5 text-xs">{savedCount}</span>}
             </Link>
+            {session?.user && (
+              <Link
+                href="/dashboard"
+                onClick={() => dispatch(toggleMobileMenu())}
+                className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-base font-medium text-sand-800 hover:bg-sand-100"
+              >
+                <BookOpenIcon className="h-5 w-5 text-sand-500" />
+                My recipes
+              </Link>
+            )}
           </div>
 
           <div className="mt-6 flex flex-col gap-3 border-t border-sand-200 pt-6">

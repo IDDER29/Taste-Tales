@@ -232,8 +232,8 @@ const HomeFeed: React.FC = () => {
         <SectionHeader
           eyebrow="Your kitchen"
           title="Recipes you've shared"
-          href={mine.length ? "/articles" : undefined}
-          linkLabel="Share another"
+          href={mine.length ? "/dashboard" : undefined}
+          linkLabel="Manage all"
         />
         {mine.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

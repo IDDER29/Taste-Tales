@@ -98,30 +98,44 @@ const ArticleHeader = ({
 
         {/* Author + rating + actions */}
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-b border-sand-100 pb-6">
-          <div className="flex items-center gap-3">
-            <Avatar
-              name={articleData.publisher?.name}
-              src={articleData.publisher?.image}
-              size="md"
-            />
-            <div>
-              <p className="font-semibold text-sand-900">
-                {articleData.publisher?.name}
-              </p>
-              <div className="flex items-center gap-2 text-sm text-sand-500">
-                <span>{articleData.publishedDate}</span>
-                {rating.count > 0 && (
-                  <>
-                    <span className="h-1 w-1 rounded-full bg-sand-300" />
-                    <span className="inline-flex items-center gap-1">
-                      <StarRating value={rating.value} size="text-sm" />
-                      {rating.value}
-                    </span>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
+          {(() => {
+            const inner = (
+              <>
+                <Avatar
+                  name={articleData.publisher?.name}
+                  src={articleData.publisher?.image}
+                  size="md"
+                />
+                <div>
+                  <p className="font-semibold text-sand-900 transition-colors group-hover:text-brand-700">
+                    {articleData.publisher?.name}
+                  </p>
+                  <div className="flex items-center gap-2 text-sm text-sand-500">
+                    <span>{articleData.publishedDate}</span>
+                    {rating.count > 0 && (
+                      <>
+                        <span className="h-1 w-1 rounded-full bg-sand-300" />
+                        <span className="inline-flex items-center gap-1">
+                          <StarRating value={rating.value} size="text-sm" />
+                          {rating.value}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </>
+            );
+            return articleData.authorId ? (
+              <Link
+                href={`/chefs/${articleData.authorId}`}
+                className="group flex items-center gap-3"
+              >
+                {inner}
+              </Link>
+            ) : (
+              <div className="flex items-center gap-3">{inner}</div>
+            );
+          })()}
 
           <div className="flex items-center gap-2">
             <button

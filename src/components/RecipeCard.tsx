@@ -32,12 +32,12 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 }) => {
   const time = formatMinutes(totalMinutes(recipe));
   const diets = recipe.diet || [];
+  const authorId = recipe.authorId;
 
   return (
-    <Link
-      href={`/articles/${recipe.id}`}
+    <article
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl border border-sand-200/70 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25 animate-fade-up",
+        "group relative flex flex-col overflow-hidden rounded-2xl border border-sand-200/70 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift focus-within:ring-4 focus-within:ring-brand-500/25 animate-fade-up",
         className
       )}
       style={{ animationDelay: `${Math.min(index, 8) * 60}ms` }}
@@ -84,14 +84,21 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
             {recipe.cuisine}
           </span>
         )}
-        <h3
-          className={cn(
-            "mt-1 font-display font-semibold leading-snug text-sand-950 line-clamp-2 transition-colors group-hover:text-brand-700",
-            featured ? "text-xl" : "text-lg"
-          )}
+        {/* Title is the stretched primary link — covers the whole card via
+            ::after so the author link below stays independently clickable. */}
+        <Link
+          href={`/articles/${recipe.id}`}
+          className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none"
         >
-          {recipe.title}
-        </h3>
+          <h3
+            className={cn(
+              "mt-1 font-display font-semibold leading-snug text-sand-950 line-clamp-2 transition-colors group-hover:text-brand-700",
+              featured ? "text-xl" : "text-lg"
+            )}
+          >
+            {recipe.title}
+          </h3>
+        </Link>
         {recipe.subtitle && (
           <p className="mt-1.5 line-clamp-2 text-sm text-sand-600">
             {recipe.subtitle}
@@ -128,26 +135,42 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
           </div>
         )}
 
-        {/* Author */}
-        <div className="mt-auto flex items-center gap-2.5 pt-4">
-          <Avatar
-            name={recipe.publisher?.name}
-            src={recipe.publisher?.image}
-            size="sm"
-          />
-          <div className="min-w-0">
-            <p className="truncate text-sm font-medium text-sand-800">
-              {recipe.publisher?.name}
-            </p>
-            {recipe.publishedDate && (
-              <p className="truncate text-xs text-sand-500">
-                {recipe.publishedDate}
+        {/* Author — sits above the stretched link (z-10) so it links to the
+            chef profile independently of the card's recipe link. */}
+        {authorId ? (
+          <Link
+            href={`/chefs/${authorId}`}
+            className="relative z-10 mt-auto flex w-fit items-center gap-2.5 pt-4"
+          >
+            <Avatar name={recipe.publisher?.name} src={recipe.publisher?.image} size="sm" />
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium text-sand-800 transition-colors hover:text-brand-700">
+                {recipe.publisher?.name}
               </p>
-            )}
+              {recipe.publishedDate && (
+                <p className="truncate text-xs text-sand-500">
+                  {recipe.publishedDate}
+                </p>
+              )}
+            </div>
+          </Link>
+        ) : (
+          <div className="mt-auto flex items-center gap-2.5 pt-4">
+            <Avatar name={recipe.publisher?.name} src={recipe.publisher?.image} size="sm" />
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium text-sand-800">
+                {recipe.publisher?.name}
+              </p>
+              {recipe.publishedDate && (
+                <p className="truncate text-xs text-sand-500">
+                  {recipe.publishedDate}
+                </p>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
-    </Link>
+    </article>
   );
 };
 
