@@ -1,7 +1,13 @@
 "use client";
 
 import React from "react";
+import {
+  MagnifyingGlassIcon,
+  AdjustmentsHorizontalIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { CUISINE_OPTIONS, DIET_OPTIONS } from "../utils/recipe";
+import { cn } from "../utils/cn";
 import type { FilterCriteria } from "../types";
 
 interface RecipeFiltersProps {
@@ -29,6 +35,9 @@ const EMPTY_FILTERS: FilterCriteria = {
   maxTime: null,
 };
 
+const selectClass =
+  "h-11 rounded-xl border border-sand-300 bg-white px-3.5 text-sm font-medium text-sand-800 transition-shadow focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15";
+
 const RecipeFilters = ({ value, onChange }: RecipeFiltersProps) => {
   const filters = { ...EMPTY_FILTERS, ...value } as Required<FilterCriteria>;
 
@@ -44,56 +53,51 @@ const RecipeFilters = ({ value, onChange }: RecipeFiltersProps) => {
 
   const clearFilters = () => onChange({ ...EMPTY_FILTERS });
 
+  const activeCount =
+    (filters.query ? 1 : 0) +
+    (filters.cuisine ? 1 : 0) +
+    (filters.maxTime != null ? 1 : 0) +
+    filters.diets.length;
+
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md mb-6">
-      <div className="flex flex-wrap items-end gap-4">
-        <div className="flex-1 min-w-[200px]">
-          <label className="block text-sm font-semibold text-gray-700 mb-1">
-            Search
-          </label>
+    <div className="rounded-3xl border border-sand-200/70 bg-white p-5 shadow-soft sm:p-6">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+        {/* Search */}
+        <div className="relative flex-1">
+          <MagnifyingGlassIcon className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-sand-400" />
           <input
             type="text"
-            placeholder="Search recipes, ingredients..."
+            placeholder="Search recipes, ingredients…"
             value={filters.query}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              update({ query: e.target.value })
-            }
-            className="p-2 border border-gray-300 rounded-lg w-full"
+            onChange={(e) => update({ query: e.target.value })}
+            className="h-11 w-full rounded-xl border border-sand-300 bg-white pl-11 pr-3 text-sm text-sand-950 placeholder:text-sand-400 focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
           />
         </div>
 
-        <div className="min-w-[160px]">
-          <label className="block text-sm font-semibold text-gray-700 mb-1">
-            Cuisine
-          </label>
+        <div className="flex flex-wrap items-center gap-3">
           <select
             value={filters.cuisine ?? ""}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              update({ cuisine: e.target.value })
-            }
-            className="p-2 border border-gray-300 rounded-lg w-full"
+            onChange={(e) => update({ cuisine: e.target.value })}
+            className={selectClass}
+            aria-label="Cuisine"
           >
-            <option value="">All</option>
+            <option value="">All cuisines</option>
             {CUISINE_OPTIONS.map((cuisine) => (
               <option key={cuisine} value={cuisine}>
                 {cuisine}
               </option>
             ))}
           </select>
-        </div>
 
-        <div className="min-w-[160px]">
-          <label className="block text-sm font-semibold text-gray-700 mb-1">
-            Max total time
-          </label>
           <select
             value={filters.maxTime == null ? "" : String(filters.maxTime)}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            onChange={(e) =>
               update({
                 maxTime: e.target.value === "" ? null : Number(e.target.value),
               })
             }
-            className="p-2 border border-gray-300 rounded-lg w-full"
+            className={selectClass}
+            aria-label="Max total time"
           >
             {TIME_OPTIONS.map((opt) => (
               <option
@@ -104,40 +108,40 @@ const RecipeFilters = ({ value, onChange }: RecipeFiltersProps) => {
               </option>
             ))}
           </select>
-        </div>
 
-        <button
-          type="button"
-          onClick={clearFilters}
-          className="p-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100"
-        >
-          Clear filters
-        </button>
+          {activeCount > 0 && (
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="inline-flex h-11 items-center gap-1.5 rounded-xl px-3 text-sm font-semibold text-sand-600 transition-colors hover:bg-sand-100 hover:text-sand-900"
+            >
+              <XMarkIcon className="h-4 w-4" />
+              Clear ({activeCount})
+            </button>
+          )}
+        </div>
       </div>
 
-      <div className="mt-4">
-        <span className="block text-sm font-semibold text-gray-700 mb-2">
+      {/* Diet chips */}
+      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-sand-100 pt-4">
+        <span className="mr-1 inline-flex items-center gap-1.5 text-sm font-medium text-sand-500">
+          <AdjustmentsHorizontalIcon className="h-4 w-4" />
           Diet
         </span>
-        <div className="flex flex-wrap gap-2">
-          {DIET_OPTIONS.map((diet) => {
-            const active = filters.diets.includes(diet);
-            return (
-              <button
-                key={diet}
-                type="button"
-                onClick={() => toggleDiet(diet)}
-                className={`px-3 py-1 rounded-full text-sm border transition-colors ${
-                  active
-                    ? "bg-red-500 text-white border-red-500"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-                }`}
-              >
-                {diet}
-              </button>
-            );
-          })}
-        </div>
+        {DIET_OPTIONS.map((diet) => {
+          const active = filters.diets.includes(diet);
+          return (
+            <button
+              key={diet}
+              type="button"
+              onClick={() => toggleDiet(diet)}
+              aria-pressed={active}
+              className={cn("chip", active && "chip-active")}
+            >
+              {diet}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

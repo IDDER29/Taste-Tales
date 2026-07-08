@@ -2,94 +2,129 @@
 
 import React from "react";
 import Link from "next/link";
+import { ArrowRightIcon, ClockIcon } from "@heroicons/react/24/outline";
 import { useAppSelector } from "../app/hooks";
 import { selectTopArticlesByViews } from "../features/article/articleSlice";
+import { formatMinutes, totalMinutes } from "../utils/recipe";
+import { AppImage } from "./ui/AppImage";
+import { Avatar } from "./ui/Avatar";
 
 const RecipeBlog: React.FC = () => {
   const topArticles = useAppSelector(selectTopArticlesByViews);
+  if (!topArticles.length) return null;
+
+  const [hero, ...rest] = topArticles;
+  const secondary = rest.slice(0, 3);
+  const heroTime = formatMinutes(totalMinutes(hero));
 
   return (
-    <div className="relative bg-white p-6 rounded-lg shadow-md">
-      <div
-        className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl"
-        aria-hidden="true"
-      >
-        <div
-          className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30"
-          style={{
-            clipPath:
-              "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-          }}
-        />
+    <section className="container-page py-16 sm:py-20">
+      <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+        <div>
+          <span className="eyebrow">Editor&apos;s picks</span>
+          <h2 className="section-title mt-3">Featured this week</h2>
+        </div>
+        <Link
+          href="/#browse"
+          className="group inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700"
+        >
+          Browse all recipes
+          <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+        </Link>
       </div>
 
-      <div className="mx-auto ">
-        <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
-          <span className="text-red-500">Recipe</span> Blogs
-        </h1>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <img
-              className="w-full h-auto rounded-lg shadow-md"
-              src="https://www.upmenu.com/wp-content/uploads/2023/06/restaurant-blog1.jpg"
-              alt="Main Blog"
-            />
-            <div className="mt-4">
-              <p className="text-gray-600 text-sm">November 30, 2016</p>
-              <h2 className="text-2xl font-semibold text-gray-800">
-                Our Recipes Blog
-              </h2>
-              <p className="text-gray-600 mt-2">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Hero feature */}
+        <Link
+          href={`/articles/${hero.id}`}
+          className="group relative flex min-h-[24rem] flex-col justify-end overflow-hidden rounded-3xl shadow-card"
+        >
+          <AppImage
+            src={hero.imageUrl}
+            alt={hero.title}
+            ratio=""
+            wrapperClassName="absolute inset-0 h-full w-full"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-sand-950/90 via-sand-950/30 to-transparent" />
+          <div className="relative p-7 text-white">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-medium">
+              {hero.category && (
+                <span className="rounded-full bg-brand-600 px-2.5 py-1">
+                  {hero.category}
+                </span>
+              )}
+              {heroTime && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 backdrop-blur">
+                  <ClockIcon className="h-3.5 w-3.5" />
+                  {heroTime}
+                </span>
+              )}
+            </div>
+            <h3 className="mt-4 font-display text-3xl font-semibold leading-tight">
+              {hero.title}
+            </h3>
+            {hero.subtitle && (
+              <p className="mt-2 max-w-lg text-white/80 line-clamp-2">
+                {hero.subtitle}
               </p>
+            )}
+            <div className="mt-5 flex items-center gap-2.5">
+              <Avatar name={hero.publisher?.name} src={hero.publisher?.image} size="sm" />
+              <span className="text-sm font-medium text-white/90">
+                {hero.publisher?.name}
+              </span>
             </div>
           </div>
-          <div className="lg:col-span-1 space-y-8 flex flex-col">
-            {topArticles.map((article) => (
-              <Link href={`/articles/${article.id}`} key={article.id}>
-                <div className="flex flex-col lg:flex-row bg-white rounded-lg shadow-md overflow-hidden">
-                  <div
-                    className="h-48 lg:h-auto lg:w-48 flex-none bg-cover"
-                    style={{ backgroundImage: `url(${article.imageUrl})` }}
-                    title={article.title}
-                  ></div>
-                  <div className="p-4 flex flex-col justify-between leading-normal">
-                    <div>
-                      <p className="text-gray-600 text-sm">
-                        {article.publishedDate}
-                      </p>
-                      <h3 className="text-xl font-semibold text-gray-800">
-                        {article.title}
-                      </h3>
-                      <p className="text-gray-600 mt-2">{article.subtitle}</p>
-                    </div>
-                    <div className="flex items-center mt-4 lg:mt-0">
-                      <span className="inline-block text-xs text-white bg-green-500 px-2 py-1 rounded-full">
-                        {article.category}
-                      </span>
-                    </div>
+        </Link>
+
+        {/* Secondary list */}
+        <div className="flex flex-col gap-5">
+          {secondary.map((article) => {
+            const time = formatMinutes(totalMinutes(article));
+            return (
+              <Link
+                key={article.id}
+                href={`/articles/${article.id}`}
+                className="group flex gap-4 overflow-hidden rounded-2xl border border-sand-200/70 bg-white p-3 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-card"
+              >
+                <div className="relative aspect-square h-28 w-28 flex-none overflow-hidden rounded-xl">
+                  <AppImage
+                    src={article.imageUrl}
+                    alt={article.title}
+                    ratio=""
+                    wrapperClassName="absolute inset-0 h-full w-full"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <div className="flex min-w-0 flex-col justify-center py-1">
+                  {article.category && (
+                    <span className="text-xs font-semibold uppercase tracking-wide text-brand-600">
+                      {article.category}
+                    </span>
+                  )}
+                  <h3 className="mt-1 font-display text-lg font-semibold leading-snug text-sand-950 line-clamp-2 group-hover:text-brand-700">
+                    {article.title}
+                  </h3>
+                  <div className="mt-2 flex items-center gap-3 text-xs text-sand-500">
+                    <span>{article.publisher?.name}</span>
+                    {time && (
+                      <>
+                        <span className="h-1 w-1 rounded-full bg-sand-300" />
+                        <span className="inline-flex items-center gap-1">
+                          <ClockIcon className="h-3.5 w-3.5" />
+                          {time}
+                        </span>
+                      </>
+                    )}
                   </div>
                 </div>
               </Link>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </div>
-
-      <div
-        className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl"
-        aria-hidden="true"
-      >
-        <div
-          className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30"
-          style={{
-            clipPath:
-              "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-          }}
-        />
-      </div>
-    </div>
+    </section>
   );
 };
 
