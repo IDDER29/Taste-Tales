@@ -12,6 +12,9 @@ import {
 import { averageRating } from "../utils/recipe";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import StarRating from "./StarRating";
+import { Avatar } from "./ui/Avatar";
+import { Button } from "./ui/Button";
+import { Textarea } from "./ui/Textarea";
 
 interface ReviewsProps {
   blogId: string;
@@ -61,96 +64,110 @@ function Reviews({ blogId }: ReviewsProps) {
   };
 
   return (
-    <section className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-2xl font-bold mb-4">Reviews</h2>
-
-      {/* Average rating summary */}
-      <div className="flex items-center gap-3 mb-6">
-        <StarRating value={avg.value} />
-        <span className="text-gray-600">
-          {avg.count > 0
-            ? `${avg.value} out of 5 · ${avg.count} review${
-                avg.count === 1 ? "" : "s"
-              }`
-            : "No reviews yet"}
-        </span>
+    <section className="rounded-3xl border border-sand-200/70 bg-white p-6 shadow-card sm:p-8">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h2 className="font-display text-2xl font-semibold text-sand-950">
+          Reviews
+        </h2>
+        <div className="flex items-center gap-3">
+          <StarRating value={avg.value} />
+          <span className="text-sm text-sand-600">
+            {avg.count > 0
+              ? `${avg.value} · ${avg.count} review${avg.count === 1 ? "" : "s"}`
+              : "No reviews yet"}
+          </span>
+        </div>
       </div>
 
       {/* Review list */}
       {reviews.length > 0 && (
-        <ul className="space-y-4 mb-8">
+        <ul className="mt-6 space-y-5">
           {reviews.map((review) => (
-            <li key={review.id} className="border-b border-gray-100 pb-4">
-              <div className="flex items-center gap-2">
-                <span className="font-bold">{review.author}</span>
-                <StarRating value={review.rating} size="text-sm" />
-                {formatDate(review.date) && (
-                  <span className="text-sm text-gray-400">
-                    {formatDate(review.date)}
+            <li
+              key={review.id}
+              className="flex gap-4 border-b border-sand-100 pb-5 last:border-0 last:pb-0"
+            >
+              <Avatar name={review.author} size="md" />
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <span className="font-semibold text-sand-900">
+                    {review.author}
                   </span>
+                  <StarRating value={review.rating} size="text-sm" />
+                  {formatDate(review.date) && (
+                    <span className="text-xs text-sand-400">
+                      {formatDate(review.date)}
+                    </span>
+                  )}
+                </div>
+                {review.comment && (
+                  <p className="mt-1.5 text-sand-700">{review.comment}</p>
                 )}
               </div>
-              {review.comment && (
-                <p className="text-gray-700 mt-1">{review.comment}</p>
-              )}
             </li>
           ))}
         </ul>
       )}
 
       {/* Write a review (requires sign-in) */}
-      {session?.user ? (
-        <form onSubmit={handleSubmit}>
-          <h3 className="text-lg font-semibold mb-3">
-            Write a review as{" "}
-            <span className="text-red-500">
-              {session.user.name || session.user.email}
-            </span>
-          </h3>
+      <div className="mt-8 rounded-2xl bg-sand-50/70 p-5 sm:p-6">
+        {session?.user ? (
+          <form onSubmit={handleSubmit}>
+            <h3 className="font-display text-lg font-semibold text-sand-950">
+              Leave a review
+            </h3>
+            <p className="mt-1 text-sm text-sand-500">
+              Writing as{" "}
+              <span className="font-medium text-sand-700">
+                {session.user.name || session.user.email}
+              </span>
+            </p>
 
-          <div className="mb-3">
-            <span className="block text-sm font-medium text-gray-700 mb-1">
-              Your rating
-            </span>
-            <StarRating value={rating} onChange={setRating} />
-          </div>
+            <div className="mt-4">
+              <span className="mb-1.5 block text-sm font-medium text-sand-700">
+                Your rating
+              </span>
+              <StarRating value={rating} onChange={setRating} size="text-2xl" />
+            </div>
 
-          <div className="mb-3">
-            <label
-              htmlFor="review-comment"
-              className="block text-sm font-medium text-gray-700 mb-1"
+            <div className="mt-4">
+              <label
+                htmlFor="review-comment"
+                className="mb-1.5 block text-sm font-medium text-sand-700"
+              >
+                Comment
+              </label>
+              <Textarea
+                id="review-comment"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                rows={4}
+                placeholder="Share how it turned out, any tweaks you made…"
+              />
+            </div>
+
+            {error && <p className="mt-3 text-sm text-brand-600">{error}</p>}
+
+            <Button
+              type="submit"
+              className="mt-4"
+              loading={loading || submitting}
             >
-              Comment
-            </label>
-            <textarea
-              id="review-comment"
-              value={comment}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                setComment(e.target.value)
-              }
-              rows={4}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-            />
-          </div>
-
-          {error && <p className="text-sm text-red-500 mb-3">{error}</p>}
-
-          <button
-            type="submit"
-            disabled={loading || submitting}
-            className="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {submitting ? "Submitting..." : "Submit"}
-          </button>
-        </form>
-      ) : (
-        <p className="text-gray-600">
-          <Link href="/login" className="text-red-500 font-medium hover:underline">
-            Sign in
-          </Link>{" "}
-          to write a review.
-        </p>
-      )}
+              {submitting ? "Submitting…" : "Submit review"}
+            </Button>
+          </form>
+        ) : (
+          <p className="text-center text-sand-600">
+            <Link
+              href="/login"
+              className="font-semibold text-brand-600 hover:text-brand-700"
+            >
+              Sign in
+            </Link>{" "}
+            to write a review.
+          </p>
+        )}
+      </div>
     </section>
   );
 }

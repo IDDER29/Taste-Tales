@@ -23,7 +23,7 @@ function StarRating({ value = 0, onChange, size = "text-xl" }: StarRatingProps) 
 
   if (!interactive) {
     return (
-      <span className={`inline-flex items-center text-yellow-400 ${size}`}>
+      <span className={`inline-flex items-center text-accent-400 ${size}`}>
         {[1, 2, 3, 4, 5].map((n) =>
           n <= active ? <FaStar key={n} /> : <FaRegStar key={n} />
         )}
@@ -32,12 +32,12 @@ function StarRating({ value = 0, onChange, size = "text-xl" }: StarRatingProps) 
   }
 
   return (
-    <span className={`inline-flex items-center text-yellow-400 ${size}`}>
+    <span className={`inline-flex items-center text-accent-400 ${size}`}>
       {[1, 2, 3, 4, 5].map((n) => (
         <button
           key={n}
           type="button"
-          className="cursor-pointer p-0.5 leading-none focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded"
+          className="cursor-pointer p-0.5 leading-none focus:outline-none focus:ring-2 focus:ring-accent-400 rounded"
           aria-label={`Rate ${n} star${n === 1 ? "" : "s"}`}
           onClick={() => onChange!(n)}
           onMouseEnter={() => setHover(n)}
