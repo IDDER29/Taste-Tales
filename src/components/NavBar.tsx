@@ -65,8 +65,12 @@ export default function NavBar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href.split("#")[0]);
+  const isActive = (href: string) => {
+    // Hash links (e.g. "/#browse") are in-page scroll targets, not routes —
+    // never mark them active, or they'd light up on every page.
+    if (href.includes("#")) return false;
+    return href === "/" ? pathname === "/" : pathname.startsWith(href);
+  };
 
   return (
     <header

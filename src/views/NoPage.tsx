@@ -10,12 +10,12 @@ const NoPage = () => {
     <div className="container-page flex min-h-[70vh] flex-col items-center justify-center py-20 text-center">
       <div className="relative">
         <span
-          className="select-none font-display text-[10rem] font-semibold leading-none text-transparent [background:linear-gradient(to_bottom_right,theme(colors.brand.400),theme(colors.accent.400))] [-webkit-background-clip:text] [background-clip:text] sm:text-[13rem]"
+          className="text-gradient select-none font-display text-[9rem] font-semibold leading-none sm:text-[13rem]"
           aria-hidden="true"
         >
           404
         </span>
-        <span className="absolute -right-2 top-2 text-5xl sm:text-6xl" aria-hidden="true">
+        <span className="absolute -right-3 top-3 text-5xl sm:text-6xl" aria-hidden="true">
           🍳
         </span>
       </div>
