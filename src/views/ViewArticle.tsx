@@ -111,7 +111,7 @@ const ArticlePage = ({ id }: { id: string }) => {
           Home
         </Link>
         <ChevronRightIcon className="h-4 w-4 text-sand-300" />
-        <Link href="/#browse" className="hover:text-brand-600">
+        <Link href="/recipes" className="hover:text-brand-600">
           Recipes
         </Link>
         <ChevronRightIcon className="h-4 w-4 text-sand-300" />

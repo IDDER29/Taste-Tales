@@ -39,7 +39,7 @@ import { cn } from "../utils/cn";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/#browse", label: "Browse" },
+  { href: "/recipes", label: "Browse" },
   { href: "/cook", label: "Cook" },
   { href: "/about", label: "About" },
 ];
@@ -66,8 +66,7 @@ export default function NavBar() {
   }, []);
 
   const isActive = (href: string) => {
-    // Hash links (e.g. "/#browse") are in-page scroll targets, not routes —
-    // never mark them active, or they'd light up on every page.
+    // Guard any in-page hash links (none today) from lighting up on every page.
     if (href.includes("#")) return false;
     return href === "/" ? pathname === "/" : pathname.startsWith(href);
   };

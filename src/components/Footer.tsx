@@ -9,7 +9,7 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
   {
     title: "Explore",
     links: [
-      { label: "All recipes", href: "/#browse" },
+      { label: "All recipes", href: "/recipes" },
       { label: "Cook from pantry", href: "/cook" },
       { label: "Recipe box", href: "/saved" },
       { label: "Share a recipe", href: "/articles" },

@@ -74,7 +74,7 @@ const AboutPage = () => {
             and cook from.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/#browse" className={buttonVariants({ size: "lg" })}>
+            <Link href="/recipes" className={buttonVariants({ size: "lg" })}>
               Browse recipes
             </Link>
             <Link
@@ -138,7 +138,7 @@ const AboutPage = () => {
               community.
             </p>
             <Link
-              href="/#browse"
+              href="/recipes"
               className="mt-7 inline-flex items-center gap-2 rounded-full bg-brand-500 px-7 py-3 font-semibold text-white shadow-glow transition-all hover:bg-brand-600 active:scale-[0.98]"
             >
               Explore recipes

@@ -25,7 +25,7 @@ const RecipeBlog: React.FC = () => {
           <h2 className="section-title mt-3">Featured this week</h2>
         </div>
         <Link
-          href="/#browse"
+          href="/recipes"
           className="group inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700"
         >
           Browse all recipes

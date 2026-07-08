@@ -11,6 +11,13 @@ jest.mock("next-auth/react", () => ({
   useSession: () => ({ data: null, status: "unauthenticated" }),
 }));
 
+// The landing page (shown to logged-out visitors) uses the App Router hooks.
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({ push: jest.fn(), refresh: jest.fn() }),
+  usePathname: () => "/",
+  useSearchParams: () => new URLSearchParams(),
+}));
+
 test("renders the hero heading", () => {
   render(
     <Provider store={store}>

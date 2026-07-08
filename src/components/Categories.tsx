@@ -3,39 +3,9 @@
 import React from "react";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import { cn } from "../utils/cn";
+import { CATEGORY_TILES } from "./categoryTiles";
 
-// Self-contained tiles (emoji + brand gradient) so the section always renders
-// crisp — no dependency on external image hosts.
-const categories = [
-  {
-    id: 1,
-    name: "Breakfast",
-    emoji: "🍳",
-    blurb: "Bright morning starts",
-    gradient: "from-accent-400 to-brand-500",
-  },
-  {
-    id: 2,
-    name: "Main Course",
-    emoji: "🍝",
-    blurb: "Hearty centerpieces",
-    gradient: "from-brand-500 to-brand-700",
-  },
-  {
-    id: 3,
-    name: "Appetizer",
-    emoji: "🥗",
-    blurb: "Small, shareable bites",
-    gradient: "from-accent-500 to-brand-600",
-  },
-  {
-    id: 4,
-    name: "Dessert",
-    emoji: "🍰",
-    blurb: "Sweet finishes",
-    gradient: "from-brand-600 to-accent-500",
-  },
-];
+const categories = CATEGORY_TILES;
 
 interface CategoriesProps {
   selectedCategory: string | null;
@@ -67,7 +37,7 @@ const Categories: React.FC<CategoriesProps> = ({
           const active = selectedCategory === category.name;
           return (
             <button
-              key={category.id}
+              key={category.name}
               onClick={() => handleCategoryClick(category.name)}
               aria-pressed={active}
               className={cn(

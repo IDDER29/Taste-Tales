@@ -62,7 +62,7 @@ const SavedRecipes = () => {
           </p>
         </div>
         {savedArticles.length > 0 && (
-          <Link href="/#browse" className={buttonVariants({ variant: "outline" })}>
+          <Link href="/recipes" className={buttonVariants({ variant: "outline" })}>
             Find more recipes
           </Link>
         )}
@@ -74,7 +74,7 @@ const SavedRecipes = () => {
           title="No saved recipes yet"
           description="Tap the bookmark on any recipe to keep it here for whenever you're ready to cook."
           action={
-            <Link href="/#browse" className={buttonVariants({})}>
+            <Link href="/recipes" className={buttonVariants({})}>
               Browse recipes
             </Link>
           }

@@ -34,7 +34,7 @@ const NoPage = () => {
           Back to home
         </Link>
         <Link
-          href="/#browse"
+          href="/recipes"
           className={buttonVariants({ variant: "outline", size: "lg" })}
         >
           <MagnifyingGlassIcon className="h-5 w-5" />
