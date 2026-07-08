@@ -3,16 +3,20 @@
 import React from "react";
 import Link from "next/link";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import RecipeCard from "./RecipeCard";
+import RecipeCard, { RecipeCardSkeleton } from "./RecipeCard";
 import { EmptyState } from "./ui/EmptyState";
 import { buttonVariants } from "./ui/Button";
 import type { Article } from "../types";
 
 interface TopCategoryRecipesProps {
   recipes: Article[];
+  loading?: boolean;
 }
 
-const TopCategoryRecipes: React.FC<TopCategoryRecipesProps> = ({ recipes }) => {
+const TopCategoryRecipes: React.FC<TopCategoryRecipesProps> = ({
+  recipes,
+  loading,
+}) => {
   return (
     <div>
       <div className="mb-8 flex items-end justify-between gap-4">
@@ -27,7 +31,13 @@ const TopCategoryRecipes: React.FC<TopCategoryRecipesProps> = ({ recipes }) => {
         )}
       </div>
 
-      {recipes.length === 0 ? (
+      {loading && recipes.length === 0 ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <RecipeCardSkeleton key={i} />
+          ))}
+        </div>
+      ) : recipes.length === 0 ? (
         <EmptyState
           icon={<MagnifyingGlassIcon className="h-8 w-8" />}
           title="No recipes match your filters"

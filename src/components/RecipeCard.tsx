@@ -152,3 +152,21 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 };
 
 export default RecipeCard;
+
+// Matching skeleton placeholder for loading grids.
+export function RecipeCardSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-sand-200/70 bg-white shadow-soft">
+      <div className="aspect-[4/3] w-full animate-pulse bg-sand-200/70" />
+      <div className="space-y-3 p-4">
+        <div className="h-3 w-16 animate-pulse rounded-full bg-sand-200/70" />
+        <div className="h-5 w-3/4 animate-pulse rounded-md bg-sand-200/70" />
+        <div className="h-4 w-full animate-pulse rounded-md bg-sand-200/60" />
+        <div className="flex items-center gap-2.5 pt-3">
+          <div className="h-8 w-8 animate-pulse rounded-full bg-sand-200/70" />
+          <div className="h-3 w-24 animate-pulse rounded-md bg-sand-200/60" />
+        </div>
+      </div>
+    </div>
+  );
+}

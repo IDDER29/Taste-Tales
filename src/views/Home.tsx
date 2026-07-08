@@ -20,12 +20,14 @@ import {
   setSelectedCategory,
   selectSelectedCategory,
   selectAllArticles,
+  selectArticlesStatus,
 } from "../features/article/articleSlice";
 import type { FilterCriteria } from "../types";
 
 function Home() {
   const selectedCategory = useAppSelector(selectSelectedCategory);
   const articles = useAppSelector(selectAllArticles);
+  const status = useAppSelector(selectArticlesStatus);
   const dispatch = useAppDispatch();
 
   const [filters, setFilters] = useState<FilterCriteria>({
@@ -70,7 +72,10 @@ function Home() {
         <div className="mb-6">
           <RecipeFilters value={filters} onChange={setFilters} />
         </div>
-        <TopCategoryRecipes recipes={filteredArticles} />
+        <TopCategoryRecipes
+          recipes={filteredArticles}
+          loading={status === "loading" || status === "idle"}
+        />
       </section>
 
       {/* Flagship feature cards */}
