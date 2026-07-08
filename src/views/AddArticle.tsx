@@ -10,8 +10,9 @@ import { useAppDispatch } from "../app/hooks";
 import { addArticle } from "../features/article/articleSlice";
 import { uploadImage } from "../api/cloudinary";
 import { v4 as uuidv4 } from "uuid"; // to generate unique id
+import { PhotoIcon } from "@heroicons/react/24/outline";
 import RecipeFormFields from "../components/RecipeFormFields";
-import { useToast } from "../components/ui";
+import { useToast, Button } from "../components/ui";
 import { CATEGORY_OPTIONS } from "../utils/recipe";
 import type { Article, RecipeFormValue } from "../types";
 
@@ -94,11 +95,11 @@ const AddArticle = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!category) {
-      alert("Please select a category.");
+      toast({ title: "Please select a category.", variant: "error" });
       return;
     }
     if (!file) {
-      alert("Please select an image.");
+      toast({ title: "Please add a cover image.", variant: "error" });
       return;
     }
 
@@ -160,134 +161,147 @@ const AddArticle = () => {
   };
 
   return (
-    <div className="container mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold text-center mb-8">
-        Create and Publish an Article
-      </h1>
-      <form
-        onSubmit={handleSubmit}
-        className="grid grid-cols-1 md:grid-cols-4 gap-6"
-      >
-        <div className="md:col-span-3">
-          <div className="relative mb-8">
-            <label
-              htmlFor="image"
-              className="block text-lg font-medium text-gray-700 mb-2"
-            >
-              Main Image
-            </label>
+    <div className="container-page py-12 lg:py-16">
+      <header className="mb-8">
+        <span className="eyebrow">Create</span>
+        <h1 className="mt-3 font-display text-4xl font-semibold text-sand-950 sm:text-5xl">
+          Share a recipe
+        </h1>
+        <p className="mt-2 text-sand-600">
+          Tell its story and capture every detail — cooks will thank you.
+        </p>
+      </header>
+
+      <form onSubmit={handleSubmit} className="grid gap-8 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2">
+          {/* Cover image */}
+          <div>
+            <span className="mb-2 block text-sm font-semibold text-sand-800">
+              Cover image
+            </span>
             <input
               type="file"
               id="image"
+              accept="image/*"
               onChange={handleImageUpload}
               className="hidden"
             />
-            <div
-              className="border-2 border-dashed border-gray-300 rounded-md p-6 cursor-pointer"
+            <button
+              type="button"
               onClick={() => document.getElementById("image")?.click()}
+              className="group relative block w-full overflow-hidden rounded-2xl border-2 border-dashed border-sand-300 bg-white transition-colors hover:border-brand-400 hover:bg-brand-50/30"
             >
               {imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={imageUrl}
-                  alt="Uploaded"
-                  className="rounded-md shadow-md w-full object-cover h-72"
+                  alt="Cover preview"
+                  className="h-72 w-full object-cover"
                 />
               ) : (
-                <p className="text-center text-gray-500">
-                  Click to upload an image
-                </p>
+                <div className="flex h-56 flex-col items-center justify-center gap-2 text-sand-500">
+                  <PhotoIcon className="h-10 w-10 text-sand-300" />
+                  <p className="font-medium">Click to upload a cover image</p>
+                  <p className="text-xs text-sand-400">PNG or JPG, landscape looks best</p>
+                </div>
               )}
-            </div>
+              {imageUrl && (
+                <span className="absolute bottom-3 right-3 rounded-full bg-sand-950/70 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur">
+                  Change image
+                </span>
+              )}
+            </button>
           </div>
-          <div className="mb-8">
+
+          {/* Title & subtitle */}
+          <div className="rounded-2xl border border-sand-200/70 bg-white p-6 shadow-soft">
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full text-4xl font-bold p-3 border-b-2 focus:outline-none"
-              placeholder="Enter your title here..."
+              className="w-full border-0 border-b border-sand-200 bg-transparent px-0 py-2 font-display text-3xl font-semibold text-sand-950 placeholder:text-sand-300 focus:border-brand-400 focus:outline-none focus:ring-0"
+              placeholder="Recipe title"
               required
             />
-          </div>
-          <div className="mb-8">
             <input
               type="text"
               value={subtitle}
               onChange={(e) => setSubtitle(e.target.value)}
-              className="w-full text-2xl font-semibold p-3 border-b-2 focus:outline-none"
-              placeholder="Enter your subtitle here..."
+              className="mt-4 w-full border-0 border-b border-sand-200 bg-transparent px-0 py-2 text-lg text-sand-700 placeholder:text-sand-300 focus:border-brand-400 focus:outline-none focus:ring-0"
+              placeholder="A short, tasty subtitle"
             />
           </div>
-          <div className="mb-8">
-            <label className="block text-lg font-medium text-gray-700 mb-2">
-              Intro / story (optional)
+
+          {/* Story */}
+          <div className="rounded-2xl border border-sand-200/70 bg-white p-6 shadow-soft">
+            <label className="mb-3 block font-display text-lg font-semibold text-sand-950">
+              Intro / story{" "}
+              <span className="text-sm font-normal text-sand-400">(optional)</span>
             </label>
             <ReactQuill
               value={content}
               onChange={setContent}
-              className="h-64 mb-8"
+              className="mb-12 h-64"
               theme="snow"
-              placeholder="Write your article content here..."
+              placeholder="Share the story behind this recipe…"
             />
           </div>
-          <div className="mt-16">
-            <RecipeFormFields value={recipe} onChange={setRecipe} />
-          </div>
+
+          <RecipeFormFields value={recipe} onChange={setRecipe} />
         </div>
-        <div className="md:col-span-1 space-y-6">
-          <div>
-            <label
-              htmlFor="tags"
-              className="block text-lg font-medium text-gray-700 mb-2"
-            >
-              Tags
-            </label>
-            <Select
-              id="tags"
-              isMulti
-              value={tags}
-              onChange={handleTagChange}
-              options={tagOptions}
-              className="basic-multi-select"
-              classNamePrefix="select"
-            />
-            <div className="mt-4">
-              {tags.map((tag) => (
-                <span
-                  key={tag.value}
-                  className="inline-block bg-blue-500 text-white px-2 py-1 rounded-full mr-2 mb-2"
+
+        {/* Sidebar */}
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-sand-200/70 bg-white p-6 shadow-soft lg:sticky lg:top-24">
+            <h3 className="font-display text-lg font-semibold text-sand-950">
+              Publish details
+            </h3>
+            <div className="mt-5 space-y-5">
+              <div>
+                <label
+                  htmlFor="category"
+                  className="mb-1.5 block text-sm font-semibold text-sand-800"
                 >
-                  {tag.label}
-                </span>
-              ))}
+                  Category <span className="text-brand-500">*</span>
+                </label>
+                <Select
+                  id="category"
+                  value={category}
+                  onChange={handleCategoryChange}
+                  options={categoryOptions}
+                  className="basic-single-select"
+                  classNamePrefix="select"
+                  isClearable
+                  placeholder="Select a category…"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="tags"
+                  className="mb-1.5 block text-sm font-semibold text-sand-800"
+                >
+                  Tags
+                </label>
+                <Select
+                  id="tags"
+                  isMulti
+                  value={tags}
+                  onChange={handleTagChange}
+                  options={tagOptions}
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  placeholder="Add tags…"
+                />
+              </div>
             </div>
+
+            <Button type="submit" size="lg" block className="mt-6">
+              Publish recipe
+            </Button>
+            <p className="mt-3 text-center text-xs text-sand-400">
+              You can edit or delete it anytime.
+            </p>
           </div>
-          <div>
-            <label
-              htmlFor="category"
-              className="block text-lg font-medium text-gray-700 mb-2"
-            >
-              Category
-            </label>
-            <Select
-              id="category"
-              value={category}
-              onChange={handleCategoryChange}
-              options={categoryOptions}
-              className="basic-single-select"
-              classNamePrefix="select"
-              isClearable={true}
-              placeholder="Select a category..."
-            />
-          </div>
-        </div>
-        <div className="text-center mt-8 md:col-span-4">
-          <button
-            type="submit"
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Publish
-          </button>
         </div>
       </form>
     </div>

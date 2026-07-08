@@ -2,7 +2,11 @@
 
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
-import { FaMagic, FaBookmark } from "react-icons/fa";
+import {
+  SparklesIcon,
+  BookmarkIcon,
+  ArrowRightIcon,
+} from "@heroicons/react/24/outline";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import HeroSection from "../components/HeroSection";
 import RecipeBlog from "../components/RecipeBlogs";
@@ -16,12 +20,14 @@ import {
   setSelectedCategory,
   selectSelectedCategory,
   selectAllArticles,
+  selectArticlesStatus,
 } from "../features/article/articleSlice";
 import type { FilterCriteria } from "../types";
 
 function Home() {
   const selectedCategory = useAppSelector(selectSelectedCategory);
   const articles = useAppSelector(selectAllArticles);
+  const status = useAppSelector(selectArticlesStatus);
   const dispatch = useAppDispatch();
 
   const [filters, setFilters] = useState<FilterCriteria>({
@@ -38,9 +44,7 @@ function Home() {
   // The hero search drives the same filter state as the filter bar.
   const handleHeroSearch = (query: string) => {
     setFilters((prev) => ({ ...prev, query }));
-    document
-      .getElementById("browse")
-      ?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById("browse")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const filteredArticles = useMemo(() => {
@@ -55,45 +59,77 @@ function Home() {
   return (
     <>
       <HeroSection onSearch={handleHeroSearch} />
-      <RecipeBlog />
-      <TrendyRecipes />
 
-      {/* Surface the flagship features */}
-      <div className="grid gap-6 sm:grid-cols-2 p-6">
-        <Link
-          href="/cook"
-          className="group flex items-center gap-4 rounded-lg bg-gradient-to-r from-red-500 to-orange-400 p-6 text-white shadow-md hover:shadow-lg transition-shadow"
-        >
-          <FaMagic className="h-8 w-8 flex-none" />
-          <div>
-            <h3 className="text-xl font-bold">Cook From Your Pantry</h3>
-            <p className="text-sm opacity-90">
-              Tell us what you have — find matches or generate a new recipe with AI.
-            </p>
-          </div>
-        </Link>
-        <Link
-          href="/saved"
-          className="group flex items-center gap-4 rounded-lg bg-white p-6 shadow-md hover:shadow-lg transition-shadow"
-        >
-          <FaBookmark className="h-8 w-8 flex-none text-red-500" />
-          <div>
-            <h3 className="text-xl font-bold text-gray-900">Your Recipe Box</h3>
-            <p className="text-sm text-gray-600">
-              Every recipe you save, kept in one place for later.
-            </p>
-          </div>
-        </Link>
-      </div>
+      <RecipeBlog />
 
       <Categories
         selectedCategory={selectedCategory}
         setSelectedCategory={handleCategoryChange}
       />
-      <div id="browse">
-        <RecipeFilters value={filters} onChange={setFilters} />
-        <TopCategoryRecipes recipes={filteredArticles} />
-      </div>
+
+      {/* Browse */}
+      <section id="browse" className="container-page scroll-mt-24 py-16 sm:py-20">
+        <div className="mb-6">
+          <RecipeFilters value={filters} onChange={setFilters} />
+        </div>
+        <TopCategoryRecipes
+          recipes={filteredArticles}
+          loading={status === "loading" || status === "idle"}
+        />
+      </section>
+
+      {/* Flagship feature cards */}
+      <section className="container-page py-4">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Link
+            href="/cook"
+            className="group relative flex items-center gap-5 overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 to-accent-500 p-8 text-white shadow-card transition-all hover:-translate-y-1 hover:shadow-lift"
+          >
+            <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
+            <span className="relative flex h-16 w-16 flex-none items-center justify-center rounded-2xl bg-white/15 backdrop-blur">
+              <SparklesIcon className="h-8 w-8" />
+            </span>
+            <div className="relative">
+              <h3 className="font-display text-2xl font-semibold">
+                Cook from your pantry
+              </h3>
+              <p className="mt-1.5 text-white/85">
+                Tell us what you have — we&apos;ll find matches or invent a new
+                recipe with AI.
+              </p>
+              <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold">
+                Start cooking
+                <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            href="/saved"
+            className="group relative flex items-center gap-5 overflow-hidden rounded-3xl border border-sand-200/70 bg-white p-8 shadow-card transition-all hover:-translate-y-1 hover:shadow-lift"
+          >
+            <span className="relative flex h-16 w-16 flex-none items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
+              <BookmarkIcon className="h-8 w-8" />
+            </span>
+            <div className="relative">
+              <h3 className="font-display text-2xl font-semibold text-sand-950">
+                Your recipe box
+              </h3>
+              <p className="mt-1.5 text-sand-600">
+                Every recipe you save, kept in one tidy place for whenever
+                you&apos;re ready to cook.
+              </p>
+              <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
+                Open recipe box
+                <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      <TrendyRecipes />
+
       <Subscription />
     </>
   );

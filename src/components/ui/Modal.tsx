@@ -45,7 +45,7 @@ export function Modal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/40" aria-hidden="true" />
+          <div className="fixed inset-0 bg-sand-950/40 backdrop-blur-sm" aria-hidden="true" />
         </TransitionChild>
 
         <div className="fixed inset-0 flex items-center justify-center p-4">
@@ -60,18 +60,18 @@ export function Modal({
           >
             <DialogPanel
               className={cn(
-                "w-full rounded-xl bg-white p-6 shadow-xl",
+                "w-full rounded-2xl border border-sand-200/70 bg-white p-6 shadow-lift",
                 sizes[size],
                 className
               )}
             >
               {title && (
-                <DialogTitle className="text-lg font-bold text-gray-900">
+                <DialogTitle className="font-display text-lg font-semibold text-sand-950">
                   {title}
                 </DialogTitle>
               )}
               {description && (
-                <p className="mt-1 text-sm text-gray-600">{description}</p>
+                <p className="mt-1 text-sm text-sand-600">{description}</p>
               )}
               {children && <div className="mt-4">{children}</div>}
               {footer && (

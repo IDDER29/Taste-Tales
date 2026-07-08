@@ -26,17 +26,17 @@ export function Field({
       {label && (
         <label
           htmlFor={htmlFor}
-          className="block text-sm font-medium text-gray-700"
+          className="mb-1.5 block text-sm font-medium text-sand-800"
         >
           {label}
-          {required && <span className="ml-0.5 text-red-500">*</span>}
+          {required && <span className="ml-0.5 text-brand-500">*</span>}
         </label>
       )}
       {children}
       {error ? (
-        <p className="text-sm text-red-600">{error}</p>
+        <p className="mt-1.5 text-sm text-brand-600">{error}</p>
       ) : hint ? (
-        <p className="text-sm text-gray-500">{hint}</p>
+        <p className="mt-1.5 text-sm text-sand-500">{hint}</p>
       ) : null}
     </div>
   );

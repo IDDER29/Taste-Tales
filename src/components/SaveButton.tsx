@@ -43,12 +43,12 @@ const SaveButton = ({ id, className = "" }: SaveButtonProps) => {
       aria-label={label}
       aria-pressed={isSaved}
       title={label}
-      className={`inline-flex items-center justify-center rounded-full bg-white/90 p-2 text-base shadow hover:bg-white transition-colors ${className}`}
+      className={`inline-flex items-center justify-center rounded-full bg-white/90 p-2.5 text-base shadow-soft backdrop-blur transition-all hover:scale-105 hover:bg-white active:scale-95 ${className}`}
     >
       {isSaved ? (
-        <FaBookmark className="text-red-500" />
+        <FaBookmark className="text-brand-600" />
       ) : (
-        <FaRegBookmark className="text-gray-600" />
+        <FaRegBookmark className="text-sand-600" />
       )}
     </button>
   );

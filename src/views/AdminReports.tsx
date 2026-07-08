@@ -61,40 +61,54 @@ export default function AdminReports() {
   if (!isAdmin) return null;
 
   return (
-    <div className="container mx-auto py-12 px-4 max-w-3xl">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Moderation queue</h1>
+    <div className="container-page max-w-3xl py-12 lg:py-16">
+      <header className="mb-8">
+        <span className="eyebrow">Admin</span>
+        <h1 className="mt-3 font-display text-4xl font-semibold text-sand-950">
+          Moderation queue
+        </h1>
+        <p className="mt-2 text-sand-600">
+          Review flagged recipes and take action.
+        </p>
+      </header>
       {loading ? (
         <LoadingState />
       ) : !reports || reports.length === 0 ? (
         <EmptyState
+          icon={<span>✓</span>}
           title="No open reports"
-          description="Nothing to moderate right now."
+          description="Nothing to moderate right now — you're all caught up."
         />
       ) : (
         <ul className="space-y-4">
           {reports.map((r) => (
-            <li key={r.id} className="bg-white rounded-lg shadow p-4">
-              <div className="flex justify-between gap-4">
-                <div>
-                  <p className="font-semibold">
+            <li
+              key={r.id}
+              className="rounded-2xl border border-sand-200/70 bg-white p-5 shadow-soft"
+            >
+              <div className="flex flex-wrap justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="font-display text-lg font-semibold text-sand-950">
                     {r.recipe ? (
                       <Link
                         href={`/articles/${r.recipe.id}`}
-                        className="text-red-500 hover:underline"
+                        className="hover:text-brand-600 hover:underline"
                       >
                         {r.recipe.title}
                       </Link>
                     ) : (
-                      "(recipe deleted)"
+                      <span className="text-sand-400">(recipe deleted)</span>
                     )}
                   </p>
-                  <p className="text-sm text-gray-600 mt-1">{r.reason}</p>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="mt-1.5 rounded-lg bg-sand-50 px-3 py-2 text-sm text-sand-700">
+                    {r.reason}
+                  </p>
+                  <p className="mt-2 text-xs text-sand-400">
                     by {r.reporter.name || r.reporter.email} ·{" "}
                     {new Date(r.createdAt).toLocaleString()}
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 shrink-0">
+                <div className="flex shrink-0 flex-col gap-2">
                   <Button size="sm" onClick={() => act(r.id, "RESOLVED")}>
                     Resolve
                   </Button>

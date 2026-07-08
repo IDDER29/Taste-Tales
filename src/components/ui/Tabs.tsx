@@ -21,7 +21,7 @@ export function Tabs({ tabs, value, onChange, className }: TabsProps) {
     <div
       role="tablist"
       aria-orientation="horizontal"
-      className={cn("flex gap-1 border-b border-gray-200", className)}
+      className={cn("flex gap-1 border-b border-sand-200", className)}
     >
       {tabs.map((tab) => {
         const selected = tab.id === value;
@@ -36,7 +36,7 @@ export function Tabs({ tabs, value, onChange, className }: TabsProps) {
               "-mb-px border-b-2 px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500",
               selected
                 ? "border-brand-500 text-brand-600"
-                : "border-transparent text-gray-500 hover:text-gray-800"
+                : "border-transparent text-sand-500 hover:text-sand-800"
             )}
           >
             {tab.label}

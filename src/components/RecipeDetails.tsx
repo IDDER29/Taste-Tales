@@ -16,6 +16,7 @@ import {
   scaleIngredients,
   ingredientToLine,
 } from "../utils/recipe";
+import { cn } from "../utils/cn";
 import type { Article } from "../types";
 
 interface RecipeDetailsProps {
@@ -35,11 +36,10 @@ const wakeLockSupported =
   typeof navigator !== "undefined" && "wakeLock" in navigator;
 
 // Access the experimental property without widening the global Navigator type.
-const wakeLockApi = (
+const wakeLockApi =
   typeof navigator !== "undefined"
     ? (navigator as Navigator & { wakeLock?: WakeLock }).wakeLock
-    : undefined
-);
+    : undefined;
 
 const RecipeDetails = ({ article }: RecipeDetailsProps) => {
   const originalServings = Number(article?.servings) || 1;
@@ -96,9 +96,12 @@ const RecipeDetails = ({ article }: RecipeDetailsProps) => {
   }, [cookMode, acquireWakeLock]);
 
   // Clean up on unmount.
-  useEffect(() => () => {
-    releaseWakeLock();
-  }, [releaseWakeLock]);
+  useEffect(
+    () => () => {
+      releaseWakeLock();
+    },
+    [releaseWakeLock]
+  );
 
   const factor = servings / originalServings;
   const scaled = scaleIngredients(article?.ingredients || [], factor);
@@ -116,138 +119,138 @@ const RecipeDetails = ({ article }: RecipeDetailsProps) => {
   const toggleChecked = (idx: number) =>
     setChecked((prev) => ({ ...prev, [idx]: !prev[idx] }));
 
+  const checkedCount = Object.values(checked).filter(Boolean).length;
   const nutrition = article?.nutrition;
 
+  const metaItems = [
+    { show: !!prepLabel, icon: FaClock, label: "Prep", value: prepLabel },
+    { show: !!cookLabel, icon: FaUtensils, label: "Cook", value: cookLabel },
+    { show: !!totalLabel, icon: FaClock, label: "Total", value: totalLabel },
+    { show: true, icon: FaUsers, label: "Serves", value: String(servings) },
+  ].filter((m) => m.show);
+
   return (
-    <section className="mb-8 space-y-6">
+    <section className="mt-8 space-y-6">
       {/* Meta row */}
-      <div className="bg-white rounded-lg shadow p-4 flex flex-wrap gap-6 justify-around text-center">
-        {prepLabel && (
-          <div className="flex flex-col items-center">
-            <FaClock className="w-5 h-5 text-red-500 mb-1" />
-            <span className="text-xs uppercase tracking-wide text-gray-500">
-              Prep
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {metaItems.map((m) => (
+          <div
+            key={m.label}
+            className="flex flex-col items-center gap-1 rounded-2xl border border-sand-200/70 bg-sand-50/60 py-4"
+          >
+            <m.icon className="mb-1 h-5 w-5 text-brand-500" />
+            <span className="text-xs uppercase tracking-wide text-sand-500">
+              {m.label}
             </span>
-            <span className="font-semibold text-gray-800">{prepLabel}</span>
+            <span className="font-semibold text-sand-900">{m.value}</span>
           </div>
-        )}
-        {cookLabel && (
-          <div className="flex flex-col items-center">
-            <FaUtensils className="w-5 h-5 text-red-500 mb-1" />
-            <span className="text-xs uppercase tracking-wide text-gray-500">
-              Cook
-            </span>
-            <span className="font-semibold text-gray-800">{cookLabel}</span>
-          </div>
-        )}
-        {totalLabel && (
-          <div className="flex flex-col items-center">
-            <FaClock className="w-5 h-5 text-green-500 mb-1" />
-            <span className="text-xs uppercase tracking-wide text-gray-500">
-              Total
-            </span>
-            <span className="font-semibold text-gray-800">{totalLabel}</span>
-          </div>
-        )}
-        <div className="flex flex-col items-center">
-          <FaUsers className="w-5 h-5 text-green-500 mb-1" />
-          <span className="text-xs uppercase tracking-wide text-gray-500">
-            Servings
-          </span>
-          <span className="font-semibold text-gray-800">{servings}</span>
-        </div>
+        ))}
       </div>
 
-      {/* Actions: cook mode + print */}
+      {/* Actions */}
       <div className="flex flex-wrap gap-3 print:hidden">
         {wakeLockSupported && (
           <button
             onClick={() => setCookMode((c) => !c)}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-colors ${
-              cookMode
-                ? "bg-green-500 text-white hover:bg-green-600 focus:ring-green-400"
-                : "bg-gray-100 text-gray-800 hover:bg-gray-200 focus:ring-gray-400"
-            }`}
             aria-pressed={cookMode}
+            className={cn(
+              "inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-4",
+              cookMode
+                ? "bg-brand-600 text-white hover:bg-brand-700 focus-visible:ring-brand-500/30"
+                : "border border-sand-300 text-sand-800 hover:bg-sand-50 focus-visible:ring-sand-400/30"
+            )}
           >
-            <FaLightbulb className="w-4 h-4" />
-            <span>{cookMode ? "Cook Mode: On" : "Cook Mode"}</span>
+            <FaLightbulb className="h-4 w-4" />
+            {cookMode ? "Cook mode: on" : "Cook mode"}
           </button>
         )}
         <button
           onClick={() => window.print()}
-          className="flex items-center space-x-2 px-4 py-2 rounded-md shadow-md bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50"
+          className="inline-flex items-center gap-2 rounded-full border border-sand-300 px-4 py-2.5 text-sm font-semibold text-sand-800 transition-colors hover:bg-sand-50"
         >
-          <FaPrint className="w-4 h-4" />
-          <span>Print</span>
+          <FaPrint className="h-4 w-4" />
+          Print
         </button>
       </div>
 
       {/* Serving scaler */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="rounded-2xl border border-sand-200/70 bg-white p-6 shadow-soft">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h3 className="text-lg font-bold text-gray-900">Adjust Servings</h3>
-            <p className="text-sm text-gray-500">
-              Ingredients scale automatically.
-            </p>
+            <h3 className="font-display text-lg font-semibold text-sand-950">
+              Adjust servings
+            </h3>
+            <p className="text-sm text-sand-500">Ingredients scale automatically.</p>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center gap-3">
             <button
               onClick={decrement}
               disabled={servings <= 1}
-              className="w-9 h-9 flex items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600 disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-red-400"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-sand-300 text-sand-700 transition-colors hover:bg-sand-100 disabled:opacity-40"
               aria-label="Decrease servings"
             >
-              <FaMinus className="w-3 h-3" />
+              <FaMinus className="h-3 w-3" />
             </button>
-            <span className="text-2xl font-bold text-gray-900 w-10 text-center">
+            <span className="w-10 text-center font-display text-2xl font-bold text-sand-950">
               {servings}
             </span>
             <button
               onClick={increment}
-              className="w-9 h-9 flex items-center justify-center rounded-full bg-green-500 text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-600 text-white transition-colors hover:bg-brand-700"
               aria-label="Increase servings"
             >
-              <FaPlus className="w-3 h-3" />
+              <FaPlus className="h-3 w-3" />
             </button>
           </div>
         </div>
         <div className="mt-4 flex gap-2">
-          {[1, 2, 3].map((mult) => (
-            <button
-              key={mult}
-              onClick={() => setMultiplier(mult)}
-              className={`px-3 py-1 rounded-md text-sm font-medium border transition-colors ${
-                servings === Math.max(1, Math.round(originalServings * mult))
-                  ? "bg-red-500 text-white border-red-500"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-              }`}
-            >
-              {mult}x
-            </button>
-          ))}
+          {[1, 2, 3].map((mult) => {
+            const active =
+              servings === Math.max(1, Math.round(originalServings * mult));
+            return (
+              <button
+                key={mult}
+                onClick={() => setMultiplier(mult)}
+                className={cn("chip", active && "chip-active")}
+              >
+                {mult}×
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {/* Ingredients checklist */}
       {scaled.length > 0 && (
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Ingredients</h3>
-          <ul className="space-y-2">
+        <div className="rounded-2xl border border-sand-200/70 bg-white p-6 shadow-soft">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="font-display text-lg font-semibold text-sand-950">
+              Ingredients
+            </h3>
+            <span className="text-sm text-sand-500">
+              {checkedCount}/{scaled.length}
+            </span>
+          </div>
+          <ul className="space-y-1">
             {scaled.map((ing, idx) => (
               <li key={idx}>
-                <label className="flex items-center space-x-3 cursor-pointer group">
+                <label
+                  className={cn(
+                    "flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-sand-50",
+                    checked[idx] && "opacity-60"
+                  )}
+                >
                   <input
                     type="checkbox"
                     checked={Boolean(checked[idx])}
                     onChange={() => toggleChecked(idx)}
-                    className="w-5 h-5 rounded border-gray-300 text-red-500 focus:ring-red-400"
+                    className="h-5 w-5 rounded-md border-sand-300 text-brand-600 focus:ring-brand-500"
                   />
                   <span
-                    className={`text-gray-800 ${
-                      checked[idx] ? "line-through text-gray-400" : ""
-                    }`}
+                    className={cn(
+                      "text-sand-800",
+                      checked[idx] && "text-sand-400 line-through"
+                    )}
                   >
                     {ingredientToLine(ing)}
                   </span>
@@ -260,15 +263,23 @@ const RecipeDetails = ({ article }: RecipeDetailsProps) => {
 
       {/* Instructions */}
       {article?.instructions && article.instructions.length > 0 && (
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Instructions</h3>
-          <ol className="space-y-4">
+        <div className="rounded-2xl border border-sand-200/70 bg-white p-6 shadow-soft">
+          <h3 className="mb-6 font-display text-lg font-semibold text-sand-950">
+            Instructions
+          </h3>
+          <ol className="space-y-6">
             {article.instructions.map((step: string, idx: number) => (
-              <li key={idx} className="flex items-start space-x-4">
-                <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-red-500 text-white font-bold text-sm">
+              <li key={idx} className="relative flex gap-4">
+                {idx < article.instructions!.length - 1 && (
+                  <span
+                    className="absolute left-[15px] top-9 h-[calc(100%+0.5rem)] w-px bg-sand-200"
+                    aria-hidden="true"
+                  />
+                )}
+                <span className="relative z-10 flex h-8 w-8 flex-none items-center justify-center rounded-full bg-brand-600 text-sm font-bold text-white">
                   {idx + 1}
                 </span>
-                <p className="text-gray-800 leading-relaxed pt-1">{step}</p>
+                <p className="pt-1 leading-relaxed text-sand-800">{step}</p>
               </li>
             ))}
           </ol>
@@ -277,48 +288,33 @@ const RecipeDetails = ({ article }: RecipeDetailsProps) => {
 
       {/* Nutrition */}
       {nutrition?.calories && (
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-1">Nutrition</h3>
-          <p className="text-sm text-gray-500 mb-4">Per serving</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-            <div className="bg-gray-50 rounded-md py-3">
-              <span className="block text-2xl font-bold text-gray-900">
-                {nutrition.calories}
-              </span>
-              <span className="text-xs uppercase tracking-wide text-gray-500">
-                Calories
-              </span>
-            </div>
-            {nutrition.protein != null && (
-              <div className="bg-gray-50 rounded-md py-3">
-                <span className="block text-2xl font-bold text-gray-900">
-                  {nutrition.protein}g
-                </span>
-                <span className="text-xs uppercase tracking-wide text-gray-500">
-                  Protein
-                </span>
-              </div>
-            )}
-            {nutrition.carbs != null && (
-              <div className="bg-gray-50 rounded-md py-3">
-                <span className="block text-2xl font-bold text-gray-900">
-                  {nutrition.carbs}g
-                </span>
-                <span className="text-xs uppercase tracking-wide text-gray-500">
-                  Carbs
-                </span>
-              </div>
-            )}
-            {nutrition.fat != null && (
-              <div className="bg-gray-50 rounded-md py-3">
-                <span className="block text-2xl font-bold text-gray-900">
-                  {nutrition.fat}g
-                </span>
-                <span className="text-xs uppercase tracking-wide text-gray-500">
-                  Fat
-                </span>
-              </div>
-            )}
+        <div className="rounded-2xl border border-sand-200/70 bg-white p-6 shadow-soft">
+          <h3 className="font-display text-lg font-semibold text-sand-950">
+            Nutrition
+          </h3>
+          <p className="mb-4 text-sm text-sand-500">Per serving</p>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {[
+              { label: "Calories", value: nutrition.calories, unit: "" },
+              { label: "Protein", value: nutrition.protein, unit: "g" },
+              { label: "Carbs", value: nutrition.carbs, unit: "g" },
+              { label: "Fat", value: nutrition.fat, unit: "g" },
+            ]
+              .filter((n) => n.value != null)
+              .map((n) => (
+                <div
+                  key={n.label}
+                  className="rounded-2xl bg-gradient-to-br from-sand-50 to-brand-50/40 py-4 text-center"
+                >
+                  <span className="block font-display text-2xl font-bold text-sand-950">
+                    {n.value}
+                    {n.unit}
+                  </span>
+                  <span className="text-xs uppercase tracking-wide text-sand-500">
+                    {n.label}
+                  </span>
+                </div>
+              ))}
           </div>
         </div>
       )}

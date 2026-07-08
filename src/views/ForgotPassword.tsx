@@ -2,6 +2,11 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { EnvelopeIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import AuthLayout, { AuthField } from "../components/AuthLayout";
+import { Input } from "../components/ui/Input";
+import { Button } from "../components/ui/Button";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -25,62 +30,48 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="container mx-auto py-16 px-4 max-w-md">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-        Reset your password
-      </h1>
+    <AuthLayout
+      title="Reset your password"
+      subtitle={!sent ? "We'll email you a secure link to set a new one." : undefined}
+      footer={
+        <Link
+          href="/login"
+          className="inline-flex items-center gap-1.5 font-semibold text-brand-600 hover:text-brand-700"
+        >
+          <ArrowLeftIcon className="h-4 w-4" />
+          Back to sign in
+        </Link>
+      }
+    >
       {sent ? (
-        <div className="bg-white rounded-lg shadow-md p-6 text-center space-y-4">
-          <p className="text-gray-700">
-            If an account exists for <strong>{email}</strong>, we&apos;ve sent a
-            password reset link. Check your inbox.
+        <div className="flex flex-col items-center gap-4 py-4 text-center">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-500">
+            <CheckCircleIcon className="h-8 w-8" />
+          </span>
+          <p className="text-sand-700">
+            If an account exists for <strong className="text-sand-950">{email}</strong>, a
+            password reset link is on its way. Check your inbox.
           </p>
-          <Link
-            href="/login"
-            className="inline-block text-red-500 font-medium hover:underline"
-          >
-            Back to sign in
-          </Link>
         </div>
       ) : (
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white rounded-lg shadow-md p-6 space-y-4"
-        >
-          <p className="text-sm text-gray-600">
-            Enter your email and we&apos;ll send you a link to reset your password.
-          </p>
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Email
-            </label>
-            <input
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <AuthField id="email" label="Email">
+            <Input
               id="email"
               type="email"
               autoComplete="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg"
+              placeholder="you@example.com"
             />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-red-500 text-white font-bold rounded-lg shadow hover:bg-red-600 disabled:opacity-50"
-          >
+          </AuthField>
+          <Button type="submit" block size="lg" loading={loading}>
+            <EnvelopeIcon className="h-5 w-5" />
             {loading ? "Sending…" : "Send reset link"}
-          </button>
-          <p className="text-sm text-gray-600 text-center">
-            <Link href="/login" className="text-red-500 font-medium hover:underline">
-              Back to sign in
-            </Link>
-          </p>
+          </Button>
         </form>
       )}
-    </div>
+    </AuthLayout>
   );
 }

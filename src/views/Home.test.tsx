@@ -17,7 +17,7 @@ test("renders the hero heading", () => {
       <Home />
     </Provider>
   );
-  expect(
-    screen.getByText(/Where Every Flavor Tells a Story/i)
-  ).toBeInTheDocument();
+  // The hero heading is split across elements ("Where every flavor" + a
+  // gradient "tells a story"); assert on the distinctive gradient fragment.
+  expect(screen.getByText(/tells a story/i)).toBeInTheDocument();
 });

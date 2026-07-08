@@ -30,9 +30,9 @@ export function useToast(): ToastContextValue {
 }
 
 const variantStyles: Record<ToastVariant, string> = {
-  success: "border-green-200 bg-green-50 text-green-800",
-  error: "border-red-200 bg-red-50 text-red-800",
-  info: "border-gray-200 bg-white text-gray-800",
+  success: "border-emerald-200 bg-emerald-50 text-emerald-800",
+  error: "border-brand-200 bg-brand-50 text-brand-800",
+  info: "border-sand-200 bg-white text-sand-800",
 };
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
@@ -69,7 +69,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             key={t.id}
             role="status"
             className={cn(
-              "pointer-events-auto animate-slide-in-right rounded-lg border p-4 shadow-md",
+              "pointer-events-auto animate-slide-in-right rounded-2xl border p-4 shadow-lift",
               variantStyles[t.variant]
             )}
           >

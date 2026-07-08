@@ -1,31 +1,39 @@
 "use client";
 
 import React from "react";
+import { CheckIcon } from "@heroicons/react/24/solid";
+import { cn } from "../utils/cn";
 
+// Self-contained tiles (emoji + brand gradient) so the section always renders
+// crisp — no dependency on external image hosts.
 const categories = [
   {
     id: 1,
     name: "Breakfast",
-    image:
-      "https://w.forfun.com/fetch/9e/9e97b46c42e0fe04e4aceb533024bff6.jpeg",
+    emoji: "🍳",
+    blurb: "Bright morning starts",
+    gradient: "from-accent-400 to-brand-500",
   },
   {
     id: 2,
     name: "Main Course",
-    image:
-      "https://assets.epicurious.com/photos/588a497e15872cb7073f2240/1:1/w_320%2Cc_limit/charred-chicken-with-sweet-potatoes-and-oranges-BA-011917.jpg",
+    emoji: "🍝",
+    blurb: "Hearty centerpieces",
+    gradient: "from-brand-500 to-brand-700",
   },
   {
     id: 3,
     name: "Appetizer",
-    image:
-      "https://www.eatingwell.com/thmb/YdKNHN_HGJakZWFsgV6e44wI4zs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/3-Ingredient-Appetizers-38e65f4cf4d04135b26c591181f854d4.jpg",
+    emoji: "🥗",
+    blurb: "Small, shareable bites",
+    gradient: "from-accent-500 to-brand-600",
   },
   {
     id: 4,
     name: "Dessert",
-    image:
-      "https://wallpaper.forfun.com/fetch/78/788bb2ea5f0f9c340f17f21f0d38703b.jpeg",
+    emoji: "🍰",
+    blurb: "Sweet finishes",
+    gradient: "from-brand-600 to-accent-500",
   },
 ];
 
@@ -45,31 +53,53 @@ const Categories: React.FC<CategoriesProps> = ({
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-4xl font-bold text-gray-800 mb-6">
-        <span className="text-red-500">Recipe</span> Categories
-      </h2>
-      <div className="flex justify-around">
-        {categories.map((category) => (
-          <div
-            key={category.id}
-            className={`flex flex-col items-center cursor-pointer rounded-full p-2`}
-            onClick={() => handleCategoryClick(category.name)}
-          >
-            <img
-              src={category.image}
-              alt={category.name}
-              className={`rounded-full w-24 h-24 object-cover ${
-                selectedCategory === category.name
-                  ? "border-4 border-orange-500"
-                  : ""
-              }`}
-            />
-            <p className="mt-2 text-gray-800 font-semibold">{category.name}</p>
-          </div>
-        ))}
+    <section className="container-page py-16 sm:py-20">
+      <div className="mb-10 text-center">
+        <span className="eyebrow">Find your craving</span>
+        <h2 className="section-title mt-3">Browse by category</h2>
+        <p className="mx-auto mt-3 max-w-md text-sand-600">
+          Pick a mood — we&apos;ll bring the recipes to match.
+        </p>
       </div>
-    </div>
+
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:gap-6">
+        {categories.map((category) => {
+          const active = selectedCategory === category.name;
+          return (
+            <button
+              key={category.id}
+              onClick={() => handleCategoryClick(category.name)}
+              aria-pressed={active}
+              className={cn(
+                "group relative aspect-[4/5] overflow-hidden rounded-3xl bg-gradient-to-br shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/30",
+                category.gradient,
+                active && "ring-4 ring-brand-500 ring-offset-2 ring-offset-[rgb(var(--surface))]"
+              )}
+            >
+              {/* soft glow + emoji */}
+              <span className="pointer-events-none absolute -right-6 -top-8 h-28 w-28 rounded-full bg-white/15 blur-2xl" />
+              <span className="absolute inset-0 flex items-center justify-center text-6xl drop-shadow-sm transition-transform duration-500 group-hover:scale-110 sm:text-7xl">
+                {category.emoji}
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-t from-sand-950/55 via-transparent to-transparent" />
+              {active && (
+                <span className="absolute right-3 top-3 inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-brand-600 shadow-glow">
+                  <CheckIcon className="h-4 w-4" />
+                </span>
+              )}
+              <div className="absolute inset-x-0 bottom-0 p-4 text-left">
+                <p className="font-display text-lg font-semibold text-white">
+                  {category.name}
+                </p>
+                <p className="text-xs text-white/80">
+                  {active ? "Showing" : category.blurb}
+                </p>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </section>
   );
 };
 

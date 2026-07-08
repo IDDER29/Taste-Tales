@@ -4,6 +4,9 @@ import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import AuthLayout, { AuthField, AuthAlert } from "../components/AuthLayout";
+import { Input } from "../components/ui/Input";
+import { Button } from "../components/ui/Button";
 
 export default function Register() {
   const router = useRouter();
@@ -48,60 +51,43 @@ export default function Register() {
   };
 
   return (
-    <div className="container mx-auto py-16 px-4 max-w-md">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-        Create your account
-      </h1>
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white rounded-lg shadow-md p-6 space-y-4"
-      >
-        {error && (
-          <p className="text-red-600 bg-red-50 border border-red-200 rounded-lg p-3 text-sm">
-            {error}
-          </p>
-        )}
-        <div>
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Name
-          </label>
-          <input
+    <AuthLayout
+      title="Create your account"
+      subtitle="Join the community and start collecting recipes worth remembering."
+      footer={
+        <>
+          Already have an account?{" "}
+          <Link href="/login" className="font-semibold text-brand-600 hover:text-brand-700">
+            Sign in
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {error && <AuthAlert>{error}</AuthAlert>}
+        <AuthField id="name" label="Name">
+          <Input
             id="name"
             type="text"
             autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            placeholder="Jamie Rivera"
           />
-        </div>
-        <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Email
-          </label>
-          <input
+        </AuthField>
+        <AuthField id="email" label="Email">
+          <Input
             id="email"
             type="email"
             autoComplete="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            placeholder="you@example.com"
           />
-        </div>
-        <div>
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Password
-          </label>
-          <input
+        </AuthField>
+        <AuthField id="password" label="Password" hint="At least 8 characters.">
+          <Input
             id="password"
             type="password"
             autoComplete="new-password"
@@ -109,24 +95,16 @@ export default function Register() {
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg"
+            placeholder="••••••••"
           />
-          <p className="text-xs text-gray-500 mt-1">At least 8 characters.</p>
-        </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-3 bg-red-500 text-white font-bold rounded-lg shadow hover:bg-red-600 disabled:opacity-50"
-        >
-          {loading ? "Creating account..." : "Create account"}
-        </button>
-        <p className="text-sm text-gray-600 text-center">
-          Already have an account?{" "}
-          <Link href="/login" className="text-red-500 font-medium hover:underline">
-            Sign in
-          </Link>
+        </AuthField>
+        <Button type="submit" block size="lg" loading={loading}>
+          {loading ? "Creating account…" : "Create account"}
+        </Button>
+        <p className="text-center text-xs text-sand-500">
+          By creating an account you agree to our Terms &amp; Privacy Policy.
         </p>
       </form>
-    </div>
+    </AuthLayout>
   );
 }

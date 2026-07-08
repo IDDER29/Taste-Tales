@@ -2,16 +2,243 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ------------------------------------------------------------------ */
+/*  Design tokens                                                      */
+/* ------------------------------------------------------------------ */
+:root {
+  --surface: 250 248 245;      /* warm cream page background          */
+  --surface-2: 244 240 234;    /* subtle sunken sections             */
+  --card: 255 255 255;         /* card / elevated surface            */
+  --ink: 43 35 30;             /* primary text (warm near-black)     */
+  --ink-soft: 117 98 81;       /* secondary text                    */
+  --line: 233 226 215;         /* hairline borders                  */
+  --ring: 236 79 53;           /* focus ring / brand                */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: rgb(var(--surface));
+    color: rgb(var(--ink));
+    font-family: var(--font-sans), Inter, ui-sans-serif, system-ui, -apple-system,
+      "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Editorial display headings use the variable serif. */
+  .font-display {
+    font-optical-sizing: auto;
+  }
+
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  }
+
+  ::selection {
+    background-color: rgb(var(--ring) / 0.18);
+    color: rgb(var(--ink));
+  }
+
+  /* Consistent, accessible focus ring across the app. */
+  :focus-visible {
+    outline: none;
+  }
+
+  /* Warm, slim scrollbar. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--line)) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--line));
+    border-radius: 9999px;
+    border: 3px solid rgb(var(--surface));
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(var(--sand-300, 216 204 187));
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reusable component utilities                                       */
+/* ------------------------------------------------------------------ */
+@layer components {
+  /* Page width container with responsive gutters. */
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Small eyebrow / kicker label above section titles. */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-brand-600;
+  }
+
+  /* Section heading in the display serif. */
+  .section-title {
+    @apply font-display text-3xl font-semibold leading-tight tracking-tight text-sand-950 sm:text-4xl;
+  }
+
+  /* Brand gradient text. */
+  .text-gradient {
+    @apply bg-gradient-to-br from-brand-500 via-brand-600 to-accent-500 bg-clip-text text-transparent;
+  }
+
+  /* Frosted glass surface (nav, floating panels). */
+  .glass {
+    background-color: rgb(255 255 255 / 0.72);
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+  }
+
+  /* Pill chip. */
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-sand-200 bg-white px-3 py-1 text-sm font-medium text-sand-700 transition-colors;
+  }
+  .chip-active {
+    @apply border-brand-500 bg-brand-50 text-brand-700;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Skeleton shimmer                                                   */
+/* ------------------------------------------------------------------ */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Respect reduced-motion preferences. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  react-select — themed to match the warm design system             */
+/* ------------------------------------------------------------------ */
+.select__control {
+  border-radius: 0.75rem !important;
+  border-color: rgb(216 204 187) !important; /* sand-300 */
+  min-height: 2.75rem !important;
+  box-shadow: none !important;
+  background-color: #fff !important;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease !important;
+}
+.select__control:hover {
+  border-color: rgb(191 174 151) !important; /* sand-400 */
+}
+.select__control--is-focused {
+  border-color: rgb(236 79 53) !important; /* brand-500 */
+  box-shadow: 0 0 0 4px rgba(236, 79, 53, 0.15) !important;
+}
+.select__placeholder {
+  color: rgb(191 174 151) !important;
+}
+.select__menu {
+  border-radius: 0.9rem !important;
+  overflow: hidden !important;
+  border: 1px solid rgb(233 226 215) !important;
+  box-shadow: 0 20px 40px -12px rgba(43, 35, 30, 0.18) !important;
+}
+.select__option--is-focused {
+  background-color: rgb(254 244 242) !important; /* brand-50 */
+  color: rgb(124 36 24) !important;
+}
+.select__option--is-selected {
+  background-color: rgb(236 79 53) !important;
+  color: #fff !important;
+}
+.select__multi-value {
+  background-color: rgb(254 244 242) !important; /* brand-50 */
+  border-radius: 9999px !important;
+  padding: 0 0.2rem !important;
+}
+.select__multi-value__label {
+  color: rgb(182 41 18) !important; /* brand-700 */
+  font-weight: 500 !important;
+}
+.select__multi-value__remove:hover {
+  background-color: rgb(253 207 197) !important; /* brand-200 */
+  color: rgb(124 36 24) !important;
+  border-radius: 9999px !important;
+}
+
+/* ------------------------------------------------------------------ */
+/*  react-quill (snow theme) — warm borders & radii                   */
+/* ------------------------------------------------------------------ */
+.ql-toolbar.ql-snow {
+  border-color: rgb(216 204 187) !important;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+  background-color: rgb(250 248 245);
+}
+.ql-container.ql-snow {
+  border-color: rgb(216 204 187) !important;
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+  font-family: var(--font-sans), Inter, sans-serif;
+  font-size: 1rem;
+}
+.ql-editor {
+  min-height: 12rem;
+}
+.ql-editor.ql-blank::before {
+  color: rgb(191 174 151);
+  font-style: normal;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Rich-text (article body) typography tuning                         */
+/* ------------------------------------------------------------------ */
+.prose :where(h1, h2, h3, h4) {
+  font-family: var(--font-display), Fraunces, ui-serif, Georgia, serif;
+  letter-spacing: -0.01em;
+}
+.prose img {
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px -12px rgba(43, 35, 30, 0.25);
+}
+.prose a {
+  color: rgb(217 53 24);
+  text-decoration: none;
+  font-weight: 600;
+}
+.prose a:hover {
+  text-decoration: underline;
 }

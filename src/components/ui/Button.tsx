@@ -6,20 +6,25 @@ import { cn } from "../../utils/cn";
 import { Spinner } from "./Spinner";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none",
+  "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100",
   {
     variants: {
       variant: {
-        primary: "bg-brand-500 text-white hover:bg-brand-600 focus-visible:ring-brand-500",
-        secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200 focus-visible:ring-gray-400",
-        outline: "border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 focus-visible:ring-gray-400",
-        ghost: "text-gray-700 hover:bg-gray-100 focus-visible:ring-gray-400",
-        danger: "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600",
+        primary:
+          "bg-brand-600 text-white shadow-soft hover:bg-brand-700 hover:shadow-glow",
+        secondary:
+          "bg-sand-100 text-sand-900 hover:bg-sand-200 focus-visible:ring-sand-400/40",
+        outline:
+          "border border-sand-300 bg-white text-sand-900 hover:border-sand-400 hover:bg-sand-50 focus-visible:ring-sand-400/40",
+        ghost:
+          "text-sand-700 hover:bg-sand-100 focus-visible:ring-sand-400/40",
+        danger:
+          "bg-red-600 text-white shadow-soft hover:bg-red-700 focus-visible:ring-red-600/30",
       },
       size: {
-        sm: "h-9 px-3 text-sm",
+        sm: "h-9 px-4 text-sm",
         md: "h-11 px-5 text-base",
-        lg: "h-12 px-6 text-lg",
+        lg: "h-12 px-7 text-base",
         icon: "h-10 w-10",
       },
       block: { true: "w-full" },
