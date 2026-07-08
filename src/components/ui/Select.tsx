@@ -13,10 +13,10 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       ref={ref}
       aria-invalid={invalid || undefined}
       className={cn(
-        "w-full appearance-none rounded-lg border bg-white px-3 py-2.5 text-base text-gray-900",
-        "focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500",
-        "disabled:cursor-not-allowed disabled:bg-gray-50",
-        invalid ? "border-red-400" : "border-gray-300",
+        "w-full appearance-none rounded-xl border bg-white px-3.5 py-2.5 text-base text-sand-950 transition-shadow",
+        "focus:outline-none focus:ring-4 focus:ring-brand-500/15 focus:border-brand-500",
+        "disabled:cursor-not-allowed disabled:bg-sand-50",
+        invalid ? "border-brand-400" : "border-sand-300",
         className
       )}
       {...props}

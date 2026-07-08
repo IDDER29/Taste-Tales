@@ -18,9 +18,10 @@ import {
   selectArticleById,
   selectArticlesStatus,
 } from "../features/article/articleSlice";
+import { PhotoIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { uploadImage } from "../api/cloudinary";
 import RecipeFormFields from "../components/RecipeFormFields";
-import { useToast } from "../components/ui";
+import { useToast, Button, buttonVariants } from "../components/ui";
 import { CATEGORY_OPTIONS } from "../utils/recipe";
 import type { Article, RecipeFormValue } from "../types";
 
@@ -128,7 +129,7 @@ const EditArticle = ({ id }: { id: string }) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!category) {
-      alert("Please select a category.");
+      toast({ title: "Please select a category.", variant: "error" });
       return;
     }
 
@@ -191,123 +192,153 @@ const EditArticle = ({ id }: { id: string }) => {
   if (!article) {
     if (status === "failed" || status === "succeeded") {
       return (
-        <div className="container mx-auto py-20 px-4 text-center">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
-            Article not found
+        <div className="container-page flex min-h-[60vh] flex-col items-center justify-center py-20 text-center">
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-50 text-brand-500">
+            <MagnifyingGlassIcon className="h-8 w-8" />
+          </span>
+          <h1 className="mt-6 font-display text-3xl font-semibold text-sand-950">
+            Recipe not found
           </h1>
-          <p className="text-gray-600 mb-6">
-            The article you're trying to edit doesn't exist or could not be
-            loaded.
+          <p className="mt-2 max-w-md text-sand-600">
+            The recipe you&apos;re trying to edit doesn&apos;t exist or could not
+            be loaded.
           </p>
-          <Link href="/" className="text-red-500 font-medium hover:underline">
-            Back to Home
+          <Link href="/" className={`mt-6 ${buttonVariants({})}`}>
+            Back to home
           </Link>
         </div>
       );
     }
-    return <p>Loading...</p>;
+    return (
+      <div className="container-page py-20 text-center text-sand-500">
+        Loading…
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold text-center mb-8">Edit Your Article</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="grid grid-cols-1 md:grid-cols-4 gap-6"
-      >
-        <div className="md:col-span-3">
-          <div className="relative mb-8">
-            <label
-              htmlFor="image"
-              className="block text-lg font-medium text-gray-700 mb-2"
-            >
-              Main Image
-            </label>
+    <div className="container-page py-12 lg:py-16">
+      <header className="mb-8">
+        <span className="eyebrow">Edit</span>
+        <h1 className="mt-3 font-display text-4xl font-semibold text-sand-950 sm:text-5xl">
+          Edit recipe
+        </h1>
+        <p className="mt-2 text-sand-600">Refine the details and save your changes.</p>
+      </header>
+
+      <form onSubmit={handleSubmit} className="grid gap-8 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2">
+          {/* Cover image */}
+          <div>
+            <span className="mb-2 block text-sm font-semibold text-sand-800">
+              Cover image
+            </span>
             <input
               type="file"
               id="image"
+              accept="image/*"
               onChange={handleImageUpload}
               className="hidden"
             />
-            <div
-              className="border-2 border-dashed border-gray-300 rounded-md p-6 cursor-pointer"
+            <button
+              type="button"
               onClick={() => document.getElementById("image")?.click()}
+              className="group relative block w-full overflow-hidden rounded-2xl border-2 border-dashed border-sand-300 bg-white transition-colors hover:border-brand-400 hover:bg-brand-50/30"
             >
               {imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={imageUrl}
-                  alt="Uploaded"
-                  className="rounded-md shadow-md w-full object-cover h-72"
+                  alt="Cover preview"
+                  className="h-72 w-full object-cover"
                 />
               ) : (
-                <p className="text-center text-gray-500">
-                  Click to upload an image
-                </p>
+                <div className="flex h-56 flex-col items-center justify-center gap-2 text-sand-500">
+                  <PhotoIcon className="h-10 w-10 text-sand-300" />
+                  <p className="font-medium">Click to upload a cover image</p>
+                </div>
               )}
-            </div>
+              {imageUrl && (
+                <span className="absolute bottom-3 right-3 rounded-full bg-sand-950/70 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur">
+                  Change image
+                </span>
+              )}
+            </button>
           </div>
-          <div className="mb-8">
+
+          {/* Title & subtitle */}
+          <div className="rounded-2xl border border-sand-200/70 bg-white p-6 shadow-soft">
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full text-4xl font-bold p-3 border-b-2 focus:outline-none"
-              placeholder="Enter your title here..."
+              className="w-full border-0 border-b border-sand-200 bg-transparent px-0 py-2 font-display text-3xl font-semibold text-sand-950 placeholder:text-sand-300 focus:border-brand-400 focus:outline-none focus:ring-0"
+              placeholder="Recipe title"
               required
             />
-          </div>
-          <div className="mb-8">
             <input
               type="text"
               value={subtitle}
               onChange={(e) => setSubtitle(e.target.value)}
-              className="w-full text-2xl font-semibold p-3 border-b-2 focus:outline-none"
-              placeholder="Enter your subtitle here..."
+              className="mt-4 w-full border-0 border-b border-sand-200 bg-transparent px-0 py-2 text-lg text-sand-700 placeholder:text-sand-300 focus:border-brand-400 focus:outline-none focus:ring-0"
+              placeholder="A short, tasty subtitle"
             />
           </div>
-          <div className="mb-8">
-            <label className="block text-lg font-medium text-gray-700 mb-2">
-              Intro / story (optional)
+
+          {/* Story */}
+          <div className="rounded-2xl border border-sand-200/70 bg-white p-6 shadow-soft">
+            <label className="mb-3 block font-display text-lg font-semibold text-sand-950">
+              Intro / story{" "}
+              <span className="text-sm font-normal text-sand-400">(optional)</span>
             </label>
             <ReactQuill
               value={content}
               onChange={setContent}
-              className="h-64 mb-8"
+              className="mb-12 h-64"
               theme="snow"
-              placeholder="Write your article content here..."
+              placeholder="Share the story behind this recipe…"
             />
           </div>
-          <div className="mt-16">
-            <RecipeFormFields value={recipe} onChange={setRecipe} />
-          </div>
+
+          <RecipeFormFields value={recipe} onChange={setRecipe} />
         </div>
-        <div className="md:col-span-1 space-y-6">
-          <div>
-            <label
-              htmlFor="category"
-              className="block text-lg font-medium text-gray-700 mb-2"
-            >
-              Category
-            </label>
-            <Select
-              id="category"
-              value={category}
-              onChange={(selectedOption: any) => setCategory(selectedOption)}
-              options={categoryOptions}
-              className="basic-single-select"
-              classNamePrefix="select"
-              isClearable={true}
-              placeholder="Select a category..."
-            />
+
+        {/* Sidebar */}
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-sand-200/70 bg-white p-6 shadow-soft lg:sticky lg:top-24">
+            <h3 className="font-display text-lg font-semibold text-sand-950">
+              Publish details
+            </h3>
+            <div className="mt-5">
+              <label
+                htmlFor="category"
+                className="mb-1.5 block text-sm font-semibold text-sand-800"
+              >
+                Category <span className="text-brand-500">*</span>
+              </label>
+              <Select
+                id="category"
+                value={category}
+                onChange={(selectedOption: any) => setCategory(selectedOption)}
+                options={categoryOptions}
+                className="basic-single-select"
+                classNamePrefix="select"
+                isClearable
+                placeholder="Select a category…"
+              />
+            </div>
+            <div className="mt-6 flex flex-col gap-2">
+              <Button type="submit" size="lg" block>
+                Save changes
+              </Button>
+              <Link
+                href={`/articles/${id}`}
+                className={buttonVariants({ variant: "ghost" })}
+              >
+                Cancel
+              </Link>
+            </div>
           </div>
-        </div>
-        <div className="text-center mt-8 md:col-span-4">
-          <button
-            type="submit"
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Update
-          </button>
         </div>
       </form>
     </div>

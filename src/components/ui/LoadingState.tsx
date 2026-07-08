@@ -13,7 +13,7 @@ export function LoadingState({ label = "Loading…", className }: LoadingStatePr
     <div
       role="status"
       className={cn(
-        "flex flex-col items-center justify-center gap-3 py-12 text-gray-500",
+        "flex flex-col items-center justify-center gap-3 py-12 text-sand-500",
         className
       )}
     >

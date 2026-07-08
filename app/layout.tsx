@@ -11,13 +11,16 @@ const inter = Inter({
   display: "swap",
 });
 
-// Editorial variable serif for display headings — optical sizing gives the
-// brand a warm, premium magazine feel that suits a recipe platform.
+// Editorial serif for display headings — gives the brand a warm, premium
+// magazine feel that suits a recipe platform. A small set of static weights
+// (rather than the full variable range) keeps the font payload lean and the
+// build's font fetch reliable.
 const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
-  axes: ["opsz", "SOFT"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {

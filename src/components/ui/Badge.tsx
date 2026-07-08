@@ -7,12 +7,12 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        brand: "bg-brand-100 text-brand-700",
-        neutral: "bg-gray-100 text-gray-700",
-        success: "bg-green-100 text-green-700",
-        warning: "bg-yellow-100 text-yellow-800",
-        danger: "bg-red-100 text-red-700",
-        outline: "border border-gray-300 text-gray-700",
+        brand: "bg-brand-50 text-brand-700",
+        neutral: "bg-sand-100 text-sand-700",
+        success: "bg-emerald-50 text-emerald-700",
+        warning: "bg-accent-50 text-accent-700",
+        danger: "bg-red-50 text-red-700",
+        outline: "border border-sand-300 text-sand-700",
       },
       size: {
         sm: "px-2 py-0.5 text-xs",

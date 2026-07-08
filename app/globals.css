@@ -150,6 +150,80 @@
 }
 
 /* ------------------------------------------------------------------ */
+/*  react-select — themed to match the warm design system             */
+/* ------------------------------------------------------------------ */
+.select__control {
+  border-radius: 0.75rem !important;
+  border-color: rgb(216 204 187) !important; /* sand-300 */
+  min-height: 2.75rem !important;
+  box-shadow: none !important;
+  background-color: #fff !important;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease !important;
+}
+.select__control:hover {
+  border-color: rgb(191 174 151) !important; /* sand-400 */
+}
+.select__control--is-focused {
+  border-color: rgb(236 79 53) !important; /* brand-500 */
+  box-shadow: 0 0 0 4px rgba(236, 79, 53, 0.15) !important;
+}
+.select__placeholder {
+  color: rgb(191 174 151) !important;
+}
+.select__menu {
+  border-radius: 0.9rem !important;
+  overflow: hidden !important;
+  border: 1px solid rgb(233 226 215) !important;
+  box-shadow: 0 20px 40px -12px rgba(43, 35, 30, 0.18) !important;
+}
+.select__option--is-focused {
+  background-color: rgb(254 244 242) !important; /* brand-50 */
+  color: rgb(124 36 24) !important;
+}
+.select__option--is-selected {
+  background-color: rgb(236 79 53) !important;
+  color: #fff !important;
+}
+.select__multi-value {
+  background-color: rgb(254 244 242) !important; /* brand-50 */
+  border-radius: 9999px !important;
+  padding: 0 0.2rem !important;
+}
+.select__multi-value__label {
+  color: rgb(182 41 18) !important; /* brand-700 */
+  font-weight: 500 !important;
+}
+.select__multi-value__remove:hover {
+  background-color: rgb(253 207 197) !important; /* brand-200 */
+  color: rgb(124 36 24) !important;
+  border-radius: 9999px !important;
+}
+
+/* ------------------------------------------------------------------ */
+/*  react-quill (snow theme) — warm borders & radii                   */
+/* ------------------------------------------------------------------ */
+.ql-toolbar.ql-snow {
+  border-color: rgb(216 204 187) !important;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+  background-color: rgb(250 248 245);
+}
+.ql-container.ql-snow {
+  border-color: rgb(216 204 187) !important;
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+  font-family: var(--font-sans), Inter, sans-serif;
+  font-size: 1rem;
+}
+.ql-editor {
+  min-height: 12rem;
+}
+.ql-editor.ql-blank::before {
+  color: rgb(191 174 151);
+  font-style: normal;
+}
+
+/* ------------------------------------------------------------------ */
 /*  Rich-text (article body) typography tuning                         */
 /* ------------------------------------------------------------------ */
 .prose :where(h1, h2, h3, h4) {

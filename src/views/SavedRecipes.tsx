@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { BookmarkIcon } from "@heroicons/react/24/outline";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   selectSavedIds,
@@ -10,8 +11,9 @@ import {
   fetchSaved,
 } from "../features/saved/savedSlice";
 import { selectAllArticles } from "../features/article/articleSlice";
-import { formatMinutes, totalMinutes } from "../utils/recipe";
-import SaveButton from "../components/SaveButton";
+import RecipeCard from "../components/RecipeCard";
+import { EmptyState } from "../components/ui/EmptyState";
+import { buttonVariants } from "../components/ui/Button";
 import type { Article } from "../types";
 
 // "My Recipe Box". Signed-in users read the server-synced list; guests resolve
@@ -41,81 +43,47 @@ const SavedRecipes = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-8">
-      <h1 className="text-4xl font-bold text-gray-800 mb-8">
-        My <span className="text-red-500">Recipe Box</span>
-      </h1>
+    <div className="container-page py-12 lg:py-16">
+      <header className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <span className="eyebrow">
+            <BookmarkIcon className="h-4 w-4" />
+            Your collection
+          </span>
+          <h1 className="mt-3 font-display text-4xl font-semibold text-sand-950 sm:text-5xl">
+            My recipe box
+          </h1>
+          <p className="mt-2 text-sand-600">
+            {savedArticles.length > 0
+              ? `${savedArticles.length} recipe${
+                  savedArticles.length === 1 ? "" : "s"
+                } saved for later.`
+              : "Everything you save lives here."}
+          </p>
+        </div>
+        {savedArticles.length > 0 && (
+          <Link href="/#browse" className={buttonVariants({ variant: "outline" })}>
+            Find more recipes
+          </Link>
+        )}
+      </header>
 
       {savedArticles.length === 0 ? (
-        <div className="bg-white rounded-lg shadow p-12 text-center">
-          <p className="text-gray-600 text-lg mb-6">
-            You haven't saved any recipes yet.
-          </p>
-          <Link
-            href="/"
-            className="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
-          >
-            Browse recipes
-          </Link>
-        </div>
+        <EmptyState
+          icon={<BookmarkIcon className="h-8 w-8" />}
+          title="No saved recipes yet"
+          description="Tap the bookmark on any recipe to keep it here for whenever you're ready to cook."
+          action={
+            <Link href="/#browse" className={buttonVariants({})}>
+              Browse recipes
+            </Link>
+          }
+        />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {savedArticles.map((article) => {
-            const total = totalMinutes(article);
-            const meta = [
-              total > 0 ? formatMinutes(total) : null,
-              article.servings ? `${article.servings} servings` : null,
-            ].filter(Boolean);
-
-            return (
-              <Link
-                href={`/articles/${article.id}`}
-                key={article.id}
-                className="group bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden flex flex-col"
-              >
-                <div className="relative">
-                  <img
-                    src={article.imageUrl}
-                    alt={article.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <SaveButton id={article.id} className="absolute top-3 right-3" />
-                </div>
-
-                <div className="p-4 flex flex-col flex-1">
-                  <h2 className="text-xl font-semibold text-gray-800 group-hover:text-red-500 transition-colors">
-                    {article.title}
-                  </h2>
-                  {article.subtitle && (
-                    <p className="text-gray-600 mt-1 line-clamp-2">
-                      {article.subtitle}
-                    </p>
-                  )}
-
-                  {meta.length > 0 && (
-                    <p className="text-sm text-gray-500 mt-3">
-                      {meta.join(" · ")}
-                    </p>
-                  )}
-
-                  {article.publisher?.name && (
-                    <div className="flex items-center mt-4 pt-4 border-t border-gray-100">
-                      {article.publisher.image && (
-                        <img
-                          src={article.publisher.image}
-                          alt={article.publisher.name}
-                          className="w-8 h-8 rounded-full object-cover mr-2"
-                        />
-                      )}
-                      <span className="text-sm text-gray-700">
-                        {article.publisher.name}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </Link>
-            );
-          })}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {savedArticles.map((article, i) => (
+            <RecipeCard key={article.id} recipe={article} index={i} />
+          ))}
         </div>
       )}
     </div>

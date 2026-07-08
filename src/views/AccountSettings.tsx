@@ -89,11 +89,22 @@ export default function AccountSettings() {
   };
 
   return (
-    <div className="container mx-auto py-12 px-4 max-w-2xl space-y-8">
-      <h1 className="text-3xl font-bold text-gray-800">Account settings</h1>
+    <div className="container-page max-w-2xl space-y-6 py-12 lg:py-16">
+      <header>
+        <span className="eyebrow">Your account</span>
+        <h1 className="mt-3 font-display text-4xl font-semibold text-sand-950">
+          Account settings
+        </h1>
+        <p className="mt-2 text-sand-600">
+          Manage your profile, password, and data.
+        </p>
+      </header>
 
       <Card>
-        <CardBody>
+        <CardBody className="p-6">
+          <h2 className="mb-4 font-display text-lg font-semibold text-sand-950">
+            Profile
+          </h2>
           <form onSubmit={saveProfile} className="space-y-4">
             <Field label="Name" htmlFor="name">
               <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
@@ -106,8 +117,8 @@ export default function AccountSettings() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Field>
-            <hr className="border-gray-100" />
-            <p className="text-sm font-medium text-gray-700">Change password</p>
+            <hr className="border-sand-100" />
+            <p className="text-sm font-semibold text-sand-800">Change password</p>
             <Field label="Current password" htmlFor="currentPassword">
               <Input
                 id="currentPassword"
@@ -134,10 +145,10 @@ export default function AccountSettings() {
       </Card>
 
       <Card>
-        <CardBody className="flex items-center justify-between gap-4">
+        <CardBody className="flex flex-wrap items-center justify-between gap-4 p-6">
           <div>
-            <p className="font-medium text-gray-800">Export your data</p>
-            <p className="text-sm text-gray-500">
+            <p className="font-semibold text-sand-900">Export your data</p>
+            <p className="text-sm text-sand-500">
               Download your profile, recipes, reviews, and saves as JSON.
             </p>
           </div>
@@ -149,11 +160,11 @@ export default function AccountSettings() {
         </CardBody>
       </Card>
 
-      <Card className="border-red-100">
-        <CardBody className="flex items-center justify-between gap-4">
+      <Card className="border-red-200 bg-red-50/40">
+        <CardBody className="flex flex-wrap items-center justify-between gap-4 p-6">
           <div>
-            <p className="font-medium text-red-700">Delete account</p>
-            <p className="text-sm text-gray-500">
+            <p className="font-semibold text-red-700">Delete account</p>
+            <p className="text-sm text-sand-500">
               Permanently delete your account and all of your content.
             </p>
           </div>
